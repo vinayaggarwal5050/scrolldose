@@ -145,35 +145,6 @@
       .exit-button:hover {
         background-color: darkred;
       }
-
-      .product-info {
-        /* margin-top: 30px; */
-        text-align: center;
-      }
-
-      .product-info h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
-      }
-
-      .product-info p {
-        margin-bottom: 20px;
-        color: #555;
-      }
-
-      .product-info a {
-        display: inline-block;
-        background-color: #007bff;
-        color: white;
-        padding: 10px 10px;
-        border-radius: 5px;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-      }
-
-      .product-info a:hover {
-        background-color: #0056b3;
-      }
     </style>
   </head>
   <body>
@@ -194,16 +165,17 @@
 
       <!-- Product Details Section -->
       <div class="details-section">
-        <button class="back-button" id="back-button" style="background-color: #007BFF; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+        <button class="back-button" id="back-button">
           &larr; Back to Gallery
         </button>
-        <div style="display: flex; align-items: center;">
-          <div class="product-details-section" id="product-details-section"></div>
+        <div class="details-content" id="details-content">
+          <h1 id="product-title">Product Title</h1>
+          <p id="product-description">Product Description</p>
+          <img id="product-image" src="" alt="Product Image" />
+          <a id="product-link" href="#" target="_blank">Buy on Amazon</a>
         </div>
-
       </div>
     </div>
-
     <script>
       const gallery = document.getElementById("gallery");
       const container = document.getElementById("container");
@@ -245,18 +217,17 @@
           div.dataset.video = product.video;
           div.dataset.link = product.link;
           div.dataset.title = product.name;
-          div.dataset.price = product.price;
           div.dataset.description = product.description;
           div.dataset.image = product.image;
 
           div.innerHTML = `
-            <iframe 
-              loading="lazy"
-              src="${product.video}" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-            </iframe>
-          `;
+      <iframe 
+        loading="lazy"
+        src="${product.video}" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    `;
           gallery.appendChild(div);
         });
         currentIndex += nextBatch.length;
@@ -293,28 +264,12 @@
       // Details button functionality
       detailsButton.addEventListener("click", () => {
         if (currentProduct) {
-          // Select the details section
-          const productDetailsSection = document.querySelector(
-            ".product-details-section"
-          );
-          productDetailsSection.innerHTML = "";
+          productTitle.textContent = currentProduct.title;
+          productDescription.textContent = currentProduct.description;
+          productImage.src = currentProduct.image;
+          productLink.href = currentProduct.link;
 
-          // Create the product details content
-          const detailsContent = document.createElement("div");
-          detailsContent.classList.add("product-info");
-
-          detailsContent.innerHTML = `
-            <img src="${currentProduct.image}" alt="${currentProduct.title}" style="width: 250px;  height: 250px; border-radius: 10px;">
-            <h2>${currentProduct.title}</h2>
-            <p style="font-size: 1.5rem; font-weight: bold; color: #007BFF">${currentProduct.price}</p>
-            <p>₹${currentProduct.description}</p>
-            <a href="${currentProduct.link}" target="_blank" style="display: block; margin-top: 20px; background-color: #007BFF; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">Buy on Amazon</a>
-          `;
-
-          // Append the current product details below the back button
-          productDetailsSection.appendChild(detailsContent);
-
-          // Show the details section and scroll to it
+          // Show details section
           container.style.transform = "translateX(-50%)";
         }
       });
