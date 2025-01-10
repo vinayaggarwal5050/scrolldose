@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" id="meta-description" content="Detailed product view on Scroll Dose - Explore all information about trending products and best deals.">
+    <meta property="og:title" id="og-title" content="Scroll Dose - Product Details">
+    <meta property="og:description" id="og-description" content="Explore detailed product descriptions and deals on Scroll Dose.">
+    <meta property="og:image" id="og-image" content="">
+    <!-- <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630"> -->
+    <meta property="og:url" id="og-url" content="">
+    <meta property="og:type" content="product">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="Scroll Dose - Product Details">
+    <meta name="twitter:description" id="twitter-description" content="Explore detailed product descriptions and deals on Scroll Dose.">
+    <meta property="product:price:amount" id="og-price" content="">
+    <meta property="product:price:currency" content="INR">
+    <meta name="twitter:image" id="twitter-image" content="">
+    <title id="page-title">Product Details - Scroll Dose</title>
+    <style>
+        /* Styles remain unchanged */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-bar img {
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .product-details h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .product-details p {
+            margin: 10px 0;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .product-details .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007BFF;
+            margin: 20px 0;
+        }
+
+        .product-details .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-details a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #007BFF;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+            flex: 1;
+            text-align: center;
+        }
+
+        .product-details a:hover {
+            background-color: #0056b3;
+        }
+
+        .product-video {
+            margin-top: 20px;
+        }
+
+        .product-video iframe {
+            width: 100%;
+            height: 315px;
+            border: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="index.html">
+            <img src="./images/scrolldose_logo_clear.png" alt="Scroll Dose Logo">
+        </a>
+    </div>
+
+    <div class="container">
+        <img id="product-image" class="product-image" src="" alt="Product Image">
+        <div class="product-details">
+            <h1 id="product-name">Product Name</h1>
+            <p id="product-description">Product Description</p>
+            <div class="price" id="product-price">Price</div>
+            <div class="button-container">
+                <a id="product-link" href="#" target="_blank">View Product on Amazon</a>
+            </div>
+            <div class="product-video" id="product-video"></div>
+        </div>
+    </div>
+
+    <script>
+        // Parse the query parameters to get the slug
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('slug');
+
+        // Fetch product data from products.json
+        fetch("products.json")
+            .then(response => response.json())
+            .then(products => {
+                const product = products.find(p => p.slug === slug);
+                if (product) {
+                    document.getElementById("product-image").src = product.image;
+                    document.getElementById("product-name").textContent = product.name;
+                    document.getElementById("product-description").textContent = product.description;
+                    document.getElementById("product-price").textContent = product.price;
+                    document.getElementById("product-link").href = product.link;
+
+                    // Update dynamic title and meta tags
+                    document.getElementById("page-title").textContent = `${product.name} - Scroll Dose`;
+                    document.getElementById("meta-description").content = product.description;
+                    document.getElementById("og-title").content = `${product.name} - Scroll Dose`;
+                    document.getElementById("og-description").content = product.description;
+                    document.getElementById("og-price").content = product.price;
+                    document.getElementById("og-image").content = product.image;
+                    document.getElementById("og-url").content = window.location.href;
+                    document.getElementById("twitter-title").content = `${product.name} - Scroll Dose`;
+                    document.getElementById("twitter-description").content = product.description;
+                    document.getElementById("twitter-image").content = product.image;
+
+                    // Add YouTube video if available
+                    if (product.video) {
+                        const videoId = new URLSearchParams(new URL(product.video).search).get("v") || product.video.split('/shorts/')[1];
+                        const iframe = document.createElement('iframe');
+                        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                        iframe.allowFullscreen = true;
+                        document.getElementById("product-video").appendChild(iframe);
+                    }
+                } else {
+                    document.querySelector('.container').innerHTML = "<h2>Product not found</h2>";
+                }
+            })
+            .catch(() => {
+                document.querySelector('.container').innerHTML = "<h2>Error loading product details</h2>";
+            });
+    </script>
+</body>
+</html>

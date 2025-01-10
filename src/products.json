@@ -1,0 +1,260 @@
+[
+    {
+        "id": 13,
+        "name": "Universal Travel Adapter",
+        "description": "International All in One Worldwide Travel Adapter and Wall Charger with USB Ports with Multi Type Power Outlet USB 2.1A,100-250 Voltage Travel Charger",
+        "price": "₹588",
+        "image": "https://m.media-amazon.com/images/I/61t7eIbAxwL._SL1200_.jpg",
+        "link": "https://amzn.to/4ad13Fx",
+        "category": "Trending",
+        "slug": "universal-travel-adapter",
+        "video": "https://www.youtube.com/embed/Efr7C3Wu7_M",
+        "tag": ["power converter", "universal socket", "universal travel adopter"],
+        "lastUpdate": ""
+    },
+    {
+        "id": 14,
+        "name": "boAt Airdopes 141",
+        "description": "Low Latency, ENx Tech, 42HRS Battery, Fast Charge, IWP, IPX4, v5.1 Bluetooth Earbuds, TWS Ear Buds Wireless Earphones with mic (Bold Black)",
+        "price": "₹1299",
+        "image": "https://m.media-amazon.com/images/I/71RFdy6y6LL._SL1500_.jpg",
+        "link": "https://amzn.to/3BX103W",
+        "category": "Trending",
+        "slug": "boat-airdrops-141",
+        "video": "https://www.youtube.com/embed/rUuKp-GeUw8",
+        "tag": ["power converter", "universal socket", "universal travel adopter"],
+        "lastUpdate": ""
+    },
+    {
+        "id": 15,
+        "name": "1.5L Electric Kettle",
+        "description": "Pigeon by Stovekraft Amaze Plus Electric Kettle (14289) with Stainless Steel Body, 1.5 litre, used for boiling Water, making tea and coffee, instant noodles, soup etc. (Silver)",
+        "price": "₹549",
+        "image": "https://m.media-amazon.com/images/I/51DGcy8eBCL._SX679_.jpg",
+        "link": "https://amzn.to/40mZDF6",
+        "category": "Trending",
+        "slug": "electric-kettle-15",
+        "video": "https://www.youtube.com/embed/3UzzEefUCBY",
+        "lastUpdate": ""
+    },
+    {
+        "id": 16,
+        "name": "Lenovo Thinkcentre M710q Desktop Computer Mini PC",
+        "description": "(Refurbished) Lenovo Thinkcentre M710q Desktop Computer Mini PC (Intel Core i3 6th Gen, 8 GB DDR4 RAM, 256 GB SSD, Windows 11, MS Office, Intel HD Graphics, USB, DP), Black",
+        "price": "₹6190",
+        "image": "https://m.media-amazon.com/images/I/41RwSXW9dCL._SX679_.jpg",
+        "link": "https://amzn.to/3C52Dws",
+        "category": "Trending",
+        "slug": "lenovo-think-center-m710-mini-pic",
+        "video": "https://www.youtube.com/embed/hgdKLr3c7a0",
+        "lastUpdate": ""
+    },
+    {
+        "id": 17,
+        "name": "Long Handle Microfiber Feather Ceiling Duster",
+        "description": "Long Handle Microfiber Feather Ceiling Duster for Dust Cleaning with extendable Pole 30-100 Inch with Anti Scratch Bendable Head Brush for Cleaning High Cobweb Stick high Ceiling Fan",
+        "price": "₹289",
+        "image": "https://m.media-amazon.com/images/I/614BSL5MO9L._SX679_.jpg",
+        "link": "https://amzn.to/4gFEFqF",
+        "category": "Trending",
+        "slug": "long-handle-ceiling-duster",
+        "video": "https://www.youtube.com/embed/25c-NVFYGWA",
+        "lastUpdate": ""
+    },
+    {
+        "id": 18,
+        "name": "Automatic Wireless Water Dispenser",
+        "description": "Konquer TimeS KTS Automatic Wireless Water Can Dispenser Pump for 20 Litre Bottle Can, with Low Noise & High Efficiency",
+        "price": "₹389",
+        "image": "https://m.media-amazon.com/images/I/61+gvsVCj0L._SX679_.jpg",
+        "link": "https://amzn.to/40jSFkh",
+        "category": "Trending",
+        "slug": "automatic-water-dispenser-18",
+        "video": "https://www.youtube.com/embed/jFhMl6a7hxU",
+        "lastUpdate": ""
+    },
+    {
+        "id": 19,
+        "name": "High Power Auto Car Vacuum Cleaner",
+        "description": "High Power Auto Car Vacuum Cleaner for Deep Cleaning, Hand Held Portable Cars Vacuum for car Cleaning with DC 12V, 140W Vacuum Motor & 5000 PA Powerful Suction, Black",
+        "price": "₹1430",
+        "image": "https://m.media-amazon.com/images/I/71op6mKBraL._SX679_.jpg",
+        "link": "https://amzn.to/41XzCgX",
+        "category": "Trending",
+        "slug": "car-vacuum-clearner-19",
+        "video": "https://www.youtube.com/embed/gAx9EyYoIqk",
+        "lastUpdate": ""
+    },
+    {
+        "id": 20,
+        "name": "Microfiber Cloth - 4 pcs - 40x40 cms",
+        "description": "Microfiber Cloth - 4 pcs - 40x40 cms - 340 GSM Grey! Thick Lint & Streak-Free Multipurpose Cloths - Automotive Microfibre Towels for Car Bike Cleaning Polishing Washing & Detailing",
+        "price": "₹298",
+        "image": "https://m.media-amazon.com/images/I/81dsWgzXLrL._SX679_.jpg",
+        "link": "https://amzn.to/4h2R5IX",
+        "category": "Trending",
+        "slug": "microfiber-clothe-car-bike",
+        "video": "https://www.youtube.com/embed/hrbyltIB38g",
+        "lastUpdate": ""
+    },
+
+    {
+        "id": 21,
+        "name": "SKYCELL Wireless Bluetooth Collar Mic",
+        "description": "SKYCELL Wireless Bluetooth Collar Mic for Youtubers – Ideal Microphone for Mobile YouTube Channels, Wireless Mic for Vlogging, and Collar Mic for Clear Audio Live Recording No App Needed K9",
+        "price": "₹550",
+        "image": "https://m.media-amazon.com/images/I/71ZM3QDxURL._SX679_.jpg",
+        "link": "https://amzn.to/3DL8XtC",
+        "category": "Trending",
+        "slug": "skycell-wireless-bluetooth-collar-mic",
+        "video": "https://www.youtube.com/embed/T12utm_cu20",
+        "lastUpdate": ""
+    },
+
+    {
+        "id": 1,
+        "name": "Wireless Earbuds",
+        "description": "High-quality sound with noise cancellation.",
+        "price": "$49.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/earbuds",
+        "category": "Hot Deals",
+        "slug": "wireless-earbuds-2",
+        "video": "https://www.youtube.com/embed/gpEQSZz81Aw"
+    },
+    {
+        "id": 2,
+        "name": "Smartphone Case",
+        "description": "Durable and stylish case for your smartphone.",
+        "price": "$14.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/case",
+        "category": "Hot Deals",
+        "slug": "smartphone-case-1",
+        "video": "https://www.youtube.com/embed/SPqG-oWN9hk"
+    },
+    {
+        "id": 3,
+        "name": "Portable Charger",
+        "description": "Fast charging power bank for all devices.",
+        "price": "$29.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/charger",
+        "category": "Hot Deals",
+        "slug": "portable-charger-3",
+        "video": "https://www.youtube.com/embed/Wkv-s3gz9dY"
+    },
+    {
+        "id": 4,
+        "name": "Bluetooth Speaker",
+        "description": "Portable speaker with deep bass.",
+        "price": "$39.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/speaker",
+        "category": "Electronics",
+        "slug": "bluetooth-speaker-4",
+        "video": "https://www.youtube.com/embed/oGAestdnhpU"
+    },
+    {
+        "id": 5,
+        "name": "Smart Watch",
+        "description": "Monitor your fitness and notifications on the go.",
+        "price": "$79.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/smart-watch",
+        "category": "Electronics",
+        "slug": "smart-watch-5",
+        "video": "https://www.youtube.com/embed/5uDte7tGIM0"
+    },
+    {
+        "id": 6,
+        "name": "Noise Cancelling Headphones",
+        "description": "Immerse yourself in crystal clear sound.",
+        "price": "$99.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/headphones",
+        "category": "Electronics",
+        "slug": "nose-cancelling-headphones-6",
+        "video": "https://www.youtube.com/embed/gnuOkWnk6vQ"
+    },
+    {
+        "id": 7,
+        "name": "Running Shoes",
+        "description": "Lightweight and comfortable for daily runs.",
+        "price": "$89.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/shoes",
+        "category": "Fashion",
+        "slug": "running-shoes-7",
+        "video": "https://www.youtube.com/embed/gnuOkWnk6vQ"
+    },
+    {
+        "id": 8,
+        "name": "Casual T-shirt",
+        "description": "Soft cotton T-shirt for everyday wear.",
+        "price": "$19.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/tshirt",
+        "category": "Fashion",
+        "slug": "casual-t-shirt",
+        "video": "https://www.youtube.com/embed/VrFE-voxo0c"
+    },
+    {
+        "id": 9,
+        "name": "Leather Jacket",
+        "description": "Premium leather jacket for a stylish look.",
+        "price": "$199.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/jacket",
+        "category": "Fashion",
+        "slug": "leather-jacket",
+        "video": "https://www.youtube.com/embed/QE6VRBG_GJA"
+    },
+    {
+        "id": 10,
+        "name": "Coffee Maker",
+        "description": "Brew the perfect cup every time.",
+        "price": "$79.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/coffee-maker",
+        "category": "Home",
+        "slug": "coffee-maker",
+        "video": "https://www.youtube.com/embed/mEOSNZHxZDY"
+    },
+    {
+        "id": 11,
+        "name": "Vacuum Cleaner",
+        "description": "Efficient cleaning with advanced technology.",
+        "price": "$149.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/vacuum-cleaner",
+        "category": "Home",
+        "slug": "vacuum-clearner",
+        "video": "https://www.youtube.com/embed/3Dlisny0FE8"
+    },
+    {
+        "id": 12,
+        "name": "Air Purifier",
+        "description": "Keep your home air clean and fresh.",
+        "price": "$129.99",
+        "image": "https://via.placeholder.com/150",
+        "link": "https://example.com/air-purifier",
+        "category": "Home",
+        "slug": "air-purifier",
+        "video": "https://www.youtube.com/embed/gnuOkWnk6vQ"
+    },
+    
+    {
+        "id": 0,
+        "name": "",
+        "description": "",
+        "price": "₹",
+        "image": "",
+        "link": "",
+        "category": "Hot Deals",
+        "slug": "",
+        "video": "",
+        "lastUpdate": ""
+    }
+
+]

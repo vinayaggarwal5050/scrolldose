@@ -1,0 +1,283 @@
+<!-- working file with lazy load, just multiple scroll problem and product details are not redendering fully -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Gallery</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+      }
+
+      .container {
+        display: flex;
+        width: 200%; /* For horizontal scrolling */
+        height: 100vh;
+        transition: transform 0.6s ease-in-out;
+      }
+
+      .gallery-section {
+        width: 50%; /* Takes half the screen */
+        height: 100vh;
+        overflow-y: scroll;
+        background-color: black; /* Neutral background */
+        position: relative;
+      }
+
+      .details-section {
+        width: 50%; /* Takes half the screen */
+        height: 100vh;
+        background-color: white;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .gallery {
+        display: flex;
+        flex-direction: column;
+        scroll-snap-type: y mandatory;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        height: 100%;
+      }
+
+      .gallery::-webkit-scrollbar {
+        display: none;
+      }
+
+      .gallery div {
+        height: 100vh;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      .button-stack {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        z-index: 10;
+      }
+
+      .button-stack button {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 5px;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+
+      .button-stack button:hover {
+        transform: scale(1.1);
+        background-color: #ddd;
+      }
+
+      .details-content {
+        display: none;
+        text-align: center;
+      }
+
+      .details-content h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
+
+      .details-content p {
+        margin: 20px 0;
+        color: #555;
+      }
+
+      .details-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+
+      .details-content a {
+        display: block;
+        margin-top: 20px;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+
+      .details-content a:hover {
+        background-color: #0056b3;
+      }
+
+      .exit-button {
+        /* position: fixed;
+      top: 10px;
+      right: 10px; */
+        /* background-color: red;
+      color: white; */
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 100;
+      }
+
+      .exit-button:hover {
+        background-color: darkred;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <button class="exit-button" onclick="location.href='index.html';">Exit</button> -->
+
+    <div class="container" id="container">
+      <!-- Video Gallery Section -->
+      <div class="gallery-section">
+        <div class="gallery" id="gallery"></div>
+        <div class="button-stack">
+          <button id="buy-button">Buy</button>
+          <button id="details-button">Details</button>
+          <button class="exit-button" onclick="location.href='index.html';">
+            Exit
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Details Section -->
+      <div class="details-section">
+        <button class="back-button" id="back-button">
+          &larr; Back to Gallery
+        </button>
+        <div class="details-content" id="details-content">
+          <h1 id="product-title">Product Title</h1>
+          <p id="product-description">Product Description</p>
+          <img id="product-image" src="" alt="Product Image" />
+          <a id="product-link" href="#" target="_blank">Buy on Amazon</a>
+        </div>
+      </div>
+    </div>
+    <script>
+      const gallery = document.getElementById("gallery");
+      const container = document.getElementById("container");
+      const buyButton = document.getElementById("buy-button");
+      const detailsButton = document.getElementById("details-button");
+      const backButton = document.getElementById("back-button");
+      const detailsContent = document.getElementById("details-content");
+
+      const productTitle = document.getElementById("product-title");
+      const productDescription = document.getElementById("product-description");
+      const productImage = document.getElementById("product-image");
+      const productLink = document.getElementById("product-link");
+
+      let currentProduct = null;
+
+      // Variables to control lazy loading
+      let products = [];
+      let currentIndex = 0;
+      const batchSize = 2; // Number of products to load per batch
+
+      // Fetch JSON file and load initial batch
+      fetch("products.json")
+        .then((response) => response.json())
+        .then((data) => {
+          products = data;
+          loadNextBatch(); // Load the first batch of products
+        })
+        .catch((error) => console.error("Error loading JSON:", error));
+
+      // Function to load the next batch of products
+      function loadNextBatch() {
+        const nextBatch = products.slice(
+          currentIndex,
+          currentIndex + batchSize
+        );
+        nextBatch.forEach((product, index) => {
+          const div = document.createElement("div");
+          div.dataset.index = currentIndex + index;
+          div.dataset.video = product.video;
+          div.dataset.link = product.link;
+          div.dataset.title = product.name;
+          div.dataset.description = product.description;
+          div.dataset.image = product.image;
+
+          div.innerHTML = `
+      <iframe 
+        loading="lazy"
+        src="${product.video}" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    `;
+          gallery.appendChild(div);
+        });
+        currentIndex += nextBatch.length;
+      }
+
+      // Track the current product on screen
+      gallery.addEventListener("scroll", () => {
+        const children = Array.from(gallery.children);
+        const viewportHeight = gallery.offsetHeight;
+        const onScreenIndex = children.findIndex(
+          (child) =>
+            child.getBoundingClientRect().top >= 0 &&
+            child.getBoundingClientRect().top < viewportHeight
+        );
+        currentProduct = children[onScreenIndex]?.dataset;
+
+        // Load next batch when scrolling near the end
+        if (
+          gallery.scrollTop + gallery.offsetHeight >=
+            gallery.scrollHeight - 100 &&
+          currentIndex < products.length
+        ) {
+          loadNextBatch();
+        }
+      });
+
+      // Buy button functionality
+      buyButton.addEventListener("click", () => {
+        if (currentProduct?.link) {
+          window.open(currentProduct.link, "_blank");
+        }
+      });
+
+      // Details button functionality
+      detailsButton.addEventListener("click", () => {
+        if (currentProduct) {
+          productTitle.textContent = currentProduct.title;
+          productDescription.textContent = currentProduct.description;
+          productImage.src = currentProduct.image;
+          productLink.href = currentProduct.link;
+
+          // Show details section
+          container.style.transform = "translateX(-50%)";
+        }
+      });
+
+      // Back button functionality
+      backButton.addEventListener("click", () => {
+        container.style.transform = "translateX(0)";
+      });
+    </script>
+  </body>
+</html>
