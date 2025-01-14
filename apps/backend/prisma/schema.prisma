@@ -32,4 +32,36 @@ model ChannelPartner {
   name      String?
   role      String   @default("CHANNEL_PARTNER")
   createdAt DateTime @default(now())
+
+  store     Store[]
+}
+
+
+model Store {
+  id                Int      @id @default(autoincrement())
+  name              String
+  slug              String?
+  channelPartnerId  Int @unique
+  createdAt DateTime @default(now())
+  
+  channelPartner    ChannelPartner @relation(fields: [channelPartnerId], references: [id])
+
+  products          Product[] 
+}
+
+model Product {
+  id               Int      @id @default(autoincrement())
+  name             String
+  description      String?
+  price            String?
+  image            String?
+  link             String?
+  slug             String?
+  video            String?
+  tag              String?
+  createdAt        DateTime @default(now())
+  lastUpdate       DateTime @updatedAt
+
+  storeId          Int
+  store            Store @relation(fields: [storeId], references: [id])
 }

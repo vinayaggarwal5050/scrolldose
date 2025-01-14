@@ -1,4 +1,4 @@
-import { createSuperadmin, getSuperadminByEmail, getSuperadminById, getAllSuperadmin, updateSuperadmintforId, updateSuperadmintforEmail } from "./superadmin-functions";
+import { createSuperadmin, getSuperadminByEmail, getSuperadminById, getAllSuperadmin, updateSuperadmintforId, updateSuperadmintforEmail } from "../db-functions/superadmin-functions";
 
 
 //.................super admin funtions..............................................................

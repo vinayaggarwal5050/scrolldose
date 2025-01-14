@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateCreateSuperuser = void 0;
+exports.validateCreateSuperAdmin = void 0;
 const zod_1 = require("zod");
-const createSuperuserSchema = zod_1.z.object({
+const createSuperAdminSchema = zod_1.z.object({
     email: zod_1.z.string().email('invalid email format'),
     password: zod_1.z.string().min(3, 'Password must be at least 3 characters long'),
     name: zod_1.z.string().optional()
 });
-const validateCreateSuperuser = (req, res, next) => {
+const validateCreateSuperAdmin = (req, res, next) => {
     try {
-        createSuperuserSchema.safeParse(req.body);
+        createSuperAdminSchema.safeParse(req.body);
         next();
     }
     catch (error) {
@@ -28,4 +28,4 @@ const validateCreateSuperuser = (req, res, next) => {
         message: "some schema exception"
     });
 };
-exports.validateCreateSuperuser = validateCreateSuperuser;
+exports.validateCreateSuperAdmin = validateCreateSuperAdmin;

@@ -36,7 +36,7 @@ exports.superadminRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0
         msg: "/api/v1/super-admin"
     });
 }));
-exports.superadminRouter.post('/create', superadmin_mw_1.validateCreateSuperuser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.superadminRouter.post('/create', superadmin_mw_1.validateCreateSuperAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/super-admin/create
     try {
         const data = yield (0, superadmin_functions_1.createSuperadmin)(req.body);
@@ -98,7 +98,7 @@ exports.superadminRouter.delete('/delete', (req, res) => __awaiter(void 0, void 
         const email = req.query.email;
         const id = req.query.id;
         if (email) {
-            const data = yield (0, superadmin_functions_1.deleteSuperUserByEmail)(email);
+            const data = yield (0, superadmin_functions_1.deleteSuperAdminByEmail)(email);
             res.status(200).json({
                 status: "true",
                 data: data,
@@ -106,7 +106,7 @@ exports.superadminRouter.delete('/delete', (req, res) => __awaiter(void 0, void 
             });
         }
         else if (id) {
-            const data = yield (0, superadmin_functions_1.deleteSuperUserById)(parseInt(id));
+            const data = yield (0, superadmin_functions_1.deleteSuperAdminById)(parseInt(id));
             res.status(200).json({
                 status: "true",
                 data: data,

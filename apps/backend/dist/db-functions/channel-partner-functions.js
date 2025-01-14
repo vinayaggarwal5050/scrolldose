@@ -38,7 +38,8 @@ const getAllChannelPartners = () => __awaiter(void 0, void 0, void 0, function* 
                 password: true,
                 name: true,
                 role: true,
-                createdAt: true
+                createdAt: true,
+                store: true
             }
         });
         return response;
@@ -54,6 +55,15 @@ const getChannelPartnerByEmail = (email) => __awaiter(void 0, void 0, void 0, fu
         const response = yield prisma.channelPartner.findFirst({
             where: {
                 email: email
+            },
+            select: {
+                id: true,
+                email: true,
+                password: true,
+                name: true,
+                role: true,
+                createdAt: true,
+                store: true
             }
         });
         return response;
@@ -69,6 +79,15 @@ const getChannelPartnerById = (id) => __awaiter(void 0, void 0, void 0, function
         const response = yield prisma.channelPartner.findFirst({
             where: {
                 id: id
+            },
+            select: {
+                id: true,
+                email: true,
+                password: true,
+                name: true,
+                role: true,
+                createdAt: true,
+                store: true
             }
         });
         return response;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteSuperUserByEmail = exports.deleteSuperUserById = exports.updateSuperadmintforId = exports.updateSuperadmintforEmail = exports.getSuperadminById = exports.getSuperadminByEmail = exports.getAllSuperadmin = exports.createSuperadmin = void 0;
+exports.deleteSuperAdminByEmail = exports.deleteSuperAdminById = exports.updateSuperadmintforId = exports.updateSuperadmintforEmail = exports.getSuperadminById = exports.getSuperadminByEmail = exports.getAllSuperadmin = exports.createSuperadmin = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
 const createSuperadmin = (superadminData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -118,7 +118,7 @@ const updateSuperadmintforId = (data) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.updateSuperadmintforId = updateSuperadmintforId;
-const deleteSuperUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteSuperAdminById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.superadmin.delete({
             where: {
@@ -131,8 +131,8 @@ const deleteSuperUserById = (id) => __awaiter(void 0, void 0, void 0, function* 
         return error;
     }
 });
-exports.deleteSuperUserById = deleteSuperUserById;
-const deleteSuperUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteSuperAdminById = deleteSuperAdminById;
+const deleteSuperAdminByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.superadmin.delete({
             where: {
@@ -145,4 +145,4 @@ const deleteSuperUserByEmail = (email) => __awaiter(void 0, void 0, void 0, func
         return error;
     }
 });
-exports.deleteSuperUserByEmail = deleteSuperUserByEmail;
+exports.deleteSuperAdminByEmail = deleteSuperAdminByEmail;

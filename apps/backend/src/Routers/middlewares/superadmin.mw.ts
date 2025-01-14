@@ -2,15 +2,15 @@ import express, { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
 
-const createSuperuserSchema = z.object({
+const createSuperAdminSchema = z.object({
   email: z.string().email('invalid email format'),
   password: z.string().min(3, 'Password must be at least 3 characters long'),
   name: z.string().optional()
 })
 
-export const validateCreateSuperuser = (req: Request, res: Response, next: NextFunction) => {
+export const validateCreateSuperAdmin = (req: Request, res: Response, next: NextFunction) => {
   try {
-    createSuperuserSchema.safeParse(req.body);
+    createSuperAdminSchema.safeParse(req.body);
     next();
 
   } catch(error) {

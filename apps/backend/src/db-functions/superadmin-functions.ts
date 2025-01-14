@@ -130,7 +130,7 @@ export const updateSuperadmintforId = async(data: SuperAdminAdminUpdateInterface
 }
 
 
-export const deleteSuperUserById = async(id: number) => {
+export const deleteSuperAdminById = async(id: number) => {
   try {
     const response = await prisma.superadmin.delete({
       where: {
@@ -144,7 +144,7 @@ export const deleteSuperUserById = async(id: number) => {
   }
 }
 
-export const deleteSuperUserByEmail = async(email: string) => {
+export const deleteSuperAdminByEmail = async(email: string) => {
   try {
     const response = await prisma.superadmin.delete({
       where: {

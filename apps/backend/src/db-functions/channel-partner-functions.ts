@@ -38,7 +38,8 @@ export const getAllChannelPartners = async() => {
       password: true,
       name: true,
       role: true,
-      createdAt: true
+      createdAt: true,
+      store: true
      } 
     })
     return response;
@@ -54,7 +55,16 @@ export const getChannelPartnerByEmail = async(email: string) => {
     const response = await prisma.channelPartner.findFirst({
       where: {
         email: email
-      }
+      },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        store: true
+       } 
     })
 
     return response;
@@ -70,7 +80,16 @@ export const getChannelPartnerById = async(id: number) => {
     const response = await prisma.channelPartner.findFirst({
       where: {
         id: id
-      }
+      },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        store: true
+       } 
     })
 
     return response;
