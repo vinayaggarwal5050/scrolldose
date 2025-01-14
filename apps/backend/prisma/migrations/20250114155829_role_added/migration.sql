@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Superadmin" ADD COLUMN     "role" TEXT NOT NULL DEFAULT 'SUPER_ADMIN';
