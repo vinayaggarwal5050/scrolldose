@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { createSuperadmin, getAllSuperadmin, getSuperadminByEmail, getSuperadminById, deleteSuperUserById, deleteSuperUserByEmail, updateSuperadmintforEmail, updateSuperadmintforId } from "../db-functions/superadmin-functions";
+import { validateCreateSuperuser } from "./middlewares/superadmin.mw";
 
 export const superadminRouter = Router();
 
@@ -21,7 +22,7 @@ superadminRouter.get('/', async (req: Request, res: Response) => {
     data = await getAllSuperadmin();
   }
 
-   res.json({
+   res.status(200).json({
     status: true,
     data: data,
     msg: "/api/v1/super-admin"
@@ -29,19 +30,19 @@ superadminRouter.get('/', async (req: Request, res: Response) => {
   
 })
 
-superadminRouter.post('/create', async(req: Request, res: Response) => {
+superadminRouter.post('/create', validateCreateSuperuser, async(req: Request, res: Response) => {
   //http://localhost:6000/api/v1/super-admin/create
 
   try {
     const data = await createSuperadmin(req.body);
-    res.json({
+    res.status(200).json({
       status: true,
       data: data,
       msg: "/api/v1/super-admin/create"
     })
 
   } catch(error) {
-    res.json({
+    res.status(200).json({
       status: false,
       msg: "some error",
       error: error
@@ -60,7 +61,7 @@ superadminRouter.put('/update', async(req: Request, res: Response) => {
 
     if(email) {
       const data = await updateSuperadmintforEmail({...req.body, "email": email})
-      res.json({
+      res.status(200).json({
         status: "true",
         data: data,
         msg: "api/v1/super-user/update/email"
@@ -68,21 +69,21 @@ superadminRouter.put('/update', async(req: Request, res: Response) => {
 
     } else if (id) {
       const data = await updateSuperadmintforId({...req.body, "id": parseInt(id)})
-      res.json({
+      res.status(200).json({
         status: "true",
         data: data,
         msg: "api/v1/super-user/update/id"
       })
       
     } else {
-      res.json({
+      res.status(200).json({
         status: false,
         msg: "invalid input"
       })
     }
 
   } catch(error) {
-    res.json({
+    res.status(200).json({
       status: false,
       msg: "some error",
       error: error
@@ -99,7 +100,7 @@ superadminRouter.delete('/delete', async(req: Request, res: Response) => {
 
     if(email) {
       const data = await deleteSuperUserByEmail(email);
-      res.json({
+      res.status(200).json({
         status: "true",
         data: data,
         msg: "api/v1/super-user/update/email"
@@ -108,14 +109,14 @@ superadminRouter.delete('/delete', async(req: Request, res: Response) => {
     } else if(id) {
       const data = await deleteSuperUserById(parseInt(id));
 
-      res.json({
+      res.status(200).json({
         status: "true",
         data: data,
         msg: "api/v1/super-user/update/id"
       })
 
     } else {
-      res.json({
+      res.status(200).json({
         status: false,
         msg: "invalid input"
       })
@@ -123,7 +124,7 @@ superadminRouter.delete('/delete', async(req: Request, res: Response) => {
 
 
   } catch(error) {
-    res.json({
+    res.status(200).json({
       status: false,
       msg: "some error",
       error: error
