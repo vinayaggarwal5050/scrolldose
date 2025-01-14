@@ -36,7 +36,6 @@ model ChannelPartner {
   store     Store[]
 }
 
-
 model Store {
   id                Int      @id @default(autoincrement())
   name              String

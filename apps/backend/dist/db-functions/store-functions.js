@@ -149,41 +149,6 @@ const updateStoreForChannelPartnerEmail = (storeData, channelPartnerEmail) => __
     }
 });
 exports.updateStoreForChannelPartnerEmail = updateStoreForChannelPartnerEmail;
-// export const updatestoreforEmail = async(data: storeUpdateInterface) => {
-//   try {
-//     const response = await prisma.store.update({
-//       where: {
-//         email: data?.email
-//       },
-//       data: {
-//         password: data?.password,
-//         name: data?.name
-//       }
-//     })
-//     return response;
-//   } catch(error) {
-//     console.error('Error Updating store:', error);
-//     return error;
-//   }
-// }
-// export const updatestoreforId = async(data: storeUpdateInterface) => {
-//   try {
-//     const response = await prisma.store.update({
-//       where: {
-//         id: data?.id
-//       },
-//       data: {
-//         email: data?.email,
-//         password: data?.password,
-//         name: data?.name
-//       }
-//     })
-//     return response;
-//   } catch(error) {
-//     console.error('Error Updating store:', error);
-//     return error;
-//   }
-// }
 const deleteStoreById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.store.delete({

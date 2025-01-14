@@ -161,46 +161,7 @@ export const updateStoreForChannelPartnerEmail = async(storeData: UpdateStoreInt
   }
 }
 
-// export const updatestoreforEmail = async(data: storeUpdateInterface) => {
-//   try {
-//     const response = await prisma.store.update({
-//       where: {
-//         email: data?.email
-//       },
-//       data: {
-//         password: data?.password,
-//         name: data?.name
-//       }
-//     })
 
-//     return response;
-
-//   } catch(error) {
-//     console.error('Error Updating store:', error);
-//     return error;
-//   }
-// }
-
-// export const updatestoreforId = async(data: storeUpdateInterface) => {
-//   try {
-//     const response = await prisma.store.update({
-//       where: {
-//         id: data?.id
-//       },
-//       data: {
-//         email: data?.email,
-//         password: data?.password,
-//         name: data?.name
-//       }
-//     })
-
-//     return response;
-
-//   } catch(error) {
-//     console.error('Error Updating store:', error);
-//     return error;
-//   }
-// }
 
 
 export const deleteStoreById = async(id: number) => {
