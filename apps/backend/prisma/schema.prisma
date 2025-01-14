@@ -24,3 +24,12 @@ model Superadmin {
   role      String   @default("SUPER_ADMIN")
   createdAt DateTime @default(now())
 }
+
+model ChannelPartner {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("CHANNEL_PARTNER")
+  createdAt DateTime @default(now())
+}

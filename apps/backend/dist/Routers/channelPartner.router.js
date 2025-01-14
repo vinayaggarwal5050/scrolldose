@@ -9,41 +9,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.superadminRouter = void 0;
+exports.channelPartnerRouter = void 0;
 const express_1 = require("express");
-const superadmin_functions_1 = require("../db-functions/superadmin-functions");
-const superadmin_mw_1 = require("./middlewares/superadmin.mw");
-exports.superadminRouter = (0, express_1.Router)();
-exports.superadminRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/super-admin
-    //http://localhost:6000/api/v1/super-admin?email=superadmin@gmail.com
-    //http://localhost:6000/api/v1/super-admin?id=3
+const channel_partner_functions_1 = require("../db-functions/channel-partner-functions");
+const channelPartner_mw_1 = require("./middlewares/channelPartner.mw");
+exports.channelPartnerRouter = (0, express_1.Router)();
+exports.channelPartnerRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //http://localhost:6000/api/v1/channel-partner
+    //http://localhost:6000/api/v1/channel-partner?email=superadmin@gmail.com
+    //http://localhost:6000/api/v1/channel-partner?id=3
     const email = req.query.email;
     const id = req.query.id;
     let data;
     if (email) {
-        data = yield (0, superadmin_functions_1.getSuperadminByEmail)(email);
+        data = yield (0, channel_partner_functions_1.getChannelPartnerByEmail)(email);
     }
     else if (id) {
-        data = yield (0, superadmin_functions_1.getSuperadminById)(parseInt(id));
+        data = yield (0, channel_partner_functions_1.getChannelPartnerById)(parseInt(id));
     }
     else {
-        data = yield (0, superadmin_functions_1.getAllSuperadmin)();
+        data = yield (0, channel_partner_functions_1.getAllChannelPartners)();
     }
     res.status(200).json({
         status: true,
         data: data,
-        msg: "/api/v1/super-admin"
+        msg: "/api/v1/channel-partner"
     });
 }));
-exports.superadminRouter.post('/create', superadmin_mw_1.validateCreateSuperuser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/super-admin/create
+exports.channelPartnerRouter.post('/create', channelPartner_mw_1.validateCreateChannelPartner, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //http://localhost:6000/api/v1/channel-partner/create
     try {
-        const data = yield (0, superadmin_functions_1.createSuperadmin)(req.body);
+        const data = yield (0, channel_partner_functions_1.createChannelPartner)(req.body);
         res.status(200).json({
             status: true,
             data: data,
-            msg: "/api/v1/super-admin/create"
+            msg: "/api/v1/channel-partner/create"
         });
     }
     catch (error) {
@@ -54,14 +54,14 @@ exports.superadminRouter.post('/create', superadmin_mw_1.validateCreateSuperuser
         });
     }
 }));
-exports.superadminRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/super-admin/update?email=test@gmail.com
-    //http://localhost:6000/api/v1/super-admin/update?id=3
+exports.channelPartnerRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //http://localhost:6000/api/v1/channel-partner/update?email=test@gmail.com
+    //http://localhost:6000/api/v1/channel-partner/update?id=3
     try {
         const email = req.query.email;
         const id = req.query.id;
         if (email) {
-            const data = yield (0, superadmin_functions_1.updateSuperadmintforEmail)(Object.assign(Object.assign({}, req.body), { "email": email }));
+            const data = yield (0, channel_partner_functions_1.updateChannelPartnerforEmail)(Object.assign(Object.assign({}, req.body), { "email": email }));
             res.status(200).json({
                 status: "true",
                 data: data,
@@ -69,7 +69,7 @@ exports.superadminRouter.put('/update', (req, res) => __awaiter(void 0, void 0, 
             });
         }
         else if (id) {
-            const data = yield (0, superadmin_functions_1.updateSuperadmintforId)(Object.assign(Object.assign({}, req.body), { "id": parseInt(id) }));
+            const data = yield (0, channel_partner_functions_1.updateChannelPartnerforId)(Object.assign(Object.assign({}, req.body), { "id": parseInt(id) }));
             res.status(200).json({
                 status: "true",
                 data: data,
@@ -91,14 +91,14 @@ exports.superadminRouter.put('/update', (req, res) => __awaiter(void 0, void 0, 
         });
     }
 }));
-exports.superadminRouter.delete('/delete', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/super-admin/delete?email=test@gmail.com
-    //http://localhost:6000/api/v1/super-admin/delete?id=4
+exports.channelPartnerRouter.delete('/delete', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //http://localhost:6000/api/v1/channel-partner/delete?email=test@gmail.com
+    //http://localhost:6000/api/v1/channel-partner/delete?id=4
     try {
         const email = req.query.email;
         const id = req.query.id;
         if (email) {
-            const data = yield (0, superadmin_functions_1.deleteSuperUserByEmail)(email);
+            const data = yield (0, channel_partner_functions_1.deleteChannelPartnerByEmail)(email);
             res.status(200).json({
                 status: "true",
                 data: data,
@@ -106,7 +106,7 @@ exports.superadminRouter.delete('/delete', (req, res) => __awaiter(void 0, void 
             });
         }
         else if (id) {
-            const data = yield (0, superadmin_functions_1.deleteSuperUserById)(parseInt(id));
+            const data = yield (0, channel_partner_functions_1.deleteChannelPartnerById)(parseInt(id));
             res.status(200).json({
                 status: "true",
                 data: data,
