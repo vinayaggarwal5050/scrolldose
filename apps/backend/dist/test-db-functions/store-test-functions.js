@@ -24,12 +24,12 @@ const storeData3 = {
 };
 const channelPartnerId = 3;
 const testStoreFunctions = () => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log( await createStore(storeData2, channelPartnerId) );
+    // console.log( await createStoreForChannelPartnerId(storeData2, channelPartnerId) );
     console.log(yield (0, store_functions_1.getAllStores)());
-    // console.log(await getStoreById(2));
+    // console.log(await getStoreByStoreId(2));
     // console.log(await getStoreByChannelPartnerId(4));
     // console.log(await getStoreByChannelPartnerEmail("secondpartner@gmail.com"));
-    // console.log( await updateStoreForId({name: "BULKMART", slug: "bulkmart"}, 1) )
+    // console.log( await updateStoreForStoreId({name: "BULKMART", slug: "bulkmart"}, 1) )
     // console.log( await updateStoreForChannelPartnerEmail( {name: "new store", slug: "new-slug"}, "secondpartner@gmail.com") )
 });
 testStoreFunctions();

@@ -20,10 +20,10 @@ exports.storeRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     //http://localhost:6000/api/v1/store?email=superadmin@gmail.com
     const channelPartnerEmail = req.query.channelpartneremail;
     const channelPartnerId = req.query.channelpartnerid;
-    const id = req.query.id;
+    const storeId = req.query.storeid;
     let data;
-    if (id) {
-        data = yield (0, store_functions_1.getStoreById)(parseInt(id));
+    if (storeId) {
+        data = yield (0, store_functions_1.getStoreByStoreId)(parseInt(storeId));
     }
     else if (channelPartnerEmail) {
         data = yield (0, store_functions_1.getStoreByChannelPartnerEmail)(channelPartnerEmail);

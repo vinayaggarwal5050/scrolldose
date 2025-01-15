@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { getAllStores, getStoreById, getStoreByChannelPartnerId, getStoreByChannelPartnerEmail, createStoreForChannelPartnerId, updateStoreForStoreId, deleteStoreById, updateStoreForChannelPartnerEmail, updateStoreForChannelPartnerId } from "../db-functions/store-functions";
+import { getAllStores, getStoreByStoreId, getStoreByChannelPartnerId, getStoreByChannelPartnerEmail, createStoreForChannelPartnerId, updateStoreForStoreId, deleteStoreById, updateStoreForChannelPartnerEmail, updateStoreForChannelPartnerId } from "../db-functions/store-functions";
 import { validateCreateStore } from "./middlewares/store.mw";
 
 export const storeRouter = Router();
@@ -13,11 +13,11 @@ storeRouter.get('/', async (req: Request, res: Response) => {
 
   const channelPartnerEmail = req.query.channelpartneremail as string;
   const channelPartnerId = req.query.channelpartnerid as string;
-  const id = req.query.id as string;
+  const storeId = req.query.storeid as string;
   let data;
 
-  if(id) {
-    data = await getStoreById(parseInt(id));
+  if(storeId) {
+    data = await getStoreByStoreId(parseInt(storeId));
   } else if(channelPartnerEmail) {
     data = await getStoreByChannelPartnerEmail(channelPartnerEmail);
   } else if(channelPartnerId) {

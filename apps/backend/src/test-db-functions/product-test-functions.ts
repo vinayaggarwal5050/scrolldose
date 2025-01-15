@@ -2,7 +2,7 @@ import {
   createProductForStoreId,
   getAllProducts,
   getproductByChannelPartnerId,
-  getProductById,
+  getProductByProductId,
   getProductsByStoreId,
   getProductsByStoreName,
   getProductsByStoreSlug,
@@ -42,7 +42,7 @@ const testStoreFunctions = async () => {
   // console.log( await getProductsByStoreName("Wenomad") );
   // console.log( await getproductByChannelPartnerId(4) );
   console.log( await updateProductByProductId({name: "Universal Travel Power Adapter / Socket"}, 1) );
-  console.log( await getProductById(1) );
+  console.log( await getProductByProductId(1) );
 
 };
 
