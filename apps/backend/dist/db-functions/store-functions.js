@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStoreById = exports.updateStoreForChannelPartnerEmail = exports.updateStoreForId = exports.getStoreByChannelPartnerEmail = exports.getStoreByChannelPartnerId = exports.getStoreById = exports.getAllStores = exports.createStore = void 0;
+exports.deleteStoreById = exports.updateStoreForChannelPartnerId = exports.updateStoreForChannelPartnerEmail = exports.updateStoreForStoreId = exports.getStoreByChannelPartnerEmail = exports.getStoreByChannelPartnerId = exports.getStoreByStoreId = exports.getAllStores = exports.createStoreForChannelPartnerId = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
-const createStore = (storeData, channelPartnerID) => __awaiter(void 0, void 0, void 0, function* () {
+const createStoreForChannelPartnerId = (storeData, channelPartnerID) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.store.create({
             data: {
@@ -32,7 +32,7 @@ const createStore = (storeData, channelPartnerID) => __awaiter(void 0, void 0, v
         return error;
     }
 });
-exports.createStore = createStore;
+exports.createStoreForChannelPartnerId = createStoreForChannelPartnerId;
 const getAllStores = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.store.findMany({
@@ -51,11 +51,11 @@ const getAllStores = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getAllStores = getAllStores;
-const getStoreById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const getStoreByStoreId = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.store.findFirst({
             where: {
-                id: id
+                id: storeId
             }
         });
         return response;
@@ -65,7 +65,7 @@ const getStoreById = (id) => __awaiter(void 0, void 0, void 0, function* () {
         return error;
     }
 });
-exports.getStoreById = getStoreById;
+exports.getStoreByStoreId = getStoreByStoreId;
 const getStoreByChannelPartnerId = (channelPartnerId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.store.findFirst({
@@ -99,7 +99,7 @@ const getStoreByChannelPartnerEmail = (channelPartnerEmail) => __awaiter(void 0,
     }
 });
 exports.getStoreByChannelPartnerEmail = getStoreByChannelPartnerEmail;
-const updateStoreForId = (storeData, storeId) => __awaiter(void 0, void 0, void 0, function* () {
+const updateStoreForStoreId = (storeData, storeId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedStore = yield prisma.store.update({
             where: {
@@ -117,7 +117,7 @@ const updateStoreForId = (storeData, storeId) => __awaiter(void 0, void 0, void 
         return error;
     }
 });
-exports.updateStoreForId = updateStoreForId;
+exports.updateStoreForStoreId = updateStoreForStoreId;
 const updateStoreForChannelPartnerEmail = (storeData, channelPartnerEmail) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const channelPartner = yield prisma.channelPartner.findFirst({
@@ -149,6 +149,37 @@ const updateStoreForChannelPartnerEmail = (storeData, channelPartnerEmail) => __
     }
 });
 exports.updateStoreForChannelPartnerEmail = updateStoreForChannelPartnerEmail;
+const updateStoreForChannelPartnerId = (storeData, channelPartnerId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const channelPartner = yield prisma.channelPartner.findFirst({
+            where: {
+                id: channelPartnerId
+            },
+            include: {
+                store: true
+            }
+        });
+        if (!channelPartner || !channelPartner.store) {
+            console.log("Channel Partner or Store not found");
+            return null;
+        }
+        const updatedStore = yield prisma.store.update({
+            where: {
+                id: channelPartner.store[0].id
+            },
+            data: {
+                name: storeData === null || storeData === void 0 ? void 0 : storeData.name,
+                slug: storeData === null || storeData === void 0 ? void 0 : storeData.slug,
+            }
+        });
+        return updatedStore;
+    }
+    catch (error) {
+        console.error('Error Finding stores:', error);
+        return error;
+    }
+});
+exports.updateStoreForChannelPartnerId = updateStoreForChannelPartnerId;
 const deleteStoreById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.store.delete({

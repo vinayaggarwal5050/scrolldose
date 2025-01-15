@@ -70,11 +70,11 @@ export const getAllProducts = async() => {
   }
 } 
 
-export const getProductById = async(id: number) => {
+export const getProductByProductId = async(productId: number) => {
   try {
     const response = await prisma.product.findFirst({
       where: {
-        id: id
+        id: productId
       },
       select: {
         name: true,
@@ -184,11 +184,11 @@ interface updateProductInterface {
   tag?: string
 }
 
-export const updateProductByProductId = async(data: updateProductInterface, id: number) => {
+export const updateProductByProductId = async(data: updateProductInterface, productId: number) => {
   try {
     const response = await prisma.product.update({
       where: {
-        id: id
+        id: productId
       },
       data: {
         name: data?.name,
@@ -211,11 +211,11 @@ export const updateProductByProductId = async(data: updateProductInterface, id: 
 
 }
 
-export const deleteproductById = async(id: number) => {
+export const deleteproductByProductId = async(productId: number) => {
   try {
     const response = await prisma.product.delete({
       where: {
-        id: id
+        id: productId
       }
     })
 

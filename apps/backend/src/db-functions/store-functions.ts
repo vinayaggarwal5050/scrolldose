@@ -8,7 +8,7 @@ export interface StoreInterface {
 }
 
 
-export const createStore = async(storeData: StoreInterface, channelPartnerID: number) => {
+export const createStoreForChannelPartnerId = async(storeData: StoreInterface, channelPartnerID: number) => {
   try {
     const response = await prisma.store.create({
       data: {
@@ -51,11 +51,11 @@ export const getAllStores = async() => {
 } 
 
 
-export const getStoreById = async(id: number) => {
+export const getStoreByStoreId = async(storeId: number) => {
   try {
     const response = await prisma.store.findFirst({
       where: {
-        id: id
+        id: storeId
       }
     })
 
@@ -107,7 +107,7 @@ export interface UpdateStoreInterface {
   slug?: string,
 }
 
-export const updateStoreForId = async(storeData: UpdateStoreInterface, storeId: number) => {
+export const updateStoreForStoreId = async(storeData: UpdateStoreInterface, storeId: number) => {
   try {
      const updatedStore = await prisma.store.update({
       where: {
@@ -161,7 +161,39 @@ export const updateStoreForChannelPartnerEmail = async(storeData: UpdateStoreInt
   }
 }
 
+export const updateStoreForChannelPartnerId = async(storeData: UpdateStoreInterface, channelPartnerId: number) => {
+  try {
+    const channelPartner = await prisma.channelPartner.findFirst({
+      where: {
+        id: channelPartnerId
+      },
+      include: {
+        store: true
+      }
+    });
 
+    if (!channelPartner || !channelPartner.store) {
+      console.log("Channel Partner or Store not found");
+      return null;
+    }
+
+    const updatedStore = await prisma.store.update({
+      where: {
+        id: channelPartner.store[0].id
+      },
+      data: {
+        name: storeData?.name,
+        slug: storeData?.slug,
+      }
+    })
+
+    return updatedStore;
+
+  } catch(error) {
+    console.error('Error Finding stores:', error);
+    return error;
+  }
+}
 
 
 export const deleteStoreById = async(id: number) => {

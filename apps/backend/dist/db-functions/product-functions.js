@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteproductById = exports.updateProductByProductId = exports.getproductByChannelPartnerId = exports.getProductsByStoreName = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductById = exports.getAllProducts = exports.createProductForStoreId = void 0;
+exports.deleteproductByProductId = exports.updateProductByProductId = exports.getproductByChannelPartnerId = exports.getProductsByStoreName = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductByProductId = exports.getAllProducts = exports.createProductForStoreId = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
 const createProductForStoreId = (productData, storeId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -64,11 +64,11 @@ const getAllProducts = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getAllProducts = getAllProducts;
-const getProductById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const getProductByProductId = (productId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.findFirst({
             where: {
-                id: id
+                id: productId
             },
             select: {
                 name: true,
@@ -91,7 +91,7 @@ const getProductById = (id) => __awaiter(void 0, void 0, void 0, function* () {
         return error;
     }
 });
-exports.getProductById = getProductById;
+exports.getProductByProductId = getProductByProductId;
 const getProductsByStoreId = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.findMany({
@@ -161,11 +161,11 @@ const getproductByChannelPartnerId = (channelPartnerId) => __awaiter(void 0, voi
     }
 });
 exports.getproductByChannelPartnerId = getproductByChannelPartnerId;
-const updateProductByProductId = (data, id) => __awaiter(void 0, void 0, void 0, function* () {
+const updateProductByProductId = (data, productId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.update({
             where: {
-                id: id
+                id: productId
             },
             data: {
                 name: data === null || data === void 0 ? void 0 : data.name,
@@ -186,11 +186,11 @@ const updateProductByProductId = (data, id) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.updateProductByProductId = updateProductByProductId;
-const deleteproductById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteproductByProductId = (productId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.delete({
             where: {
-                id: id
+                id: productId
             }
         });
     }
@@ -199,4 +199,4 @@ const deleteproductById = (id) => __awaiter(void 0, void 0, void 0, function* ()
         return error;
     }
 });
-exports.deleteproductById = deleteproductById;
+exports.deleteproductByProductId = deleteproductByProductId;
