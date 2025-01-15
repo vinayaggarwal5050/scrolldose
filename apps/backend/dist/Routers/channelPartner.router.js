@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.channelPartnerRouter = void 0;
 const express_1 = require("express");
 const channel_partner_functions_1 = require("../db-functions/channel-partner-functions");
-const channelPartner_mw_1 = require("./middlewares/channelPartner.mw");
 exports.channelPartnerRouter = (0, express_1.Router)();
 exports.channelPartnerRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/channel-partner
@@ -36,13 +35,13 @@ exports.channelPartnerRouter.get('/', (req, res) => __awaiter(void 0, void 0, vo
         msg: "/api/v1/channel-partner"
     });
 }));
-exports.channelPartnerRouter.post('/create', channelPartner_mw_1.validateCreateChannelPartner, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.channelPartnerRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/channel-partner/create
     try {
         const data = yield (0, channel_partner_functions_1.createChannelPartner)(req.body);
         res.status(200).json({
             status: true,
-            data: data,
+            data: "data",
             msg: "/api/v1/channel-partner/create"
         });
     }

@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.productRouter = void 0;
 const express_1 = require("express");
 const product_functions_1 = require("../db-functions/product-functions");
-const product_mw_1 = require("./middlewares/product.mw");
 exports.productRouter = (0, express_1.Router)();
 exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/product
@@ -38,7 +37,7 @@ exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, f
         data = yield (0, product_functions_1.getProductsByStoreSlug)(storeSlug);
     }
     else if (channelPartnerId) {
-        data = yield (0, product_functions_1.getproductByChannelPartnerId)(channelPartnerId);
+        data = yield (0, product_functions_1.getproductsByChannelPartnerId)(channelPartnerId);
     }
     else {
         data = yield (0, product_functions_1.getAllProducts)();
@@ -49,7 +48,7 @@ exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, f
         msg: "/api/v1/products"
     });
 }));
-exports.productRouter.post('/create', product_mw_1.validateCreateProduct, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/product/create?storeid=1
     const storeId = parseInt(req.query.storeid);
     const productData = req.body;
@@ -102,11 +101,19 @@ exports.productRouter.delete('/delete', (req, res) => __awaiter(void 0, void 0, 
     try {
         const productId = parseInt(req.query.productid);
         const data = yield (0, product_functions_1.deleteproductByProductId)(productId);
-        res.status(200).json({
-            status: "true",
-            data: data,
-            msg: "api/v1/product/delete?productid="
-        });
+        if (productId) {
+            res.status(200).json({
+                status: "true",
+                data: data,
+                msg: "api/v1/product/delete?productid="
+            });
+        }
+        else {
+            res.json({
+                status: "false",
+                msg: "invalid data"
+            });
+        }
     }
     catch (error) {
         res.status(200).json({

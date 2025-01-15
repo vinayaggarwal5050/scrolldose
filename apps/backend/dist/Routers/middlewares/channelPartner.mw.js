@@ -9,7 +9,7 @@ const createChannelPartnerSchema = zod_1.z.object({
 });
 const validateCreateChannelPartner = (req, res, next) => {
     try {
-        createChannelPartnerSchema.safeParse(req.body);
+        createChannelPartnerSchema.parse(req.body);
         next();
     }
     catch (error) {

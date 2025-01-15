@@ -10,7 +10,7 @@ const createChannelPartnerSchema = z.object({
 
 export const validateCreateChannelPartner = (req: Request, res: Response, next: NextFunction) => {
   try {
-    createChannelPartnerSchema.safeParse(req.body);
+    createChannelPartnerSchema.parse(req.body);
     next();
 
   } catch(error) {

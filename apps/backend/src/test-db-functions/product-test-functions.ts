@@ -1,7 +1,7 @@
 import {
   createProductForStoreId,
   getAllProducts,
-  getproductByChannelPartnerId,
+  getproductsByChannelPartnerId,
   getProductByProductId,
   getProductsByStoreId,
   getProductsByStoreName,
@@ -40,8 +40,8 @@ const testStoreFunctions = async () => {
   // console.log( await getProductsByStoreId(1) );
   // console.log( await getProductsByStoreSlug("bulkmart") );
   // console.log( await getProductsByStoreName("Wenomad") );
-  // console.log( await getproductByChannelPartnerId(4) );
-  console.log( await updateProductByProductId({name: "Universal Travel Power Adapter / Socket"}, 1) );
+  // console.log( await getproductsByChannelPartnerId(4) );
+  // console.log( await updateProductByProductId({name: "Universal Travel Power Adapter / Socket"}, 1) );
   console.log( await getProductByProductId(1) );
 
 };

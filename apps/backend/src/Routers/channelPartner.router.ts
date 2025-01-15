@@ -31,14 +31,14 @@ channelPartnerRouter.get('/', async (req: Request, res: Response) => {
   
 })
 
-channelPartnerRouter.post('/create', validateCreateChannelPartner, async(req: Request, res: Response) => {
+channelPartnerRouter.post('/create', async(req: Request, res: Response) => {
   //http://localhost:6000/api/v1/channel-partner/create
 
   try {
     const data = await createChannelPartner(req.body);
     res.status(200).json({
       status: true,
-      data: data,
+      data: "data",
       msg: "/api/v1/channel-partner/create"
     })
 

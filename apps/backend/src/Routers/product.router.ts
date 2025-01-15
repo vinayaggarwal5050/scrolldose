@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createProductForStoreId, deleteproductByProductId, getAllProducts, getproductByChannelPartnerId, getProductByProductId, getProductsByStoreId, getProductsByStoreName, getProductsByStoreSlug, updateProductByProductId } from "../db-functions/product-functions";
+import { createProductForStoreId, deleteproductByProductId, getAllProducts, getproductsByChannelPartnerId, getProductByProductId, getProductsByStoreId, getProductsByStoreName, getProductsByStoreSlug, updateProductByProductId } from "../db-functions/product-functions";
 import { validateCreateProduct } from "./middlewares/product.mw";
 
 export const productRouter = Router();
@@ -28,7 +28,7 @@ productRouter.get('/', async (req: Request, res: Response) => {
   } else if(storeSlug) {
     data = await getProductsByStoreSlug(storeSlug);
   } else if(channelPartnerId) {
-    data = await getproductByChannelPartnerId(channelPartnerId)
+    data = await getproductsByChannelPartnerId(channelPartnerId)
   } else {
     data = await getAllProducts();
   }
@@ -41,7 +41,7 @@ productRouter.get('/', async (req: Request, res: Response) => {
   
 })
 
-productRouter.post('/create', validateCreateProduct, async(req: Request, res: Response) => {
+productRouter.post('/create', async(req: Request, res: Response) => {
   //http://localhost:6000/api/v1/product/create?storeid=1
   const storeId = parseInt(req.query.storeid as string);
   const productData = req.body;
@@ -98,15 +98,20 @@ productRouter.delete('/delete', async(req: Request, res: Response) => {
   try {
     const productId = parseInt(req.query.productid as string);
 
-      const data = await deleteproductByProductId(productId);
+    const data = await deleteproductByProductId(productId);
 
+    if(productId) {
       res.status(200).json({
         status: "true",
         data: data,
         msg: "api/v1/product/delete?productid="
       })
-
-
+    } else {
+      res.json({
+        status: "false",
+        msg: "invalid data"
+      })
+    }
 
   } catch(error) {
     res.status(200).json({

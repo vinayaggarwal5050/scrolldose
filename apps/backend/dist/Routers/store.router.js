@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.storeRouter = void 0;
 const express_1 = require("express");
 const store_functions_1 = require("../db-functions/store-functions");
-const store_mw_1 = require("./middlewares/store.mw");
 exports.storeRouter = (0, express_1.Router)();
 exports.storeRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/store
@@ -40,23 +39,31 @@ exports.storeRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         msg: "/api/v1/stores"
     });
 }));
-exports.storeRouter.post('/create', store_mw_1.validateCreateStore, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.storeRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/store/create?channelPartnerId=3
     const channelPartnerId = parseInt(req.query.channelpartnerid);
     const productData = req.body;
-    try {
-        const data = yield (0, store_functions_1.createStoreForChannelPartnerId)(productData, channelPartnerId);
-        res.status(200).json({
-            status: true,
-            data: data,
-            msg: "/api/v1/store/create"
-        });
+    if (channelPartnerId) {
+        try {
+            const data = yield (0, store_functions_1.createStoreForChannelPartnerId)(productData, channelPartnerId);
+            res.status(200).json({
+                status: true,
+                data: data,
+                msg: "/api/v1/store/create"
+            });
+        }
+        catch (error) {
+            res.status(200).json({
+                status: false,
+                msg: "some error",
+                error: error
+            });
+        }
     }
-    catch (error) {
+    else {
         res.status(200).json({
             status: false,
-            msg: "some error",
-            error: error
+            msg: "invalid data",
         });
     }
 }));
@@ -67,13 +74,13 @@ exports.storeRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 
     try {
         const storeId = parseFloat(req.query.storeid);
         const channelPartnerId = parseFloat(req.query.channelpartnerid);
-        const channelPartnerEmail = req.query.email;
+        const channelPartnerEmail = req.query.channelpartneremail;
         const storeData = req.body;
         if (storeId) {
             const data = yield (0, store_functions_1.updateStoreForStoreId)(storeData, storeId);
             res.status(200).json({
                 status: "true",
-                data: data,
+                data: "data",
                 msg: "api/v1/store/update/storeId"
             });
         }
@@ -82,7 +89,7 @@ exports.storeRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 
             res.status(200).json({
                 status: "true",
                 data: data,
-                msg: "api/v1/store/update/storeId"
+                msg: "api/v1/store/update/channelPartnerEmail"
             });
         }
         else if (channelPartnerId) {
@@ -90,7 +97,7 @@ exports.storeRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 
             res.status(200).json({
                 status: "true",
                 data: data,
-                msg: "api/v1/store/update/storeId"
+                msg: "api/v1/store/update/channelPartnerId"
             });
         }
         else {

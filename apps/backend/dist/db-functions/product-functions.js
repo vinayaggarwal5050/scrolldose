@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteproductByProductId = exports.updateProductByProductId = exports.getproductByChannelPartnerId = exports.getProductsByStoreName = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductByProductId = exports.getAllProducts = exports.createProductForStoreId = void 0;
+exports.deleteproductByProductId = exports.updateProductByProductId = exports.getproductsByChannelPartnerId = exports.getProductsByStoreName = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductByProductId = exports.getAllProducts = exports.createProductForStoreId = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
 const createProductForStoreId = (productData, storeId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -43,6 +43,7 @@ const getAllProducts = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.findMany({
             select: {
+                id: true,
                 name: true,
                 description: true,
                 price: true,
@@ -71,6 +72,7 @@ const getProductByProductId = (productId) => __awaiter(void 0, void 0, void 0, f
                 id: productId
             },
             select: {
+                id: true,
                 name: true,
                 description: true,
                 price: true,
@@ -143,14 +145,19 @@ const getProductsByStoreName = (StoreName) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.getProductsByStoreName = getProductsByStoreName;
-const getproductByChannelPartnerId = (channelPartnerId) => __awaiter(void 0, void 0, void 0, function* () {
+const getproductsByChannelPartnerId = (channelPartnerId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield prisma.store.findFirst({
+        const store = yield prisma.store.findFirst({
             where: {
                 channelPartnerId: channelPartnerId
-            },
-            include: {
-                products: true
+            }
+        });
+        if (!store) {
+            return "no store exists for this channel partner id";
+        }
+        const response = yield prisma.product.findMany({
+            where: {
+                storeId: store.id
             }
         });
         return response;
@@ -160,7 +167,7 @@ const getproductByChannelPartnerId = (channelPartnerId) => __awaiter(void 0, voi
         return error;
     }
 });
-exports.getproductByChannelPartnerId = getproductByChannelPartnerId;
+exports.getproductsByChannelPartnerId = getproductsByChannelPartnerId;
 const updateProductByProductId = (data, productId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.update({
@@ -170,6 +177,7 @@ const updateProductByProductId = (data, productId) => __awaiter(void 0, void 0, 
             data: {
                 name: data === null || data === void 0 ? void 0 : data.name,
                 description: data === null || data === void 0 ? void 0 : data.description,
+                category: data === null || data === void 0 ? void 0 : data.category,
                 price: data === null || data === void 0 ? void 0 : data.price,
                 image: data === null || data === void 0 ? void 0 : data.image,
                 slug: data === null || data === void 0 ? void 0 : data.image,

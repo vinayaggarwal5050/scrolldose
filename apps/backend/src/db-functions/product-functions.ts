@@ -6,6 +6,7 @@ export interface ProductInterface {
   name: string,
   description?: string,
   price?: string,
+  category?: string
   image?: string,
   link?: string,
   slug?: string,
@@ -20,6 +21,7 @@ export const createProductForStoreId = async(productData: ProductInterface, stor
       data: {
         name: productData.name,
         description: productData?.description,
+        category: productData?.category,
         price: productData?.price,
         image: productData?.image,
         link: productData?.link,
@@ -47,6 +49,7 @@ export const getAllProducts = async() => {
   try {
     const response  = await prisma.product.findMany({
       select: {
+        id: true,
         name: true,
         description: true,
         price: true,
@@ -77,6 +80,7 @@ export const getProductByProductId = async(productId: number) => {
         id: productId
       },
       select: {
+        id: true,
         name: true,
         description: true,
         price: true,
@@ -154,14 +158,21 @@ export const getProductsByStoreName = async(StoreName: string) => {
   }
 }
 
-export const getproductByChannelPartnerId = async(channelPartnerId: number) => {
+export const getproductsByChannelPartnerId = async(channelPartnerId: number) => {
   try {
-    const response = await prisma.store.findFirst({
+    const store = await prisma.store.findFirst({
       where: {
         channelPartnerId: channelPartnerId
-      },
-      include: {
-        products: true
+      }
+    })
+
+    if(!store) {
+      return "no store exists for this channel partner id"
+    }
+    
+    const response = await prisma.product.findMany({
+      where: {
+        storeId: store.id
       }
     })
 
@@ -176,12 +187,13 @@ export const getproductByChannelPartnerId = async(channelPartnerId: number) => {
 interface updateProductInterface {
   name: string,
   description?: string,
+  category?: string
   price?: string,
   image?: string,
   link?: string,
   slug?: string,
   video?: string,
-  tag?: string
+  tag?: string,
 }
 
 export const updateProductByProductId = async(data: updateProductInterface, productId: number) => {
@@ -193,6 +205,7 @@ export const updateProductByProductId = async(data: updateProductInterface, prod
       data: {
         name: data?.name,
         description: data?.description,
+        category: data?.category,
         price: data?.price,
         image: data?.image,
         slug: data?.image,

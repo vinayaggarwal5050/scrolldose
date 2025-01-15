@@ -35,28 +35,33 @@ storeRouter.get('/', async (req: Request, res: Response) => {
   
 })
 
-storeRouter.post('/create', validateCreateStore, async(req: Request, res: Response) => {
+storeRouter.post('/create', async(req: Request, res: Response) => {
   //http://localhost:6000/api/v1/store/create?channelPartnerId=3
   const channelPartnerId = parseInt(req.query.channelpartnerid as string);
   const productData = req.body;
+  if(channelPartnerId) {
+    try {
+      const data = await createStoreForChannelPartnerId(productData, channelPartnerId);
+      res.status(200).json({
+        status: true,
+        data: data,
+        msg: "/api/v1/store/create"
+      })
   
-  try {
-    const data = await createStoreForChannelPartnerId(productData, channelPartnerId);
-    res.status(200).json({
-      status: true,
-      data: data,
-      msg: "/api/v1/store/create"
-    })
+    } catch(error) {
+      res.status(200).json({
+        status: false,
+        msg: "some error",
+        error: error
+      })
+    }
 
-  } catch(error) {
+  } else {
     res.status(200).json({
       status: false,
-      msg: "some error",
-      error: error
+      msg: "invalid data",
     })
   }
-
-  
 })
 
 storeRouter.put('/update', async(req: Request, res: Response) => {
@@ -68,15 +73,14 @@ storeRouter.put('/update', async(req: Request, res: Response) => {
   try {
     const storeId = parseFloat(req.query.storeid as string);
     const channelPartnerId = parseFloat(req.query.channelpartnerid as string);
-    const channelPartnerEmail = req.query.email as string;
+    const channelPartnerEmail = req.query.channelpartneremail as string;
     const storeData = req.body;
-
 
     if(storeId) {
       const data = await updateStoreForStoreId(storeData, storeId)
       res.status(200).json({
         status: "true",
-        data: data,
+        data: "data",
         msg: "api/v1/store/update/storeId"
       })
 
@@ -85,7 +89,7 @@ storeRouter.put('/update', async(req: Request, res: Response) => {
       res.status(200).json({
         status: "true",
         data: data,
-        msg: "api/v1/store/update/storeId"
+        msg: "api/v1/store/update/channelPartnerEmail"
       })
       
     } else if(channelPartnerId) {
@@ -93,7 +97,7 @@ storeRouter.put('/update', async(req: Request, res: Response) => {
       res.status(200).json({
         status: "true",
         data: data,
-        msg: "api/v1/store/update/storeId"
+        msg: "api/v1/store/update/channelPartnerId"
       })
 
     } else {

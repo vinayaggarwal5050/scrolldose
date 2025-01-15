@@ -39,8 +39,8 @@ const testStoreFunctions = () => __awaiter(void 0, void 0, void 0, function* () 
     // console.log( await getProductsByStoreId(1) );
     // console.log( await getProductsByStoreSlug("bulkmart") );
     // console.log( await getProductsByStoreName("Wenomad") );
-    // console.log( await getproductByChannelPartnerId(4) );
-    console.log(yield (0, product_functions_1.updateProductByProductId)({ name: "Universal Travel Power Adapter / Socket" }, 1));
+    // console.log( await getproductsByChannelPartnerId(4) );
+    // console.log( await updateProductByProductId({name: "Universal Travel Power Adapter / Socket"}, 1) );
     console.log(yield (0, product_functions_1.getProductByProductId)(1));
 });
 testStoreFunctions();
