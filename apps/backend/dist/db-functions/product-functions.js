@@ -18,6 +18,7 @@ const createProductForStoreId = (productData, storeId) => __awaiter(void 0, void
             data: {
                 name: productData.name,
                 description: productData === null || productData === void 0 ? void 0 : productData.description,
+                category: productData === null || productData === void 0 ? void 0 : productData.category,
                 price: productData === null || productData === void 0 ? void 0 : productData.price,
                 image: productData === null || productData === void 0 ? void 0 : productData.image,
                 link: productData === null || productData === void 0 ? void 0 : productData.link,
