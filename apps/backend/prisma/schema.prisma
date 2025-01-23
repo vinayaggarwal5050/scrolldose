@@ -65,3 +65,19 @@ model Product {
   storeId          Int
   store            Store @relation(fields: [storeId], references: [id])
 }
+
+model user {
+  userId           Int      @id @default(autoincrement())
+  userName         String
+  userEmail        String   @unique
+  userPassword     String
+  userInterests    String?
+  userWishlist     String?
+  userAddress1     String?
+  userAddress2     String?
+  userCity         String?
+  userState        String?
+  userPincode      String?
+  userCountry      String?
+  userSubscribedStoreId Int?
+}
