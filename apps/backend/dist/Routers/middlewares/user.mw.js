@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userSignInAuth = exports.validateCreateUser = void 0;
+exports.userAuth = exports.userSignInAuth = exports.validateCreateUser = void 0;
 const zod_1 = require("zod");
 const user_funtions_1 = require("../../db-functions/user-funtions");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -21,6 +21,20 @@ const createUserSchema = zod_1.z.object({
     userPasswod: zod_1.z.string().min(3, 'Password must be at least 3 characters long'),
     userName: zod_1.z.string().optional()
 });
+const USER_JWT_SECRET_KEY = "123";
+const generateUserJWT = (payload) => {
+    const userJWT = jsonwebtoken_1.default.sign(payload, USER_JWT_SECRET_KEY);
+    return userJWT;
+};
+const verifyUserJWT = (userJWT) => {
+    try {
+        const decoded = jsonwebtoken_1.default.verify(userJWT, USER_JWT_SECRET_KEY);
+        return decoded;
+    }
+    catch (error) {
+        throw new Error('Invalid or expired token');
+    }
+};
 const validateCreateUser = (req, res, next) => {
     try {
         createUserSchema.safeParse(req.body);
@@ -83,17 +97,27 @@ const userSignInAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     });
 });
 exports.userSignInAuth = userSignInAuth;
-const USER_JWT_SECRET_KEY = "123";
-const generateUserJWT = (payload) => {
-    const userJWT = jsonwebtoken_1.default.sign(payload, USER_JWT_SECRET_KEY);
-    return userJWT;
-};
-const verifyUserJWT = (userJWT) => {
+const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userJWT } = req.body;
+    if (!userJWT) {
+        res.status(200).json({
+            status: false,
+            msg: "No Access Token Found"
+        });
+        return;
+    }
     try {
-        const decoded = jsonwebtoken_1.default.verify(userJWT, USER_JWT_SECRET_KEY);
-        return decoded;
+        const payload = verifyUserJWT(userJWT);
+        // console.log(payload);
+        req.body = payload;
+        next();
     }
-    catch (error) {
-        throw new Error('Invalid or expired token');
+    catch (err) {
+        res.status(200).json({
+            status: false,
+            msg: "Invalid User Access Token"
+        });
+        return;
     }
-};
+});
+exports.userAuth = userAuth;

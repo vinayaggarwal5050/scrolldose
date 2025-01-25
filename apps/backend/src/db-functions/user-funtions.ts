@@ -117,6 +117,7 @@ interface UserUpdateInterface {
   userPincode?: string;
   userCountry?: string;
   userSubscribedStoreId? : number;
+  userOldPassword?: string;
 }
 
 export const updateUserForUserEmail = async(data: UserUpdateInterface, userEmail: string) => {

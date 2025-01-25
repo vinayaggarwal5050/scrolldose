@@ -10,6 +10,24 @@ const createUserSchema = z.object({
   userName: z.string().optional()
 })
 
+const USER_JWT_SECRET_KEY = "123";
+
+const generateUserJWT = (payload: {"userId": string, "userEmail": string}): string => {
+
+  const userJWT = jwt.sign(payload, USER_JWT_SECRET_KEY);
+  return userJWT;
+}
+
+const verifyUserJWT = (userJWT: string): any => {
+  try {
+    const decoded = jwt.verify(userJWT, USER_JWT_SECRET_KEY);
+    return decoded;
+
+  } catch(error) {
+    throw new Error('Invalid or expired token');
+  }
+}
+
 export const validateCreateUser = (req: Request, res: Response, next: NextFunction) => {
   try {
     createUserSchema.safeParse(req.body);
@@ -33,8 +51,6 @@ export const validateCreateUser = (req: Request, res: Response, next: NextFuncti
   })
 
 }
-
-
 
 export const userSignInAuth = async (req: Request, res: Response, next: NextFunction) => {
     const { userEmail, userPassword } = req.body;
@@ -84,20 +100,31 @@ export const userSignInAuth = async (req: Request, res: Response, next: NextFunc
     
 }
 
-const USER_JWT_SECRET_KEY = "123";
 
-const generateUserJWT = (payload: {"userId": string, "userEmail": string}): string => {
+export const userAuth = async (req: Request, res: Response, next: NextFunction) => {
+  const { userJWT } = req.body;
 
-  const userJWT = jwt.sign(payload, USER_JWT_SECRET_KEY);
-  return userJWT;
-}
-
-const verifyUserJWT = (userJWT: string): any => {
-  try {
-    const decoded = jwt.verify(userJWT, USER_JWT_SECRET_KEY);
-    return decoded;
-
-  } catch(error) {
-    throw new Error('Invalid or expired token');
+  if(!userJWT) {
+    res.status(200).json({
+      status: false,
+      msg: "No Access Token Found"
+    })
+    return;
   }
+
+  try {
+    const payload = verifyUserJWT(userJWT);
+    // console.log(payload);
+    req.body = payload;
+    next();
+
+  } catch(err) {
+
+    res.status(200).json({
+      status: false,
+      msg: "Invalid User Access Token"
+    })
+    return;
+  }
+
 }

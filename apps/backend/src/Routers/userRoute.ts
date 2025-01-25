@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import  { UserInterface, createUser, getAllUsers, getUserByUserEmail, getUserByUserId, updateUserForUserEmail, updateUserForUserId, deleteUserForUserEmail, deleteUserForUserId } from "../db-functions/user-funtions"
-import { userSignInAuth } from "./middlewares/user.mw";
+import { userAuth, userSignInAuth } from "./middlewares/user.mw";
 // import { validateCreateUser } from "./middlewares/User.mw";
 
 export const userRouter = Router();
@@ -65,15 +65,17 @@ userRouter.put('/update', async(req: Request, res: Response) => {
       res.status(200).json({
         status: "true",
         data: data,
-        msg: "api/v1/super-user/update/useremail"
+        msgFrom: "api/v1/super-user/update/useremail",
+        msg: "User Updated Successfully"
       })
 
     } else if (userId) {
-      const data = await updateUserForUserId(req.body, userId)
+      const data = await updateUserForUserId(req.body, userId);
       res.status(200).json({
         status: "true",
         data: data,
-        msg: "api/v1/super-user/update/userid"
+        msgFrom: "api/v1/super-user/update/userid",
+        msg: "User Updated Successfully"
       })
       
     } else {
@@ -185,5 +187,16 @@ userRouter.post("/signin", userSignInAuth, (req: Request, res: Response) => {
   res.status(200).json({
     status: true,
     msg: "signed in"
+  })
+})
+
+userRouter.post('/profile', userAuth, async (req: Request, res: Response) => {
+    const { userId, userEmail } = req.body;
+    const data = await getUserByUserId(parseInt(userId));
+    
+  res.status(200).json({
+    status: true,
+    data: data,
+    msg: "api/v1/user/profile"
   })
 })

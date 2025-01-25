@@ -66,7 +66,8 @@ exports.userRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0
             res.status(200).json({
                 status: "true",
                 data: data,
-                msg: "api/v1/super-user/update/useremail"
+                msgFrom: "api/v1/super-user/update/useremail",
+                msg: "User Updated Successfully"
             });
         }
         else if (userId) {
@@ -74,7 +75,8 @@ exports.userRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0
             res.status(200).json({
                 status: "true",
                 data: data,
-                msg: "api/v1/super-user/update/userid"
+                msgFrom: "api/v1/super-user/update/userid",
+                msg: "User Updated Successfully"
             });
         }
         else {
@@ -171,3 +173,12 @@ exports.userRouter.post("/signin", user_mw_1.userSignInAuth, (req, res) => {
         msg: "signed in"
     });
 });
+exports.userRouter.post('/profile', user_mw_1.userAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, userEmail } = req.body;
+    const data = yield (0, user_funtions_1.getUserByUserId)(parseInt(userId));
+    res.status(200).json({
+        status: true,
+        data: data,
+        msg: "api/v1/user/profile"
+    });
+}));
