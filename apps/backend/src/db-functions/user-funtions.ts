@@ -206,3 +206,69 @@ export const deleteUserForUserEmail = async(userEmail: string) => {
     return error;
   }
 }
+
+
+export const addProductIdToUserWishList = async(userId: number, productId: number) => {
+  try {
+    const response = await prisma.user.update({
+      where: {
+        userId: userId
+      },
+      data: {
+        userWishedProducts: {
+          connect: {
+            id: productId
+          }
+        }
+      }
+    })
+
+    return response;
+
+  } catch(error) {
+    console.log('Error While adding to wish list', error);
+    return error;
+  }
+}
+
+export const removeProductIdToUserWishList = async(userId: number, productId: number) => {
+  try {
+    const response = await prisma.user.update({
+      where: {
+        userId: userId
+      },
+      data: {
+        userWishedProducts: {
+          disconnect: {
+            id: productId
+          }
+        }
+      }
+    })
+
+    return response;
+
+  } catch(error) {
+    console.log('Error While adding to wish list', error);
+    return error;
+  }
+}
+
+export const getUserWishedProductsByUserId = async(userId: number) => {
+  try {
+    const response = await prisma.user.findMany({
+      where: {
+        userId: userId
+      },
+      include: {
+        userWishedProducts: true
+      }
+    });
+
+    return response;
+
+  } catch(error) {
+    console.log('Error While adding to wish list', error);
+    return error;
+  }
+}

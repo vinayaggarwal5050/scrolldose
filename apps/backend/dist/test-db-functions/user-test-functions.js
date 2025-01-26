@@ -26,5 +26,9 @@ const testUserFunctions = () => __awaiter(void 0, void 0, void 0, function* () {
     // console.log( await getUserByUserId(2) );
     // console.log( await updateUserForUserEmail({userName: "USER1", userCountry: "India", userCity: "Delhi"}, "user1@gmail.com" ) );
     // console.log( await updateUserForUserId({userName: "USER2", userCountry: "India", userState: "Punjab", userCity: "Chandigarh"}, 2 ) );
+    // let res = await getUserWishedProductsByUserId(1);
+    // console.log(res);
+    // console.log( await addProductIdToUserWishList(1, 1) );
+    // console.log( await removeProductIdToUserWishList(1, 4) );
 });
 testUserFunctions();

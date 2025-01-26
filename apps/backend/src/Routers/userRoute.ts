@@ -1,5 +1,5 @@
-import { Router, Request, Response } from "express";
-import  { UserInterface, createUser, getAllUsers, getUserByUserEmail, getUserByUserId, updateUserForUserEmail, updateUserForUserId, deleteUserForUserEmail, deleteUserForUserId } from "../db-functions/user-funtions"
+import { Router, Request, Response, response } from "express";
+import  { UserInterface, createUser, getAllUsers, getUserByUserEmail, getUserByUserId, updateUserForUserEmail, updateUserForUserId, deleteUserForUserEmail, deleteUserForUserId, getUserWishedProductsByUserId, addProductIdToUserWishList, removeProductIdToUserWishList } from "../db-functions/user-funtions"
 import { userAuth, userSignInAuth } from "./middlewares/user.mw";
 // import { validateCreateUser } from "./middlewares/User.mw";
 
@@ -199,4 +199,90 @@ userRouter.post('/profile', userAuth, async (req: Request, res: Response) => {
     data: data,
     msg: "api/v1/user/profile"
   })
+})
+
+userRouter.get('/wishlist', async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.query.userid as string);
+    if(userId) {
+      const userData = await getUserWishedProductsByUserId(userId);
+      res.status(200).json({
+        status: true,
+        data: userData,
+        msg: "wishlist fetched successfull"
+      })
+
+    } else {
+      res.status(200).json({
+        status: false,
+        msg: "invalid user id",
+        msgFrom: "/api/v1/user/wishlist/userid"
+      })
+    }
+
+
+  } catch(err) {
+    res.status(200).json({
+      status: false,
+      msg: "some eroor"
+    })
+  }
+})
+
+userRouter.get('/wishlist/add', async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.query.userid as string);
+    const productId = parseInt(req.query.productid as string);
+
+    if(!userId || !productId) {
+      res.status(200).json({
+        status: false,
+        msg: "userId or productId not found"
+      })
+      return;
+    }
+
+    const wishlist = await addProductIdToUserWishList(userId, productId);
+
+    res.status(200).json({
+      status: true,
+      data: wishlist,
+      msg: "Product added to wishlist successfully"
+    })
+
+  } catch(err) {
+    res.status(200).json({
+      status: false,
+      msg: "some eroor"
+    })
+  }
+})
+
+userRouter.get('/wishlist/remove', async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.query.userid as string);
+    const productId = parseInt(req.query.productid as string);
+
+    if(!userId || !productId) {
+      res.status(200).json({
+        status: false,
+        msg: "userId or productId not found"
+      })
+      return;
+    }
+
+    const wishlist = await removeProductIdToUserWishList(userId, productId);
+
+    res.status(200).json({
+      status: true,
+      data: wishlist,
+      msg: "Product removed from wishlist successfully"
+    })
+
+  } catch(err) {
+    res.status(200).json({
+      status: false,
+      msg: "some eroor"
+    })
+  }
 })

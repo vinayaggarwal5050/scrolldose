@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserForUserEmail = exports.deleteUserForUserId = exports.updateUserForUserId = exports.updateUserForUserEmail = exports.getUserByUserId = exports.getUserByUserEmail = exports.getAllUsers = exports.createUser = void 0;
+exports.getUserWishedProductsByUserId = exports.removeProductIdToUserWishList = exports.addProductIdToUserWishList = exports.deleteUserForUserEmail = exports.deleteUserForUserId = exports.updateUserForUserId = exports.updateUserForUserEmail = exports.getUserByUserId = exports.getUserByUserEmail = exports.getAllUsers = exports.createUser = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
 const createUser = (userData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -180,3 +180,65 @@ const deleteUserForUserEmail = (userEmail) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.deleteUserForUserEmail = deleteUserForUserEmail;
+const addProductIdToUserWishList = (userId, productId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield prisma.user.update({
+            where: {
+                userId: userId
+            },
+            data: {
+                userWishedProducts: {
+                    connect: {
+                        id: productId
+                    }
+                }
+            }
+        });
+        return response;
+    }
+    catch (error) {
+        console.log('Error While adding to wish list', error);
+        return error;
+    }
+});
+exports.addProductIdToUserWishList = addProductIdToUserWishList;
+const removeProductIdToUserWishList = (userId, productId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield prisma.user.update({
+            where: {
+                userId: userId
+            },
+            data: {
+                userWishedProducts: {
+                    disconnect: {
+                        id: productId
+                    }
+                }
+            }
+        });
+        return response;
+    }
+    catch (error) {
+        console.log('Error While adding to wish list', error);
+        return error;
+    }
+});
+exports.removeProductIdToUserWishList = removeProductIdToUserWishList;
+const getUserWishedProductsByUserId = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield prisma.user.findMany({
+            where: {
+                userId: userId
+            },
+            include: {
+                userWishedProducts: true
+            }
+        });
+        return response;
+    }
+    catch (error) {
+        console.log('Error While adding to wish list', error);
+        return error;
+    }
+});
+exports.getUserWishedProductsByUserId = getUserWishedProductsByUserId;

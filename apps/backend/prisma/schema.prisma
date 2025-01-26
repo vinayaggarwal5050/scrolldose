@@ -40,9 +40,9 @@ model Store {
   id                Int      @id @default(autoincrement())
   name              String
   slug              String?
-  channelPartnerId  Int @unique
   createdAt DateTime @default(now())
-  
+
+  channelPartnerId  Int @unique
   channelPartner    ChannelPartner @relation(fields: [channelPartnerId], references: [id])
 
   products          Product[] 
@@ -64,6 +64,8 @@ model Product {
 
   storeId          Int
   store            Store @relation(fields: [storeId], references: [id])
+
+  wishedByUsers    user[]  @relation("UserWishesProduct")
 }
 
 model user {
@@ -80,4 +82,6 @@ model user {
   userPincode      String?
   userCountry      String?
   userSubscribedStoreId Int?
+
+  userWishedProducts  Product[] @relation("UserWishesProduct")
 }

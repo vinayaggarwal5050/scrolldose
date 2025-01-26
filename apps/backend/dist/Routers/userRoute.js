@@ -182,3 +182,79 @@ exports.userRouter.post('/profile', user_mw_1.userAuth, (req, res) => __awaiter(
         msg: "api/v1/user/profile"
     });
 }));
+exports.userRouter.get('/wishlist', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = parseInt(req.query.userid);
+        if (userId) {
+            const userData = yield (0, user_funtions_1.getUserWishedProductsByUserId)(userId);
+            res.status(200).json({
+                status: true,
+                data: userData,
+                msg: "wishlist fetched successfull"
+            });
+        }
+        else {
+            res.status(200).json({
+                status: false,
+                msg: "invalid user id",
+                msgFrom: "/api/v1/user/wishlist/userid"
+            });
+        }
+    }
+    catch (err) {
+        res.status(200).json({
+            status: false,
+            msg: "some eroor"
+        });
+    }
+}));
+exports.userRouter.get('/wishlist/add', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = parseInt(req.query.userid);
+        const productId = parseInt(req.query.productid);
+        if (!userId || !productId) {
+            res.status(200).json({
+                status: false,
+                msg: "userId or productId not found"
+            });
+            return;
+        }
+        const wishlist = yield (0, user_funtions_1.addProductIdToUserWishList)(userId, productId);
+        res.status(200).json({
+            status: true,
+            data: wishlist,
+            msg: "Product added to wishlist successfully"
+        });
+    }
+    catch (err) {
+        res.status(200).json({
+            status: false,
+            msg: "some eroor"
+        });
+    }
+}));
+exports.userRouter.get('/wishlist/remove', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = parseInt(req.query.userid);
+        const productId = parseInt(req.query.productid);
+        if (!userId || !productId) {
+            res.status(200).json({
+                status: false,
+                msg: "userId or productId not found"
+            });
+            return;
+        }
+        const wishlist = yield (0, user_funtions_1.removeProductIdToUserWishList)(userId, productId);
+        res.status(200).json({
+            status: true,
+            data: wishlist,
+            msg: "Product removed from wishlist successfully"
+        });
+    }
+    catch (err) {
+        res.status(200).json({
+            status: false,
+            msg: "some eroor"
+        });
+    }
+}));

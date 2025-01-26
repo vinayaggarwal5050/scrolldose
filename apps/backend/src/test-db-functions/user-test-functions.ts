@@ -1,4 +1,4 @@
-import  { UserInterface, createUser, getAllUsers, getUserByUserEmail, getUserByUserId, updateUserForUserEmail, updateUserForUserId, deleteUserForUserEmail, deleteUserForUserId } from "../db-functions/user-funtions"
+import  { UserInterface, createUser, getAllUsers, getUserByUserEmail, getUserByUserId, updateUserForUserEmail, updateUserForUserId, deleteUserForUserEmail, deleteUserForUserId, getUserWishedProductsByUserId, addProductIdToUserWishList, removeProductIdToUserWishList } from "../db-functions/user-funtions"
 
 //.................super admin funtions..............................................................
 interface UserUpdateInterface {
@@ -35,6 +35,10 @@ const testUserFunctions = async () => {
   // console.log( await getUserByUserId(2) );
   // console.log( await updateUserForUserEmail({userName: "USER1", userCountry: "India", userCity: "Delhi"}, "user1@gmail.com" ) );
   // console.log( await updateUserForUserId({userName: "USER2", userCountry: "India", userState: "Punjab", userCity: "Chandigarh"}, 2 ) );
+  // let res = await getUserWishedProductsByUserId(1);
+  // console.log(res);
+  // console.log( await addProductIdToUserWishList(1, 1) );
+  // console.log( await removeProductIdToUserWishList(1, 4) );
 
 } 
 
