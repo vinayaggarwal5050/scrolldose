@@ -205,10 +205,11 @@ userRouter.get('/wishlist', async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.query.userid as string);
     if(userId) {
-      const userData = await getUserWishedProductsByUserId(userId);
+      const userData:any = await getUserWishedProductsByUserId(userId);
+      const wishlist = userData.userWishedProducts;
       res.status(200).json({
         status: true,
-        data: userData,
+        data: wishlist,
         msg: "wishlist fetched successfull"
       })
 

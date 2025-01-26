@@ -220,6 +220,9 @@ export const addProductIdToUserWishList = async(userId: number, productId: numbe
             id: productId
           }
         }
+      },
+      select: {
+        userWishedProducts: true
       }
     })
 
@@ -243,6 +246,9 @@ export const removeProductIdToUserWishList = async(userId: number, productId: nu
             id: productId
           }
         }
+      },
+      select: {
+        userWishedProducts: true
       }
     })
 
@@ -256,11 +262,11 @@ export const removeProductIdToUserWishList = async(userId: number, productId: nu
 
 export const getUserWishedProductsByUserId = async(userId: number) => {
   try {
-    const response = await prisma.user.findMany({
+    const response = await prisma.user.findUnique({
       where: {
         userId: userId
       },
-      include: {
+      select: {
         userWishedProducts: true
       }
     });

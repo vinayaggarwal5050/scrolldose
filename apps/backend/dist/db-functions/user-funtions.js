@@ -192,6 +192,9 @@ const addProductIdToUserWishList = (userId, productId) => __awaiter(void 0, void
                         id: productId
                     }
                 }
+            },
+            select: {
+                userWishedProducts: true
             }
         });
         return response;
@@ -214,6 +217,9 @@ const removeProductIdToUserWishList = (userId, productId) => __awaiter(void 0, v
                         id: productId
                     }
                 }
+            },
+            select: {
+                userWishedProducts: true
             }
         });
         return response;
@@ -226,11 +232,11 @@ const removeProductIdToUserWishList = (userId, productId) => __awaiter(void 0, v
 exports.removeProductIdToUserWishList = removeProductIdToUserWishList;
 const getUserWishedProductsByUserId = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield prisma.user.findMany({
+        const response = yield prisma.user.findUnique({
             where: {
                 userId: userId
             },
-            include: {
+            select: {
                 userWishedProducts: true
             }
         });

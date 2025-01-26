@@ -187,9 +187,10 @@ exports.userRouter.get('/wishlist', (req, res) => __awaiter(void 0, void 0, void
         const userId = parseInt(req.query.userid);
         if (userId) {
             const userData = yield (0, user_funtions_1.getUserWishedProductsByUserId)(userId);
+            const wishlist = userData.userWishedProducts;
             res.status(200).json({
                 status: true,
-                data: userData,
+                data: wishlist,
                 msg: "wishlist fetched successfull"
             });
         }
