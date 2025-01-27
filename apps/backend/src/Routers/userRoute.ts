@@ -243,7 +243,8 @@ userRouter.get('/wishlist/add', async (req: Request, res: Response) => {
       return;
     }
 
-    const wishlist = await addProductIdToUserWishList(userId, productId);
+    const userData:any = await addProductIdToUserWishList(userId, productId);
+    const wishlist = userData.userWishedProducts;
 
     res.status(200).json({
       status: true,
@@ -272,7 +273,8 @@ userRouter.get('/wishlist/remove', async (req: Request, res: Response) => {
       return;
     }
 
-    const wishlist = await removeProductIdToUserWishList(userId, productId);
+    const userData:any = await removeProductIdToUserWishList(userId, productId);
+    const wishlist = userData.userWishedProducts;
 
     res.status(200).json({
       status: true,

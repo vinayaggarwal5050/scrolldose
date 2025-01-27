@@ -220,7 +220,8 @@ exports.userRouter.get('/wishlist/add', (req, res) => __awaiter(void 0, void 0, 
             });
             return;
         }
-        const wishlist = yield (0, user_funtions_1.addProductIdToUserWishList)(userId, productId);
+        const userData = yield (0, user_funtions_1.addProductIdToUserWishList)(userId, productId);
+        const wishlist = userData.userWishedProducts;
         res.status(200).json({
             status: true,
             data: wishlist,
@@ -245,7 +246,8 @@ exports.userRouter.get('/wishlist/remove', (req, res) => __awaiter(void 0, void 
             });
             return;
         }
-        const wishlist = yield (0, user_funtions_1.removeProductIdToUserWishList)(userId, productId);
+        const userData = yield (0, user_funtions_1.removeProductIdToUserWishList)(userId, productId);
+        const wishlist = userData.userWishedProducts;
         res.status(200).json({
             status: true,
             data: wishlist,
