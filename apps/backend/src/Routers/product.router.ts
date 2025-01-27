@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createProductForStoreId, deleteproductByProductId, getAllProducts, getproductsByChannelPartnerId, getProductByProductId, getProductsByStoreId, getProductsByStoreName, getProductsByStoreSlug, updateProductByProductId } from "../db-functions/product-functions";
+import { createProductForStoreId, deleteproductByProductId, getAllProducts, getproductsByChannelPartnerId, getProductByProductId, getProductsByStoreId, getProductsByStoreName, getProductsByStoreSlug, updateProductByProductId, getProductsByRange, getProductsByRangeAndUserId } from "../db-functions/product-functions";
 import { validateCreateProduct } from "./middlewares/product.mw";
 
 export const productRouter = Router();
@@ -39,6 +39,69 @@ productRouter.get('/', async (req: Request, res: Response) => {
     msg: "/api/v1/products"
   })
   
+})
+
+productRouter.get('/range', async (req: Request, res: Response) => {
+  const startIndex = parseInt(req.query.startindex as string);
+  const endIndex = parseInt(req.query.endindex as string);
+  const limit = parseInt(req.query.limit as string);
+
+  if(startIndex && endIndex && limit) {
+    try {
+      const data = await getProductsByRange(startIndex, endIndex, limit);
+      res.status(200).json({
+        status: true,
+        data: data,
+        msg: "/api/v1/products/range"
+      })
+
+    } catch(err) {
+      res.status(200).json({
+        status: false,
+        msg: "some database error",
+        msgFrom: "/api/v1/products/range"
+      })
+    }
+
+  } else {
+    res.status(200).json({
+      status: true,
+      msg: "parameters missing",
+      msgFrom: "/api/v1/products/range"
+    })
+  }
+})
+
+productRouter.get('/user-range', async (req: Request, res: Response) => {
+  const startIndex = parseInt(req.query.startindex as string);
+  const endIndex = parseInt(req.query.endindex as string);
+  const limit = parseInt(req.query.limit as string);
+  const userId = parseInt(req.query.userid as string);
+
+  if(startIndex && endIndex && limit && userId) {
+    try {
+      const data = await getProductsByRangeAndUserId(startIndex, endIndex, limit, userId);
+      res.status(200).json({
+        status: true,
+        data: data,
+        msg: "/api/v1/products/user-range"
+      })
+
+    } catch(err) {
+      res.status(200).json({
+        status: false,
+        msg: "some database error",
+        msgFrom: "/api/v1/products/user-range"
+      })
+    }
+
+  } else {
+    res.status(200).json({
+      status: true,
+      msg: "parameters missing",
+      msgFrom: "/api/v1/products/user-range"
+    })
+  }
 })
 
 productRouter.post('/create', async(req: Request, res: Response) => {

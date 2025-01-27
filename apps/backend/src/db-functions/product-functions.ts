@@ -71,7 +71,66 @@ export const getAllProducts = async() => {
     console.error('Error fetching products:', error);
     return error;
   }
-} 
+}
+
+export const getProductsByRange = async (startIndex: number, endIndex: number, limit: number) => {
+  try {
+    const response = await prisma.product.findMany({
+      where: {
+        id: {
+          gte: startIndex,
+          lte: endIndex,
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+      take: limit, // Ensures that only 'limit' products are returned
+    });
+
+    return response;
+  } catch (error) {
+    console.error('Error fetching products by range:', error);
+    return error;
+  }
+};
+
+export const getProductsByRangeAndUserId = async (startIndex: number, endIndex: number, limit: number, userId: number) => {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        id: {
+          gte: startIndex,
+          lte: endIndex,
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+      take: limit,
+      include: {
+        wishedByUsers: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    const result = products.map((product) => {
+      return {
+        ...product,
+        isWishedByUser: product.wishedByUsers.some((user) => user.userId === userId),
+      };
+    });
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching products by range and user ID:', error);
+    return error;
+  }
+};
+
 
 export const getProductByProductId = async(productId: number) => {
   try {

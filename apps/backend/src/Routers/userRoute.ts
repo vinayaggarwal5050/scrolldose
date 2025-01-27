@@ -202,6 +202,7 @@ userRouter.post('/profile', userAuth, async (req: Request, res: Response) => {
 })
 
 userRouter.get('/wishlist', async (req: Request, res: Response) => {
+  // http://localhost:5000/api/v1/user/wishlist?userid=1
   try {
     const userId = parseInt(req.query.userid as string);
     if(userId) {
@@ -231,6 +232,7 @@ userRouter.get('/wishlist', async (req: Request, res: Response) => {
 })
 
 userRouter.get('/wishlist/add', async (req: Request, res: Response) => {
+  //http://localhost:5000/api/v1/user/wishlist/add?userid=1&productid=4
   try {
     const userId = parseInt(req.query.userid as string);
     const productId = parseInt(req.query.productid as string);
@@ -261,6 +263,7 @@ userRouter.get('/wishlist/add', async (req: Request, res: Response) => {
 })
 
 userRouter.get('/wishlist/remove', async (req: Request, res: Response) => {
+  //http://localhost:5000/api/v1/user/wishlist/remove?userid=1&productid=4
   try {
     const userId = parseInt(req.query.userid as string);
     const productId = parseInt(req.query.productid as string);

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteproductByProductId = exports.updateProductByProductId = exports.getproductsByChannelPartnerId = exports.getProductsByStoreName = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductByProductId = exports.getAllProducts = exports.createProductForStoreId = void 0;
+exports.deleteproductByProductId = exports.updateProductByProductId = exports.getproductsByChannelPartnerId = exports.getProductsByStoreName = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductByProductId = exports.getProductsByRangeAndUserId = exports.getProductsByRange = exports.getAllProducts = exports.createProductForStoreId = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
 const createProductForStoreId = (productData, storeId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -66,6 +66,60 @@ const getAllProducts = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getAllProducts = getAllProducts;
+const getProductsByRange = (startIndex, endIndex, limit) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield prisma.product.findMany({
+            where: {
+                id: {
+                    gte: startIndex,
+                    lte: endIndex,
+                },
+            },
+            orderBy: {
+                id: 'asc',
+            },
+            take: limit, // Ensures that only 'limit' products are returned
+        });
+        return response;
+    }
+    catch (error) {
+        console.error('Error fetching products by range:', error);
+        return error;
+    }
+});
+exports.getProductsByRange = getProductsByRange;
+const getProductsByRangeAndUserId = (startIndex, endIndex, limit, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const products = yield prisma.product.findMany({
+            where: {
+                id: {
+                    gte: startIndex,
+                    lte: endIndex,
+                },
+            },
+            orderBy: {
+                id: 'asc',
+            },
+            take: limit,
+            include: {
+                wishedByUsers: {
+                    select: {
+                        userId: true,
+                    },
+                },
+            },
+        });
+        const result = products.map((product) => {
+            return Object.assign(Object.assign({}, product), { isWishedByUser: product.wishedByUsers.some((user) => user.userId === userId) });
+        });
+        return result;
+    }
+    catch (error) {
+        console.error('Error fetching products by range and user ID:', error);
+        return error;
+    }
+});
+exports.getProductsByRangeAndUserId = getProductsByRangeAndUserId;
 const getProductByProductId = (productId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.findFirst({

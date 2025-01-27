@@ -48,6 +48,65 @@ exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, f
         msg: "/api/v1/products"
     });
 }));
+exports.productRouter.get('/range', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const startIndex = parseInt(req.query.startindex);
+    const endIndex = parseInt(req.query.endindex);
+    const limit = parseInt(req.query.limit);
+    if (startIndex && endIndex && limit) {
+        try {
+            const data = yield (0, product_functions_1.getProductsByRange)(startIndex, endIndex, limit);
+            res.status(200).json({
+                status: true,
+                data: data,
+                msg: "/api/v1/products/range"
+            });
+        }
+        catch (err) {
+            res.status(200).json({
+                status: false,
+                msg: "some database error",
+                msgFrom: "/api/v1/products/range"
+            });
+        }
+    }
+    else {
+        res.status(200).json({
+            status: true,
+            msg: "parameters missing",
+            msgFrom: "/api/v1/products/range"
+        });
+    }
+}));
+exports.productRouter.get('/user-range', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const startIndex = parseInt(req.query.startindex);
+    const endIndex = parseInt(req.query.endindex);
+    const limit = parseInt(req.query.limit);
+    const userId = parseInt(req.query.userid);
+    if (startIndex && endIndex && limit && userId) {
+        try {
+            const data = yield (0, product_functions_1.getProductsByRangeAndUserId)(startIndex, endIndex, limit, userId);
+            res.status(200).json({
+                status: true,
+                data: data,
+                msg: "/api/v1/products/user-range"
+            });
+        }
+        catch (err) {
+            res.status(200).json({
+                status: false,
+                msg: "some database error",
+                msgFrom: "/api/v1/products/user-range"
+            });
+        }
+    }
+    else {
+        res.status(200).json({
+            status: true,
+            msg: "parameters missing",
+            msgFrom: "/api/v1/products/user-range"
+        });
+    }
+}));
 exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/product/create?storeid=1
     const storeId = parseInt(req.query.storeid);

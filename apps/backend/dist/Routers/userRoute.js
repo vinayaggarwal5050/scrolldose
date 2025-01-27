@@ -183,6 +183,7 @@ exports.userRouter.post('/profile', user_mw_1.userAuth, (req, res) => __awaiter(
     });
 }));
 exports.userRouter.get('/wishlist', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // http://localhost:5000/api/v1/user/wishlist?userid=1
     try {
         const userId = parseInt(req.query.userid);
         if (userId) {
@@ -210,6 +211,7 @@ exports.userRouter.get('/wishlist', (req, res) => __awaiter(void 0, void 0, void
     }
 }));
 exports.userRouter.get('/wishlist/add', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //http://localhost:5000/api/v1/user/wishlist/add?userid=1&productid=4
     try {
         const userId = parseInt(req.query.userid);
         const productId = parseInt(req.query.productid);
@@ -236,6 +238,7 @@ exports.userRouter.get('/wishlist/add', (req, res) => __awaiter(void 0, void 0, 
     }
 }));
 exports.userRouter.get('/wishlist/remove', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //http://localhost:5000/api/v1/user/wishlist/remove?userid=1&productid=4
     try {
         const userId = parseInt(req.query.userid);
         const productId = parseInt(req.query.productid);
