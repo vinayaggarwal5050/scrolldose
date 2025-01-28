@@ -131,7 +131,6 @@ export const getProductsByRangeAndUserId = async (startIndex: number, endIndex: 
   }
 };
 
-
 export const getProductByProductId = async(productId: number) => {
   try {
     const response = await prisma.product.findFirst({
