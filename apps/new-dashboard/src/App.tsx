@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Header } from "./components/Header"
 import { SideBar } from "./components/Sidebar"
 import { DashBoard } from "./pages/DashBoard";
+import { AddProduct } from "./pages/products/AddProduct";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Header/>
           <Routes>
             <Route path="/" element={<DashBoard />} />
+            <Route path="/products/add-new" element={<AddProduct />} />
         </Routes>
         </div>
       </div>
