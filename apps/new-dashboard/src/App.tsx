@@ -17,7 +17,7 @@ function App() {
           <Header/>
           <Routes>
             <Route path="/" element={<DashBoard />} />
-            <Route path="/products/add-new" element={<AddProduct />} />
+            <Route path="/store/add-product" element={<AddProduct />} />
         </Routes>
         </div>
       </div>

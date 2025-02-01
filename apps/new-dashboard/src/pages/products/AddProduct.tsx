@@ -10,7 +10,9 @@ export const AddProduct = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [mainImage, setMainImage] = useState<File | null>(null);
+  const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
   const [otherImages, setOtherImages] = useState<File[]>([]);
+  const [otherImagesPreview, setOtherImagesPreview] = useState<string[]>([]);
   const [isEditable, setIsEditable] = useState<boolean>(true);
 
   const backendURL = "http://backend.scrolldose.com/api/v1";
@@ -30,31 +32,30 @@ export const AddProduct = () => {
     affiliateImageLink: Yup.string().optional(),
   });
 
-  const pushToServer = async (data: any) => {
+  const pushToServer = async (data: FormData) => {
     try {
-      const res = await fetch(`http://${backendURL}/product/create`, {
+      const res = await fetch(`${backendURL}/product/create`, {
         method: "POST",
         headers: {
-          "contentType": "Application/Json",
           "Authentication": `Auth-bearer: ${cpJWT}`
         },
-        body: JSON.stringify(data)
+        body: data,
       });
-
-      if(res.ok) {
+  
+      if (res.ok) {
         setSubmitted(true);
-        alert("product addred successfully");
-        const jsonData = await res.json();
-        return jsonData;
+        alert("Product added successfully");
+        return await res.json();
       } else {
         alert("Could not add product");
         return null;
       }
-
-    } catch(err) {
+    } catch (err) {
+      console.error("Error uploading product:", err);
       return null;
     }
-  }
+  };
+  
 
   const handleSubmit = async(values: any) => {
     setSubmitted(true);
@@ -71,6 +72,14 @@ export const AddProduct = () => {
     formData.append("video", values.video);
     formData.append("tag", values.tag);
     formData.append("stock", values.stock);
+
+    if (mainImage) {
+      formData.append("mainImage", mainImage);
+    }
+
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
 
     // console.log(formData);
     formData.forEach((item, key) => console.log(key, item));
@@ -96,11 +105,20 @@ export const AddProduct = () => {
   });
 
   const handleMainImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) setMainImage(event.target.files[0]);
+    if (event.target.files) {
+      const file = event.target.files[0];
+      setMainImage(file);
+      setMainImagePreview(URL.createObjectURL(file)); 
+    }
   };
 
+
   const handleOtherImagesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) setOtherImages([...event.target.files]);
+    if (event.target.files) {
+      const filesArray = Array.from(event.target.files);
+      setOtherImages(filesArray);
+      setOtherImagesPreview(filesArray.map((file) => URL.createObjectURL(file))); 
+    }
   };
 
   return(
@@ -187,7 +205,7 @@ export const AddProduct = () => {
               </FormControl>
 
             <FormControl component="fieldset" margin="normal">
-              <FormLabel component="legend">Is Affiliate?</FormLabel>
+              <FormLabel component="legend">Is Affiliate Product?</FormLabel>
               <RadioGroup
                 row
                 name="isAffiliate"
@@ -272,6 +290,28 @@ export const AddProduct = () => {
                 error={formik.touched.stock && Boolean(formik.errors.stock)}
                 helperText={formik.touched.stock && formik.errors.stock}
               />
+
+              {/* Main Image */}
+              <Typography sx={{ mt: 2, mb: 1, color: 'text.primary', fontSize: 15 }}>
+                Main Image
+              </Typography>
+              <input type="file" accept="image/*" onChange={handleMainImageChange} />
+              {mainImagePreview && (
+                <Box sx={{ mt: 1 }}>
+                  <img src={mainImagePreview} alt="Main Preview" width="100px" height="100px" style={{ borderRadius: '5px', objectFit: 'cover' }} />
+                </Box>
+              )}
+
+              {/* Other Images */}
+              <Typography sx={{ mt: 2, mb:1, color: 'text.primary', fontSize: 15 }}>
+                Other Images
+              </Typography>
+              <input type="file" accept="image/*" multiple onChange={handleOtherImagesChange} />
+              <div style={{ display: "flex", gap: "10px", marginTop: 8 }}>
+              {otherImagesPreview.map((src, index) => (
+                <img key={index} src={src} alt={`Preview ${index + 1}`} width="100" />
+              ))}
+            </div>
 
               {/* Submit Button */}
               {! submitted && 

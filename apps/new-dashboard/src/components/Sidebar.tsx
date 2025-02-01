@@ -2,6 +2,7 @@ import { Box, Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, L
 import { ExpandLess, ExpandMore, Home as HomeIcon, Store as StoreIcon, VideoLibrary as VideoIcon, Settings as SettingsIcon } from "@mui/icons-material";
 import Shop2Icon from '@mui/icons-material/Shop2';
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const SideBar = () => {
 
@@ -31,7 +32,7 @@ export const SideBar = () => {
         <List>
           {/* {Home} */}
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton component={Link} to="/">
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
@@ -49,7 +50,7 @@ export const SideBar = () => {
           <Collapse in={menuState["Orders"]}>
             <List>
               {menuOptions["Orders"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }}>
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/orders/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    
@@ -69,7 +70,7 @@ export const SideBar = () => {
           <Collapse in={menuState["Store"]}>
             <List>
               {menuOptions["Store"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }}>
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/store/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    
@@ -88,7 +89,7 @@ export const SideBar = () => {
           <Collapse in={menuState["Videos"]}>
             <List>
               {menuOptions["Videos"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }}>
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/videos/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    
@@ -107,16 +108,13 @@ export const SideBar = () => {
           <Collapse in={menuState["Settings"]}>
             <List>
               {menuOptions["Settings"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }}>
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/settings/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    
             </List>
           </Collapse>
           <Divider sx={{m: 1}} />
-
-
-
 
 
         </List>
