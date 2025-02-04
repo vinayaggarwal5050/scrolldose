@@ -36,7 +36,8 @@ export const createChannelPartner = async (
         name: true,
         role: true,
         createdAt: true,
-        store: true
+        store: true,
+        studio: true
        }
     });
 
@@ -58,7 +59,8 @@ export const getAllChannelPartners = async() => {
       name: true,
       role: true,
       createdAt: true,
-      store: true
+      store: true,
+      studio: true
      }
     })
     return { status: true, data: response};
@@ -82,7 +84,8 @@ export const getChannelPartnerByEmail = async(email: string) => {
         name: true,
         role: true,
         createdAt: true,
-        store: true
+        store: true,
+        studio: true
        } 
     })
 
@@ -107,7 +110,8 @@ export const getChannelPartnerById = async(id: number) => {
         name: true,
         role: true,
         createdAt: true,
-        store: true
+        store: true,
+        studio: true
        } 
     })
 

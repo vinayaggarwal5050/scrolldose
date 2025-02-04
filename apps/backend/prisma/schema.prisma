@@ -33,55 +33,68 @@ model ChannelPartner {
   role      String   @default("CHANNEL_PARTNER")
   createdAt DateTime @default(now())
 
-  store     Store[]
+  store  Store[]
+  studio Studio[]
 }
 
 model Store {
-  id                Int      @id @default(autoincrement())
-  name              String
-  slug              String?
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String?
   createdAt DateTime @default(now())
 
-  channelPartnerId  Int @unique
-  channelPartner    ChannelPartner @relation(fields: [channelPartnerId], references: [id])
+  channelPartnerId Int            @unique
+  channelPartner   ChannelPartner @relation(fields: [channelPartnerId], references: [id])
 
-  products          Product[] 
+  products Product[]
 }
 
 model Product {
-  id               Int      @id @default(autoincrement())
-  name             String
-  description      String?
-  category         String?
-  price            String?
-  image            String?
-  link             String?
-  slug             String?
-  video            String?
-  tag              String?
-  createdAt        DateTime @default(now())
-  lastUpdate       DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  category    String?
+  price       String?
+  image       String?
+  link        String?
+  slug        String?
+  video       String?
+  tag         String?
+  createdAt   DateTime @default(now())
+  lastUpdate  DateTime @updatedAt
 
-  storeId          Int
-  store            Store @relation(fields: [storeId], references: [id])
+  storeId Int
+  store   Store @relation(fields: [storeId], references: [id])
 
-  wishedByUsers    user[]  @relation("UserWishesProduct")
+  wishedByUsers user[] @relation("UserWishesProduct")
+}
+
+model Studio {
+  id        Int      @id @default(autoincrement())
+  name      String
+  link      String?  @unique
+  createdAt DateTime @default(now())
+
+  channelPartnerId Int            @unique
+  channelPartner   ChannelPartner @relation(fields: [channelPartnerId], references: [id])
+
+  //  videos          Video[] 
 }
 
 model user {
-  userId           Int      @id @default(autoincrement())
-  userName         String
-  userEmail        String   @unique
-  userPassword     String
-  userInterests    String?
-  userWishlist     String?
-  userAddress1     String?
-  userAddress2     String?
-  userCity         String?
-  userState        String?
-  userPincode      String?
-  userCountry      String?
+  userId                Int     @id @default(autoincrement())
+  userName              String
+  userEmail             String  @unique
+  userPassword          String
+  userInterests         String?
+  userWishlist          String?
+  userAddress1          String?
+  userAddress2          String?
+  userCity              String?
+  userState             String?
+  userPincode           String?
+  userCountry           String?
   userSubscribedStoreId Int?
 
-  userWishedProducts  Product[] @relation("UserWishesProduct")
+  userWishedProducts Product[] @relation("UserWishesProduct")
 }

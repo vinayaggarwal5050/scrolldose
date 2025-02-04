@@ -241,10 +241,11 @@ export const deleteStoreById = async(id: number) => {
         id: id
       }
     })
-
+    return {status: true, data: response};
+    
   } catch(error) {
     console.error('Error Deleting store:', error);
-    return error;
+    return {status: false, error: error};
   }
 }
 

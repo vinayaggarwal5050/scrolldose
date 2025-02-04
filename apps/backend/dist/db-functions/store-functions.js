@@ -223,10 +223,11 @@ const deleteStoreById = (id) => __awaiter(void 0, void 0, void 0, function* () {
                 id: id
             }
         });
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Deleting store:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.deleteStoreById = deleteStoreById;

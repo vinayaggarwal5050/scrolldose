@@ -4,6 +4,7 @@ import { channelPartnerRouter } from "./Routers/channelPartner.router";
 import { storeRouter } from "./Routers/store.router";
 import { productRouter } from "./Routers/product.router";
 import { userRouter } from "./Routers/userRoute";
+import { studioRouter } from "./Routers/studio.router";
 import cors from "cors";
 
 const app = express();
@@ -48,3 +49,4 @@ app.use("/api/v1/channel-partner", channelPartnerRouter);
 app.use("/api/v1/store", storeRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/studio", studioRouter);

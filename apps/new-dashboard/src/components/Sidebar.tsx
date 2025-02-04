@@ -10,7 +10,7 @@ export const SideBar = () => {
       "Orders": ["New Order", "All Orders", "Sale Analytics"],
       "Store": ["Add Product", "Add Categories", "All Products", "Categories", ],
       "Videos": ["Add Video", "All Videos", "Video Analytics"],
-      "Settings": ["Store Settings", "Profile Settings", "Account Setting"]
+      "Settings": ["Store Settings", "Studio Settings", "Profile Settings", "Account Setting"]
     };
 
   const [menuState, setMenuState] = useState<{[key: string]: boolean}>({})

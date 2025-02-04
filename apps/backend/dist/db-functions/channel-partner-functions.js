@@ -35,7 +35,8 @@ const createChannelPartner = (channelPartnerData) => __awaiter(void 0, void 0, v
                 name: true,
                 role: true,
                 createdAt: true,
-                store: true
+                store: true,
+                studio: true
             }
         });
         return { status: true, data: response };
@@ -56,7 +57,8 @@ const getAllChannelPartners = () => __awaiter(void 0, void 0, void 0, function* 
                 name: true,
                 role: true,
                 createdAt: true,
-                store: true
+                store: true,
+                studio: true
             }
         });
         return { status: true, data: response };
@@ -80,7 +82,8 @@ const getChannelPartnerByEmail = (email) => __awaiter(void 0, void 0, void 0, fu
                 name: true,
                 role: true,
                 createdAt: true,
-                store: true
+                store: true,
+                studio: true
             }
         });
         return { status: true, data: response };
@@ -105,7 +108,8 @@ const getChannelPartnerById = (id) => __awaiter(void 0, void 0, void 0, function
                 name: true,
                 role: true,
                 createdAt: true,
-                store: true
+                store: true,
+                studio: true
             }
         });
         return { status: true, data: response };

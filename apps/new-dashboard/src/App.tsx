@@ -10,6 +10,7 @@ import LandingPage from "./pages/landing-page/LandingPage";
 import Page404 from "./pages/Page404";
 import ProtectedRoute from "./pages/auth/ProtectedRoute";
 import StoreSettings from "./pages/store/StoreSettings";
+import StudioSettings from "./pages/studio/StudioSettings";
 
 const DashboardLayout = () => {
   return (
@@ -39,6 +40,7 @@ function App() {
               <Route index element={<DashBoard />} /> 
               <Route path="store/add-product" element={<AddProduct />} /> 
               <Route path="settings/store-settings" element={<StoreSettings />} />
+              <Route path="settings/studio-settings" element={<StudioSettings />} />
             </Route>
           </Route>
 
