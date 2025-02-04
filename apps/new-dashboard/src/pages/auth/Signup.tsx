@@ -104,7 +104,7 @@ const SignUp: React.FC = () => {
               ),
             }}
           />
-          <Typography sx={{ mt: 2, color: "red" }}>{msg}</Typography>
+          <Typography sx={{ mt: 2, color: "gray" }}>{msg}</Typography>
           <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }} onClick={handleSubmit}>
             Sign Up
           </Button>

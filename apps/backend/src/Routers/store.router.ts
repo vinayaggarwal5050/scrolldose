@@ -36,22 +36,36 @@ storeRouter.get('/', async (req: Request, res: Response) => {
 })
 
 storeRouter.post('/create', async(req: Request, res: Response) => {
-  //http://localhost:6000/api/v1/store/create?channelPartnerId=3
+  //http://localhost:5000/api/v1/store/create?channelpartnerid=3
   const channelPartnerId = parseInt(req.query.channelpartnerid as string);
-  const productData = req.body;
-  if(channelPartnerId) {
+  const storeData = req.body;
+  const { name, slug } = storeData;
+  if(channelPartnerId && name && slug) {
     try {
-      const data = await createStoreForChannelPartnerId(productData, channelPartnerId);
-      res.status(200).json({
-        status: true,
-        data: data,
-        msg: "/api/v1/store/create"
-      })
+      const response = await createStoreForChannelPartnerId(storeData, channelPartnerId);
+      if(response.status) {
+        res.status(200).json({
+          status: true,
+          data: response.data,
+          msg: "Store Created Successfully!",
+          msgFrom: "/api/v1/channel-partner/create"
+        })
+
+      } else {
+        res.status(200).json({
+          status: false,
+          msg: response?.error,
+          error: response?.error,
+          msgFrom: "/api/v1/channel-partner/create"
+        })
+
+      }
   
     } catch(error) {
       res.status(200).json({
         status: false,
         msg: "some error",
+        msgFrom: "/api/v1/channel-partner/create",
         error: error
       })
     }
@@ -60,14 +74,17 @@ storeRouter.post('/create', async(req: Request, res: Response) => {
     res.status(200).json({
       status: false,
       msg: "invalid data",
+      msgFrom: "/api/v1/store/create"
     })
   }
 })
 
+
+
 storeRouter.put('/update', async(req: Request, res: Response) => {
-  //http://localhost:6000/api/v1/store/update?storeId=3
-  //http://localhost:6000/api/v1/store/update?channelpartneremail=test@gmail.com
-  //http://localhost:6000/api/v1/store/update?channelpartnerid=4
+  //http://localhost:5000/api/v1/store/update?storeid=3
+  //http://localhost:5000/api/v1/store/update?channelpartneremail=test@gmail.com
+  //http://localhost:5000/api/v1/store/update?channelpartnerid=4
 
 
   try {
@@ -76,34 +93,41 @@ storeRouter.put('/update', async(req: Request, res: Response) => {
     const channelPartnerEmail = req.query.channelpartneremail as string;
     const storeData = req.body;
 
+    // console.log(storeId, channelPartnerId, channelPartnerEmail, storeData);
+
+    let response: any;
+
     if(storeId) {
-      const data = await updateStoreForStoreId(storeData, storeId)
-      res.status(200).json({
-        status: "true",
-        data: "data",
-        msg: "api/v1/store/update/storeId"
-      })
+      response = await updateStoreForStoreId(storeData, storeId)
 
     } else if (channelPartnerEmail) {
-      const data = await updateStoreForChannelPartnerEmail(storeData, channelPartnerEmail)
-      res.status(200).json({
-        status: "true",
-        data: data,
-        msg: "api/v1/store/update/channelPartnerEmail"
-      })
+      response = await updateStoreForChannelPartnerEmail(storeData, channelPartnerEmail)
       
     } else if(channelPartnerId) {
-      const data = await updateStoreForChannelPartnerId(storeData, channelPartnerId)
-      res.status(200).json({
-        status: "true",
-        data: data,
-        msg: "api/v1/store/update/channelPartnerId"
-      })
+      response = await updateStoreForChannelPartnerId(storeData, channelPartnerId)
 
     } else {
       res.status(200).json({
         status: false,
-        msg: "invalid input"
+        msg: "invalid input",
+        msgFrom: "api/v1/store/update/channelPartnerId"
+      })
+    }
+
+    if(response.status) {
+      res.status(200).json({
+        status: true,
+        data: response.data,
+        msg: "Store Updated Successfully",
+        msgFrom: "api/v1/store/update/channelPartnerId"
+      })
+      
+    } else if(response.error) {
+      res.status(200).json({
+        status: false,
+        error: response.error,
+        msg: "Error While Updating Store",
+        msgFrom: "api/v1/store/update/channelPartnerId"
       })
     }
 
@@ -111,7 +135,8 @@ storeRouter.put('/update', async(req: Request, res: Response) => {
     res.status(200).json({
       status: false,
       msg: "some error",
-      error: error
+      error: error,
+      msgFrom: "api/v1/store/update/channelPartnerId"
     })
   }
 })

@@ -20,13 +20,19 @@ export const createStoreForChannelPartnerId = async(storeData: StoreInterface, c
           }
         }
       },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        channelPartnerId: true
+      }
     })
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
-    console.error('Error creating store:', error);
-    return error;
+    console.error("Error Occured Whilte creating Store:", error);
+    return { status: false, error: "An error occurred while Store" };
   }
 
 }
@@ -56,6 +62,12 @@ export const getStoreByStoreId = async(storeId: number) => {
     const response = await prisma.store.findFirst({
       where: {
         id: storeId
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        channelPartnerId: true
       }
     })
 
@@ -72,6 +84,12 @@ export const getStoreByChannelPartnerId = async(channelPartnerId: number) => {
     const response = await prisma.store.findFirst({
       where: {
         channelPartnerId: channelPartnerId
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        channelPartnerId: true
       }
     })
 
@@ -105,6 +123,8 @@ export const getStoreByChannelPartnerEmail = async(channelPartnerEmail: string) 
 export interface UpdateStoreInterface {
   name?: string,
   slug?: string,
+  id?: any,
+  channelPartnerId?: any
 }
 
 export const updateStoreForStoreId = async(storeData: UpdateStoreInterface, storeId: number) => {
@@ -116,14 +136,20 @@ export const updateStoreForStoreId = async(storeData: UpdateStoreInterface, stor
       data: {
         name: storeData?.name,
         slug: storeData?.slug,
+      },
+      select: {
+        id: true,
+        channelPartnerId: true,
+        name: true,
+        slug: true
       }
     })
 
-    return updatedStore;
+    return {status: true, data: updatedStore};
 
   } catch(error) {
     console.error('Error Finding stores:', error);
-    return error;
+    return {status: false, error: error};
   }
 }
 
@@ -150,14 +176,20 @@ export const updateStoreForChannelPartnerEmail = async(storeData: UpdateStoreInt
       data: {
         name: storeData?.name,
         slug: storeData?.slug,
+      },
+      select: {
+        id: true,
+        channelPartnerId: true,
+        name: true,
+        slug: true
       }
     })
 
-    return updatedStore;
+    return {status: true, data: updatedStore};
 
   } catch(error) {
     console.error('Error Finding stores:', error);
-    return error;
+    return {status: false, error: error}
   }
 }
 
@@ -184,14 +216,20 @@ export const updateStoreForChannelPartnerId = async(storeData: UpdateStoreInterf
       data: {
         name: storeData?.name,
         slug: storeData?.slug,
+      },
+      select: {
+        id: true,
+        channelPartnerId: true,
+        name: true,
+        slug: true
       }
     })
 
-    return updatedStore;
+    return {status: true, data: updatedStore};
 
   } catch(error) {
     console.error('Error Finding stores:', error);
-    return error;
+    return {status: false, error: error}
   }
 }
 

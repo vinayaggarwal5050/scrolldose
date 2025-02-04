@@ -28,6 +28,15 @@ const createChannelPartner = (channelPartnerData) => __awaiter(void 0, void 0, v
                 password: channelPartnerData.password,
                 name: channelPartnerData === null || channelPartnerData === void 0 ? void 0 : channelPartnerData.name,
             },
+            select: {
+                id: true,
+                email: true,
+                password: true,
+                name: true,
+                role: true,
+                createdAt: true,
+                store: true
+            }
         });
         return { status: true, data: response };
     }
@@ -118,11 +127,11 @@ const updateChannelPartnerforEmail = (data) => __awaiter(void 0, void 0, void 0,
                 name: data === null || data === void 0 ? void 0 : data.name
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Updating channelPartner:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.updateChannelPartnerforEmail = updateChannelPartnerforEmail;
@@ -138,11 +147,11 @@ const updateChannelPartnerforId = (data) => __awaiter(void 0, void 0, void 0, fu
                 name: data === null || data === void 0 ? void 0 : data.name
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Updating channelPartner:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.updateChannelPartnerforId = updateChannelPartnerforId;

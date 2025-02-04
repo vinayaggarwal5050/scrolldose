@@ -79,32 +79,41 @@ exports.channelPartnerRouter.post('/create', (req, res) => __awaiter(void 0, voi
         });
     }
 }));
+//some error in logic, multile times response is getting sent
 exports.channelPartnerRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/channel-partner/update?email=test@gmail.com
     //http://localhost:6000/api/v1/channel-partner/update?id=3
     try {
         const email = req.query.email;
         const id = req.query.id;
+        let response;
         if (email) {
-            const data = yield (0, channel_partner_functions_1.updateChannelPartnerforEmail)(Object.assign(Object.assign({}, req.body), { "email": email }));
-            res.status(200).json({
-                status: "true",
-                data: data,
-                msg: "api/v1/super-user/update/email"
-            });
+            response = yield (0, channel_partner_functions_1.updateChannelPartnerforEmail)(Object.assign(Object.assign({}, req.body), { "email": email }));
         }
         else if (id) {
-            const data = yield (0, channel_partner_functions_1.updateChannelPartnerforId)(Object.assign(Object.assign({}, req.body), { "id": parseInt(id) }));
+            response = yield (0, channel_partner_functions_1.updateChannelPartnerforId)(Object.assign(Object.assign({}, req.body), { "id": parseInt(id) }));
+        }
+        else {
             res.status(200).json({
-                status: "true",
-                data: data,
-                msg: "api/v1/super-user/update/id"
+                status: false,
+                msg: "invalid input",
+                msgFrom: "api/v1/chanel-partner/update"
+            });
+        }
+        if (response.status) {
+            res.status(200).json({
+                status: true,
+                data: response.data,
+                msg: "Channel Partner Updated Successfully ",
+                msgFrom: "api/v1/chanel-partner/update"
             });
         }
         else {
             res.status(200).json({
                 status: false,
-                msg: "invalid input"
+                error: response.error,
+                msg: "Error While Updating Channel Partner",
+                msgFrom: "api/v1/chanel-partner/update"
             });
         }
     }

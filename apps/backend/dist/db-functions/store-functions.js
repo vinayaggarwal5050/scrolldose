@@ -24,12 +24,18 @@ const createStoreForChannelPartnerId = (storeData, channelPartnerID) => __awaite
                     }
                 }
             },
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                channelPartnerId: true
+            }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
-        console.error('Error creating store:', error);
-        return error;
+        console.error("Error Occured Whilte creating Store:", error);
+        return { status: false, error: "An error occurred while Store" };
     }
 });
 exports.createStoreForChannelPartnerId = createStoreForChannelPartnerId;
@@ -56,6 +62,12 @@ const getStoreByStoreId = (storeId) => __awaiter(void 0, void 0, void 0, functio
         const response = yield prisma.store.findFirst({
             where: {
                 id: storeId
+            },
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                channelPartnerId: true
             }
         });
         return response;
@@ -71,6 +83,12 @@ const getStoreByChannelPartnerId = (channelPartnerId) => __awaiter(void 0, void 
         const response = yield prisma.store.findFirst({
             where: {
                 channelPartnerId: channelPartnerId
+            },
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                channelPartnerId: true
             }
         });
         return response;
@@ -108,13 +126,19 @@ const updateStoreForStoreId = (storeData, storeId) => __awaiter(void 0, void 0, 
             data: {
                 name: storeData === null || storeData === void 0 ? void 0 : storeData.name,
                 slug: storeData === null || storeData === void 0 ? void 0 : storeData.slug,
+            },
+            select: {
+                id: true,
+                channelPartnerId: true,
+                name: true,
+                slug: true
             }
         });
-        return updatedStore;
+        return { status: true, data: updatedStore };
     }
     catch (error) {
         console.error('Error Finding stores:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.updateStoreForStoreId = updateStoreForStoreId;
@@ -139,13 +163,19 @@ const updateStoreForChannelPartnerEmail = (storeData, channelPartnerEmail) => __
             data: {
                 name: storeData === null || storeData === void 0 ? void 0 : storeData.name,
                 slug: storeData === null || storeData === void 0 ? void 0 : storeData.slug,
+            },
+            select: {
+                id: true,
+                channelPartnerId: true,
+                name: true,
+                slug: true
             }
         });
-        return updatedStore;
+        return { status: true, data: updatedStore };
     }
     catch (error) {
         console.error('Error Finding stores:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.updateStoreForChannelPartnerEmail = updateStoreForChannelPartnerEmail;
@@ -170,13 +200,19 @@ const updateStoreForChannelPartnerId = (storeData, channelPartnerId) => __awaite
             data: {
                 name: storeData === null || storeData === void 0 ? void 0 : storeData.name,
                 slug: storeData === null || storeData === void 0 ? void 0 : storeData.slug,
+            },
+            select: {
+                id: true,
+                channelPartnerId: true,
+                name: true,
+                slug: true
             }
         });
-        return updatedStore;
+        return { status: true, data: updatedStore };
     }
     catch (error) {
         console.error('Error Finding stores:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.updateStoreForChannelPartnerId = updateStoreForChannelPartnerId;

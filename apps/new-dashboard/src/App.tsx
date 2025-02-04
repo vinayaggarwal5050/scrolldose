@@ -9,6 +9,7 @@ import Signin from "./pages/auth/Signin";
 import LandingPage from "./pages/landing-page/LandingPage";
 import Page404 from "./pages/Page404";
 import ProtectedRoute from "./pages/auth/ProtectedRoute";
+import StoreSettings from "./pages/store/StoreSettings";
 
 const DashboardLayout = () => {
   return (
@@ -33,10 +34,11 @@ function App() {
           <Route path="/signin" element={<Signin />} />
 
           {/* Protected Dashboard Routes with Layout */}
-          <Route element={<ProtectedRoute />}>  {/* 🔒 Wraps everything inside /cp */}
+          <Route element={<ProtectedRoute />}>
             <Route path="/cp" element={<DashboardLayout />}>
-              <Route index element={<DashBoard />} /> {/* `/cp` renders Dashboard */}
-              <Route path="store/add-product" element={<AddProduct />} /> {/* `/cp/store/add-product` */}
+              <Route index element={<DashBoard />} /> 
+              <Route path="store/add-product" element={<AddProduct />} /> 
+              <Route path="settings/store-settings" element={<StoreSettings />} />
             </Route>
           </Route>
 

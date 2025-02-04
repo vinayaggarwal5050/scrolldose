@@ -29,6 +29,15 @@ export const createChannelPartner = async (
         password: channelPartnerData.password,
         name: channelPartnerData?.name,
       },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        store: true
+       }
     });
 
     return { status: true, data: response };
@@ -50,7 +59,7 @@ export const getAllChannelPartners = async() => {
       role: true,
       createdAt: true,
       store: true
-     } 
+     }
     })
     return { status: true, data: response};
 
@@ -129,11 +138,11 @@ export const updateChannelPartnerforEmail = async(data: ChannelPartnerUpdateInte
       }
     })
 
-    return response;
+    return {status: true, data: response} ;
 
   } catch(error) {
     console.error('Error Updating channelPartner:', error);
-    return error;
+    return {status: false, error: error};
   }
 }
 
@@ -150,11 +159,11 @@ export const updateChannelPartnerforId = async(data: ChannelPartnerUpdateInterfa
       }
     })
 
-    return response;
+    return {status: true, data: response} ;
 
   } catch(error) {
     console.error('Error Updating channelPartner:', error);
-    return error;
+    return {status: false, error: error};
   }
 }
 

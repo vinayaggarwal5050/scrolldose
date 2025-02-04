@@ -8,9 +8,9 @@ export const SideBar = () => {
 
   const menuOptions: any = {
       "Orders": ["New Order", "All Orders", "Sale Analytics"],
-      "Store": ["Add Product", "Add Categories", "All Products", "Categories", "Store Settings"],
+      "Store": ["Add Product", "Add Categories", "All Products", "Categories", ],
       "Videos": ["Add Video", "All Videos", "Video Analytics"],
-      "Settings": ["Profile Settings", "Account Setting"]
+      "Settings": ["Store Settings", "Profile Settings", "Account Setting"]
     };
 
   const [menuState, setMenuState] = useState<{[key: string]: boolean}>({})
