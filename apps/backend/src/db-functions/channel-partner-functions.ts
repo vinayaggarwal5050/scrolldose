@@ -9,24 +9,34 @@ export interface ChannelPartnerInterface {
 }
 
 
-export const createChannelPartner = async(channelPartnerData: ChannelPartnerInterface) => {
+export const createChannelPartner = async (
+  channelPartnerData: ChannelPartnerInterface
+): Promise<{ status: boolean; data?: any; error?: string }> => {
   try {
+    // Check if email already exists
+    const existingPartner = await prisma.channelPartner.findUnique({
+      where: { email: channelPartnerData.email },
+    });
+
+    if (existingPartner) {
+      return { status: false, error: "Email already exists" };
+    }
+
+    // Create a new channel partner if email does not exist
     const response = await prisma.channelPartner.create({
       data: {
         email: channelPartnerData.email,
         password: channelPartnerData.password,
-        name: channelPartnerData?.name
+        name: channelPartnerData?.name,
       },
-    })
+    });
 
-    return response;
-
-  } catch(error) {
-    console.error('Error creating channelPartner:', error);
-    return error;
+    return { status: true, data: response };
+  } catch (error) {
+    console.error("Error creating channelPartner:", error);
+    return { status: false, error: "An error occurred while creating channel partner" };
   }
-
-}
+};
 
 
 export const getAllChannelPartners = async() => {
@@ -42,11 +52,11 @@ export const getAllChannelPartners = async() => {
       store: true
      } 
     })
-    return response;
+    return { status: true, data: response};
 
   } catch(error) {
     console.error('Error fetching channelPartners:', error);
-    return error;
+    return { status: false, error: error };
   }
 } 
 
@@ -67,11 +77,11 @@ export const getChannelPartnerByEmail = async(email: string) => {
        } 
     })
 
-    return response;
+    return { status: true, data: response};;
 
   } catch(error) {
     console.error('Error Finding channelPartners:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 
@@ -92,11 +102,11 @@ export const getChannelPartnerById = async(id: number) => {
        } 
     })
 
-    return response;
+    return { status: true, data: response};
 
   } catch(error) {
     console.error('Error Finding channelPartners:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 

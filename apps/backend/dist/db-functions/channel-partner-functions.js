@@ -14,18 +14,26 @@ const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
 const createChannelPartner = (channelPartnerData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Check if email already exists
+        const existingPartner = yield prisma.channelPartner.findUnique({
+            where: { email: channelPartnerData.email },
+        });
+        if (existingPartner) {
+            return { status: false, error: "Email already exists" };
+        }
+        // Create a new channel partner if email does not exist
         const response = yield prisma.channelPartner.create({
             data: {
                 email: channelPartnerData.email,
                 password: channelPartnerData.password,
-                name: channelPartnerData === null || channelPartnerData === void 0 ? void 0 : channelPartnerData.name
+                name: channelPartnerData === null || channelPartnerData === void 0 ? void 0 : channelPartnerData.name,
             },
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
-        console.error('Error creating channelPartner:', error);
-        return error;
+        console.error("Error creating channelPartner:", error);
+        return { status: false, error: "An error occurred while creating channel partner" };
     }
 });
 exports.createChannelPartner = createChannelPartner;
@@ -42,11 +50,11 @@ const getAllChannelPartners = () => __awaiter(void 0, void 0, void 0, function* 
                 store: true
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error fetching channelPartners:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getAllChannelPartners = getAllChannelPartners;
@@ -66,11 +74,12 @@ const getChannelPartnerByEmail = (email) => __awaiter(void 0, void 0, void 0, fu
                 store: true
             }
         });
-        return response;
+        return { status: true, data: response };
+        ;
     }
     catch (error) {
         console.error('Error Finding channelPartners:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getChannelPartnerByEmail = getChannelPartnerByEmail;
@@ -90,11 +99,11 @@ const getChannelPartnerById = (id) => __awaiter(void 0, void 0, void 0, function
                 store: true
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Finding channelPartners:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getChannelPartnerById = getChannelPartnerById;

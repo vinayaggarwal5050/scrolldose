@@ -32,7 +32,7 @@ export const SideBar = () => {
         <List>
           {/* {Home} */}
           <ListItem disablePadding>
-            <ListItemButton component={Link} to="/">
+            <ListItemButton component={Link} to="/cp">
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
@@ -50,7 +50,7 @@ export const SideBar = () => {
           <Collapse in={menuState["Orders"]}>
             <List>
               {menuOptions["Orders"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/orders/${text.toLowerCase().replace(/\s+/g, "-")}`} >
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/cp/orders/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    
@@ -70,7 +70,7 @@ export const SideBar = () => {
           <Collapse in={menuState["Store"]}>
             <List>
               {menuOptions["Store"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/store/${text.toLowerCase().replace(/\s+/g, "-")}`} >
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/cp/store/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    
@@ -89,7 +89,7 @@ export const SideBar = () => {
           <Collapse in={menuState["Videos"]}>
             <List>
               {menuOptions["Videos"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/videos/${text.toLowerCase().replace(/\s+/g, "-")}`} >
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/cp/videos/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    
@@ -108,7 +108,7 @@ export const SideBar = () => {
           <Collapse in={menuState["Settings"]}>
             <List>
               {menuOptions["Settings"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/settings/${text.toLowerCase().replace(/\s+/g, "-")}`} >
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/cp/settings/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    

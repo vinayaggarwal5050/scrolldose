@@ -137,56 +137,13 @@ userRouter.delete('/delete', async(req: Request, res: Response) => {
 })
 
 
-// userRouter.post("/signin", async(req: Request, res: Response) => {
-//   const { userEmail, userPassword } = req.body;
-
-//   if(!userEmail || !userPassword) {
-//     res.status(200).json({
-//       status: false,
-//       msg: "invalid data",
-//       msgFrom: "api/v1/user/signin/invalid-data"
-//     })
-//     return;
-//   }
-
-//   const userData:any = await getUserByUserEmail(userEmail);
-
-//   if(!userData) {
-//     res.status(200).json({
-//       status: false,
-//       msg: "User with Given Email Does Not Exists",
-//       msgFrom: "api/v1/user/signin/invalid-email"
-//     })
-//     return;
-//   }
-
-//   if(userData.userPassword !== userPassword) {
-//     res.status(200).json({
-//       status: false,
-//       msg: "Invalid Password",
-//       msgFrom: "api/v1/user/signin/invalid-password"
-//     })
-//     return;
-
-//   }
-
-//   const userJWT = "9SFUSM2342FSDF"
-//   res.status(200).json({
-//     status: true,
-//     data: {...userData, userJWT},
-//     msg: "Login Successful",
-//     msgFrom: "api/v1/user/signin/success"
-//   })
-
-//   return;
-
-// })
 
 userRouter.post("/signin", userSignInAuth, (req: Request, res: Response) => {
 
   res.status(200).json({
     status: true,
-    msg: "signed in"
+    msg: "user signed in",
+    msgFrom: "user Singed in"
   })
 })
 

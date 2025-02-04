@@ -1,12 +1,12 @@
 import { Router, Request, Response } from "express";
 import { getAllChannelPartners, getChannelPartnerByEmail, getChannelPartnerById, createChannelPartner, updateChannelPartnerforEmail,  updateChannelPartnerforId, deleteChannelPartnerByEmail, deleteChannelPartnerById } from "../db-functions/channel-partner-functions";
 
-import { validateCreateChannelPartner } from "./middlewares/channelPartner.mw";
+import { cpSignInAuth, generateCPJWT, validateCreateChannelPartner } from "./middlewares/channelPartner.mw";
 
 export const channelPartnerRouter = Router();
 
 
-channelPartnerRouter.get('/', async (req: Request, res: Response) => {
+channelPartnerRouter.get('/', async(req: Request, res: Response) => {
   //http://localhost:6000/api/v1/channel-partner
   //http://localhost:6000/api/v1/channel-partner?email=superadmin@gmail.com
   //http://localhost:6000/api/v1/channel-partner?id=3
@@ -14,20 +14,32 @@ channelPartnerRouter.get('/', async (req: Request, res: Response) => {
   const email = req.query.email as string;
   const id = req.query.id as string;
   let data;
+  let response;
 
   if(email) {
-    data = await getChannelPartnerByEmail(email);
+    response = await getChannelPartnerByEmail(email);
   } else if(id) {
-    data = await getChannelPartnerById(parseInt(id));
+    response = await getChannelPartnerById(parseInt(id));
   } else {
-    data = await getAllChannelPartners();
+    response = await getAllChannelPartners();
   }
 
-   res.status(200).json({
-    status: true,
-    data: data,
-    msg: "/api/v1/channel-partner"
-  })
+  if(response.status) {
+    res.status(200).json({
+      status: true,
+      data: response.data,
+      msgFrom: "/api/v1/channel-partner"
+    })
+  } else {
+    res.status(200).json({
+      status: false,
+      msg: "Error Finding channelPartners",
+      error: response?.error,
+      msgFrom: "/api/v1/channel-partner/create"
+    })
+  }
+
+
   
 })
 
@@ -35,12 +47,30 @@ channelPartnerRouter.post('/create', async(req: Request, res: Response) => {
   //http://localhost:6000/api/v1/channel-partner/create
 
   try {
-    const data = await createChannelPartner(req.body);
-    res.status(200).json({
-      status: true,
-      data: "data",
-      msg: "/api/v1/channel-partner/create"
-    })
+    const response = await createChannelPartner(req.body);
+
+    if(response?.error) {
+      res.status(200).json({
+        status: false,
+        msg: response?.error,
+        error: response?.error,
+        msgFrom: "/api/v1/channel-partner/create"
+      })
+
+    } else {
+      const { id, email, role } = response.data;
+      const cpJWT = generateCPJWT({id, email, role});
+      const data = response.data;
+
+      res.status(200).json({
+        status: true,
+        data: {...data, cpJWT},
+        msg: "Account Created Successfully",
+        msgFrom: "/api/v1/channel-partner/create"
+      })
+    }
+
+
 
   } catch(error) {
     res.status(200).json({
@@ -132,4 +162,12 @@ channelPartnerRouter.delete('/delete', async(req: Request, res: Response) => {
     })
   }
 
+})
+
+channelPartnerRouter.post('/signin', cpSignInAuth, async(req: Request, res: Response) => {
+  res.status(200).json({
+    status: true,
+    msg: "user signed in",
+    msgFrom: "user Singed in"
+  })
 })

@@ -21,20 +21,6 @@ const createUserSchema = zod_1.z.object({
     userPasswod: zod_1.z.string().min(3, 'Password must be at least 3 characters long'),
     userName: zod_1.z.string().optional()
 });
-const USER_JWT_SECRET_KEY = "123";
-const generateUserJWT = (payload) => {
-    const userJWT = jsonwebtoken_1.default.sign(payload, USER_JWT_SECRET_KEY);
-    return userJWT;
-};
-const verifyUserJWT = (userJWT) => {
-    try {
-        const decoded = jsonwebtoken_1.default.verify(userJWT, USER_JWT_SECRET_KEY);
-        return decoded;
-    }
-    catch (error) {
-        throw new Error('Invalid or expired token');
-    }
-};
 const validateCreateUser = (req, res, next) => {
     try {
         createUserSchema.safeParse(req.body);
@@ -57,6 +43,20 @@ const validateCreateUser = (req, res, next) => {
     });
 };
 exports.validateCreateUser = validateCreateUser;
+const USER_JWT_SECRET_KEY = "123";
+const generateUserJWT = (payload) => {
+    const userJWT = jsonwebtoken_1.default.sign(payload, USER_JWT_SECRET_KEY);
+    return userJWT;
+};
+const verifyUserJWT = (userJWT) => {
+    try {
+        const decoded = jsonwebtoken_1.default.verify(userJWT, USER_JWT_SECRET_KEY);
+        return decoded;
+    }
+    catch (error) {
+        throw new Error('Invalid or expired token');
+    }
+};
 const userSignInAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { userEmail, userPassword } = req.body;
     if (!userEmail || !userPassword) {
