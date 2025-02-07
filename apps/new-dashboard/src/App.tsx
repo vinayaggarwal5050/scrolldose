@@ -12,6 +12,7 @@ import ProtectedRoute from "./pages/auth/ProtectedRoute";
 import StoreSettings from "./pages/store/StoreSettings";
 import StudioSettings from "./pages/studio/StudioSettings";
 import AddVideo from "./pages/studio/AddVideo";
+import AllVideos from "./pages/studio/AllVideos";
 
 const DashboardLayout = () => {
   return (
@@ -43,6 +44,7 @@ function App() {
               <Route path="settings/store-settings" element={<StoreSettings />} />
               <Route path="settings/studio-settings" element={<StudioSettings />} />
               <Route path="videos/add-video" element={<AddVideo />} />
+              <Route path="videos/all-videos" element={<AllVideos />} />
             </Route>
           </Route>
 

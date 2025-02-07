@@ -8,58 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.videoRouter = void 0;
 const express_1 = require("express");
+const multer_1 = __importDefault(require("multer"));
+const fs_1 = __importDefault(require("fs"));
 const video_functions_1 = require("../db-functions/video-functions");
 exports.videoRouter = (0, express_1.Router)();
-exports.videoRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/video
-    //http://localhost:6000/api/v1/video?videoid=3
-    //http://localhost:6000/api/v1/video?videoslug=my-new-video
-    //http://localhost:6000/api/v1/video?studioid=3
-    const videoId = parseInt(req.query.videoid);
-    const videoSlug = req.query.videoslug;
-    const studioId = parseInt(req.query.studioid);
-    let response;
-    try {
-        if (videoId) {
-            response = yield (0, video_functions_1.getVideoEntryByVideoId)(videoId);
-        }
-        else if (videoSlug) {
-            response = yield (0, video_functions_1.getVideoEntryByVideoSlug)(videoSlug);
-        }
-        else if (studioId) {
-            response = yield (0, video_functions_1.getVideoEnteriesForStudioId)(studioId);
-        }
-        else {
-            response = yield (0, video_functions_1.getAllVideoEnteries)();
-        }
-        if (response.status) {
-            res.status(200).json({
-                status: true,
-                data: response.data,
-                msg: "Video Fetch Succesfully",
-                msgFrom: "/api/v1/video/"
-            });
-        }
-        else {
-            res.status(200).json({
-                status: false,
-                error: response.error,
-                msg: "Fail to Fetch Video",
-                msgFrom: "/api/v1/video/"
-            });
-        }
-    }
-    catch (err) {
-        res.status(200).json({
-            status: false,
-            msg: "Fail to Fetch Video",
-            msgFrom: "/api/v1/video/"
-        });
-    }
-}));
 // videoRouter.get('/range', async (req: Request, res: Response) => {
 //   const startIndex = parseInt(req.query.startindex as string);
 //   const endIndex = parseInt(req.query.endindex as string);
@@ -115,8 +73,18 @@ exports.videoRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
 //     })
 //   }
 // })
-exports.videoRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:5000/api/v1/video/create?studioid=1
+// Set up storage for uploaded files
+const upload = (0, multer_1.default)({ dest: "uploads/" });
+// Ensure output folder exists
+const outputFolder = "converted/";
+if (!fs_1.default.existsSync(outputFolder)) {
+    fs_1.default.mkdirSync(outputFolder);
+}
+exports.videoRouter.post('/upload', upload.single("video"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //http://localhost:5000/api/v1/video/upload?studioid=1
+    if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+    }
     const studioId = parseInt(req.query.studioid);
     const videoData = req.body;
     const { title } = videoData;
@@ -157,8 +125,55 @@ exports.videoRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void
         });
     }
 }));
+exports.videoRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //http://localhost:6000/api/v1/video
+    //http://localhost:6000/api/v1/video?videoid=3
+    //http://localhost:6000/api/v1/video?videoslug=my-new-video
+    //http://localhost:6000/api/v1/video?studioid=3
+    const videoId = parseInt(req.query.videoid);
+    const videoSlug = req.query.videoslug;
+    const studioId = parseInt(req.query.studioid);
+    let response;
+    try {
+        if (videoId) {
+            response = yield (0, video_functions_1.getVideoEntryByVideoId)(videoId);
+        }
+        else if (videoSlug) {
+            response = yield (0, video_functions_1.getVideoEntryByVideoSlug)(videoSlug);
+        }
+        else if (studioId) {
+            response = yield (0, video_functions_1.getVideoEnteriesForStudioId)(studioId);
+        }
+        else {
+            response = yield (0, video_functions_1.getAllVideoEnteries)();
+        }
+        if (response.status) {
+            res.status(200).json({
+                status: true,
+                data: response.data,
+                msg: "Video Fetch Succesfully",
+                msgFrom: "/api/v1/video/"
+            });
+        }
+        else {
+            res.status(200).json({
+                status: false,
+                error: response.error,
+                msg: "Fail to Fetch Video",
+                msgFrom: "/api/v1/video/"
+            });
+        }
+    }
+    catch (err) {
+        res.status(200).json({
+            status: false,
+            msg: "Fail to Fetch Video",
+            msgFrom: "/api/v1/video/"
+        });
+    }
+}));
 exports.videoRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/video/update?videoid=3
+    //http://localhost:5000/api/v1/video/update?videoid=3
     try {
         const videoId = parseFloat(req.query.videoid);
         const videoData = req.body;

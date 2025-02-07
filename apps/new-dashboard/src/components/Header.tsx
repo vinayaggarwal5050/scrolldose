@@ -40,7 +40,7 @@ export const Header = () => {
       </div>
 
       {/* Chat Icon */}
-      <IconButton color="inherit" sx={{ mr: 1 }}>
+      <IconButton color="inherit" sx={{ mr: 1 }} onClick={() => console.log(cpData)}>
         <ChatBubbleOutlineIcon />
       </IconButton>
 

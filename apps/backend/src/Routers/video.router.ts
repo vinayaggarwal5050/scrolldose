@@ -1,7 +1,62 @@
 import { Router, Request, Response } from "express";
+import multer from "multer";
+import ffmpeg from "fluent-ffmpeg";
+import path from "path";
+import fs from "fs";
 import { createVideoEntryForStudioId, deleteVideoEntryByVideoId, getAllVideoEnteries, getVideoEnteriesForStudioId, getVideoEntryByVideoId, getVideoEntryByVideoSlug, updateVideoByVideoId } from "../db-functions/video-functions";
 
 export const videoRouter = Router();
+
+videoRouter.post('/upload', async(req: Request, res: Response) => {
+
+  //http://localhost:5000/api/v1/video/upload?studioid=1
+
+  const studioId = parseInt(req.query.studioid as string);
+  const videoData = req.body;
+  const { title } = videoData;
+  let response;
+  
+  try {
+
+    if(studioId && title) {
+      response = await createVideoEntryForStudioId(videoData, studioId);
+
+      if(response.status) {
+        res.status(200).json({
+          status: true,
+          data: response.data,
+          msg: "Video Entry Created Succesfully",
+          msgFrom: "/api/v1/video/create"
+        })
+      } else {
+        res.status(200).json({
+          status: false,
+          error: response.error,
+          msg: "Fail to Create Video Entry",
+          msgFrom: "/api/v1/video/create"
+        })
+      }
+
+    } else {
+      res.status(200).json({
+        status: false,
+        msg: "Invalid Data",
+        msgFrom: "/api/v1/video/create"
+      })
+    }
+
+
+
+  } catch(err) {
+    res.status(200).json({
+      status: false,
+      msg: "Fail to Create Video Entry",
+      msgFrom: "/api/v1/video/"
+    })
+  }
+
+})
+
 
 
 videoRouter.get('/', async (req: Request, res: Response) => {
@@ -54,119 +109,6 @@ videoRouter.get('/', async (req: Request, res: Response) => {
   
 })
 
-// videoRouter.get('/range', async (req: Request, res: Response) => {
-//   const startIndex = parseInt(req.query.startindex as string);
-//   const endIndex = parseInt(req.query.endindex as string);
-//   const limit = parseInt(req.query.limit as string);
-
-//   if(startIndex && endIndex && limit) {
-//     try {
-//       const data = await getvideosByRange(startIndex, endIndex, limit);
-//       res.status(200).json({
-//         status: true,
-//         data: data,
-//         msg: "/api/v1/videos/range"
-//       })
-
-//     } catch(err) {
-//       res.status(200).json({
-//         status: false,
-//         msg: "some database error",
-//         msgFrom: "/api/v1/videos/range"
-//       })
-//     }
-
-//   } else {
-//     res.status(200).json({
-//       status: true,
-//       msg: "parameters missing",
-//       msgFrom: "/api/v1/videos/range"
-//     })
-//   }
-// })
-
-// videoRouter.get('/user-range', async (req: Request, res: Response) => {
-//   const startIndex = parseInt(req.query.startindex as string);
-//   const endIndex = parseInt(req.query.endindex as string);
-//   const limit = parseInt(req.query.limit as string);
-//   const userId = parseInt(req.query.userid as string);
-
-//   if(startIndex && endIndex && limit && userId) {
-//     try {
-//       const data = await getvideosByRangeAndUserId(startIndex, endIndex, limit, userId);
-//       res.status(200).json({
-//         status: true,
-//         data: data,
-//         msg: "/api/v1/videos/user-range"
-//       })
-
-//     } catch(err) {
-//       res.status(200).json({
-//         status: false,
-//         msg: "some database error",
-//         msgFrom: "/api/v1/videos/user-range"
-//       })
-//     }
-
-//   } else {
-//     res.status(200).json({
-//       status: true,
-//       msg: "parameters missing",
-//       msgFrom: "/api/v1/videos/user-range"
-//     })
-//   }
-// })
-
-
-videoRouter.post('/create', async(req: Request, res: Response) => {
-
-  //http://localhost:5000/api/v1/video/create?studioid=1
-
-  const studioId = parseInt(req.query.studioid as string);
-  const videoData = req.body;
-  const { title } = videoData;
-  let response;
-  
-  try {
-
-    if(studioId && title) {
-      response = await createVideoEntryForStudioId(videoData, studioId);
-
-      if(response.status) {
-        res.status(200).json({
-          status: true,
-          data: response.data,
-          msg: "Video Entry Created Succesfully",
-          msgFrom: "/api/v1/video/create"
-        })
-      } else {
-        res.status(200).json({
-          status: false,
-          error: response.error,
-          msg: "Fail to Create Video Entry",
-          msgFrom: "/api/v1/video/create"
-        })
-      }
-
-    } else {
-      res.status(200).json({
-        status: false,
-        msg: "Invalid Data",
-        msgFrom: "/api/v1/video/create"
-      })
-    }
-
-
-
-  } catch(err) {
-    res.status(200).json({
-      status: false,
-      msg: "Fail to Create Video Entry",
-      msgFrom: "/api/v1/video/"
-    })
-  }
-
-})
 
 videoRouter.put('/update', async(req: Request, res: Response) => {
 

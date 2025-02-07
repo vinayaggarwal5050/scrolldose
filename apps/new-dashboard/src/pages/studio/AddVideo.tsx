@@ -8,10 +8,11 @@ import { Link } from "react-router-dom";
 
 const AddVideo = () => {
 
-  const { cpData, setCpData } = useCPData();
+  const { cpData } = useCPData();
   const [exists, setExists] = useState(false);
   const [msg, setMsg] = useState("");
   const [studioExists, setStdioExists] = useState(false);
+  const [videoData, setVideoData] = useState<any>();
 
 
   useEffect(() => {
@@ -46,8 +47,6 @@ const AddVideo = () => {
   // }
   
 
-
-
   const validationSchema = Yup.object({
     title: Yup.string().required("Video Title is required"),
     slug: Yup.string().required("Video Slug is required"),
@@ -58,7 +57,6 @@ const AddVideo = () => {
 
 
   const handleSubmit = async(values: any) => {
-    setExists(true);
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("slug", values.slug);
@@ -67,25 +65,29 @@ const AddVideo = () => {
     formData.append("studioId", values.studioId);
 
     const formDataObject: Record<string, any> = {};
+
     formData.forEach((value, key) => {
       formDataObject[key] = value;
     });  
+
     console.log("Converted Object:", formDataObject);
-/*
-    let data;
+
+    let response;
+
     if(exists) {
-      data = await updateOnServer(formDataObject);
+      response = await updateOnServer(formDataObject);
     } else {
-      data = await createOnServer(formDataObject);
+      setExists(false);
+      response = await createOnServer(formDataObject);
     }
 
     //server response is true
-    if(data) {
-      //@ts-ignore
-      setCpData(prev => ({...prev, studio: [data]}))
+    if(response.data) {
+      setExists(true);
+      setVideoData(response.data);
+      console.log(response.data);
     }
 
-*/
   }
 
 
@@ -118,7 +120,7 @@ const AddVideo = () => {
         setMsg(res.msg);
       }
 
-      return res.data;
+      return res;
 
     } catch(err) {
       console.log(err);
@@ -128,7 +130,7 @@ const AddVideo = () => {
 
   const updateOnServer = async(formData: any) => {
     try {
-      const jsonRes = await fetch(`${backendURL}/video/upload?studioid=${cpData?.studio[0]?.id}`, {
+      const jsonRes = await fetch(`${backendURL}/video/update?videoid=${videoData?.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -236,7 +238,7 @@ const AddVideo = () => {
                   fullWidth
                   sx={{ mt: 2 }}
                 >
-                  {exists ? <>Edit Video</> : <>Upload Video</>}
+                  {exists ? <>Edit Video Information</> : <>Upload Video</>}
                 </Button>
 
             </form>
