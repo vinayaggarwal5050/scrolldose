@@ -83,15 +83,22 @@ model Studio {
 }
 
 model Video {
-  id          Int       @id @default(autoincrement())
-  title       String
-  filePath    String?   @unique
-  slug        String?   @unique
-  category    String?
-  thumbnail   String?
+  id              Int       @id @default(autoincrement())
+  title           String
+  slug            String?   @unique
+  category        String?
+  categoryId      Int?
+  thumbnailPath   String?
+  filePath        String?   @unique
+  status          String?  @default("Pending")
+  tags            String?
 
-  studioId    Int
-  studio      Studio @relation(fields: [studioId], references: [id])
+
+  studioId        Int
+  studio          Studio @relation(fields: [studioId], references: [id])
+
+  createdAt   DateTime @default(now())
+  lastUpdate  DateTime @updatedAt
 
 }
 

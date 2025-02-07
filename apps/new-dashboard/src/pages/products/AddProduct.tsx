@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, Typography, Container, MenuItem, Select, InputLabel, FormControl, Box, Radio, FormLabel, RadioGroup, FormControlLabel } from "@mui/material";
+import { Button, TextField, Typography, MenuItem, Select, InputLabel, FormControl, Box, Radio, FormLabel, RadioGroup, FormControlLabel } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -11,9 +11,9 @@ export const AddProduct = () => {
   const [submitted, setSubmitted] = useState(false);
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
-  const [otherImages, setOtherImages] = useState<File[]>([]);
+  // const [ setOtherImages] = useState<File[]>([]);
   const [otherImagesPreview, setOtherImagesPreview] = useState<string[]>([]);
-  const [isEditable, setIsEditable] = useState<boolean>(true);
+  // const [isEditable, setIsEditable] = useState<boolean>(true);
 
   const backendURL = "http://backend.scrolldose.com/api/v1";
   const cpJWT = "sadfasdfjaljowieru9euernweoirw9e8y";
@@ -84,6 +84,7 @@ export const AddProduct = () => {
     // console.log(formData);
     formData.forEach((item, key) => console.log(key, item));
     const jsonData = await pushToServer(formData);
+    console.log(jsonData);
   };
 
   const formik = useFormik({
@@ -116,7 +117,7 @@ export const AddProduct = () => {
   const handleOtherImagesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
-      setOtherImages(filesArray);
+      // setOtherImages(filesArray);
       setOtherImagesPreview(filesArray.map((file) => URL.createObjectURL(file))); 
     }
   };

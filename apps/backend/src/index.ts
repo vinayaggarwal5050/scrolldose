@@ -5,18 +5,36 @@ import { storeRouter } from "./Routers/store.router";
 import { productRouter } from "./Routers/product.router";
 import { userRouter } from "./Routers/userRoute";
 import { studioRouter } from "./Routers/studio.router";
+import { videoRouter } from "./Routers/video.router";
 import cors from "cors";
 
 const app = express();
 const PORT = 5000;
 
+app.use(cors({
+  origin: '*', // Try setting it to '*' for debugging, but restrict it later for security
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true
+}));
+
+app.options('*', cors()); // Ensure OPTIONS requests are handled properly
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.listen(5000, () => {
+  console.log('Server running on port 5000');
+});
+
+/*
 app.listen(PORT, "0.0.0.0", () => {
   console.log("API server started on port: ", PORT);
 });
 
 app.use(express.json());
 app.use(cors());
-
+*/
 // app.use((req, res, next) => {
 //   res.setHeader(
 //     "Content-Security-Policy",
@@ -50,3 +68,5 @@ app.use("/api/v1/store", storeRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/studio", studioRouter);
+app.use("/api/v1/video", videoRouter);
+
