@@ -8,83 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.videoRouter = void 0;
 const express_1 = require("express");
-const multer_1 = __importDefault(require("multer"));
-const fs_1 = __importDefault(require("fs"));
 const video_functions_1 = require("../db-functions/video-functions");
 exports.videoRouter = (0, express_1.Router)();
-// videoRouter.get('/range', async (req: Request, res: Response) => {
-//   const startIndex = parseInt(req.query.startindex as string);
-//   const endIndex = parseInt(req.query.endindex as string);
-//   const limit = parseInt(req.query.limit as string);
-//   if(startIndex && endIndex && limit) {
-//     try {
-//       const data = await getvideosByRange(startIndex, endIndex, limit);
-//       res.status(200).json({
-//         status: true,
-//         data: data,
-//         msg: "/api/v1/videos/range"
-//       })
-//     } catch(err) {
-//       res.status(200).json({
-//         status: false,
-//         msg: "some database error",
-//         msgFrom: "/api/v1/videos/range"
-//       })
-//     }
-//   } else {
-//     res.status(200).json({
-//       status: true,
-//       msg: "parameters missing",
-//       msgFrom: "/api/v1/videos/range"
-//     })
-//   }
-// })
-// videoRouter.get('/user-range', async (req: Request, res: Response) => {
-//   const startIndex = parseInt(req.query.startindex as string);
-//   const endIndex = parseInt(req.query.endindex as string);
-//   const limit = parseInt(req.query.limit as string);
-//   const userId = parseInt(req.query.userid as string);
-//   if(startIndex && endIndex && limit && userId) {
-//     try {
-//       const data = await getvideosByRangeAndUserId(startIndex, endIndex, limit, userId);
-//       res.status(200).json({
-//         status: true,
-//         data: data,
-//         msg: "/api/v1/videos/user-range"
-//       })
-//     } catch(err) {
-//       res.status(200).json({
-//         status: false,
-//         msg: "some database error",
-//         msgFrom: "/api/v1/videos/user-range"
-//       })
-//     }
-//   } else {
-//     res.status(200).json({
-//       status: true,
-//       msg: "parameters missing",
-//       msgFrom: "/api/v1/videos/user-range"
-//     })
-//   }
-// })
-// Set up storage for uploaded files
-const upload = (0, multer_1.default)({ dest: "uploads/" });
-// Ensure output folder exists
-const outputFolder = "converted/";
-if (!fs_1.default.existsSync(outputFolder)) {
-    fs_1.default.mkdirSync(outputFolder);
-}
-exports.videoRouter.post('/upload', upload.single("video"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.videoRouter.post('/upload', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:5000/api/v1/video/upload?studioid=1
-    if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
-    }
     const studioId = parseInt(req.query.studioid);
     const videoData = req.body;
     const { title } = videoData;
@@ -175,7 +105,7 @@ exports.videoRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
 exports.videoRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:5000/api/v1/video/update?videoid=3
     try {
-        const videoId = parseFloat(req.query.videoid);
+        const videoId = parseInt(req.query.videoid);
         const videoData = req.body;
         let response;
         if (videoId) {

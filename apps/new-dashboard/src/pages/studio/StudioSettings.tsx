@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { useCPData } from "../../global-states/CPProvider";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -10,6 +10,7 @@ const StudioSettings = () => {
   const { cpData, setCpData } = useCPData();
   const [exists, setExists] = useState(true);
   const [msg, setMsg] = useState("");
+  const [resAwait, setResAwait] = useState(false);
   
   useEffect(() => {
     if(cpData.studio.length === 0) {
@@ -27,6 +28,7 @@ const StudioSettings = () => {
 
   const handleSubmit = async(values: any) => {
     setExists(true);
+    setResAwait(true);
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("link", values.link);
@@ -50,6 +52,7 @@ const StudioSettings = () => {
       //@ts-ignore
       setCpData(prev => ({...prev, studio: [data]}))
     }
+    setResAwait(false);
   }
 
 
@@ -161,31 +164,23 @@ const StudioSettings = () => {
                 size="small"
               />
 
+              {resAwait  && <CircularProgress />}
+
               {/* Submit Button */}
 
                 <Button
                   type="submit"
                   variant="contained"
                   color="primary"
-                  fullWidth
+                  disabled={resAwait}
                   sx={{ mt: 2 }}
                 >
                   {exists ? <>Update Studio</>: <>Create Studio</>}
                 </Button>
 
+                <Typography sx={{ mt: 2, color: "gray" }}>{msg}</Typography>
+
             </form>
-
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ mt: 2 }}
-              onClick={() => {console.log(cpData)}}
-              >
-              Print State
-            </Button>
-
-            <Typography sx={{ mt: 2, color: "gray" }}>{msg}</Typography>
 
           </Box>
 

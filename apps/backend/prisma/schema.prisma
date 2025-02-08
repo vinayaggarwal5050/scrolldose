@@ -90,8 +90,9 @@ model Video {
   categoryId      Int?
   thumbnailPath   String?
   filePath        String?   @unique
-  status          String?  @default("Pending")
+  status          String?   @default("Pending")
   tags            String?
+  url             String?   @unique
 
 
   studioId        Int

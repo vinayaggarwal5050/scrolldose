@@ -1,95 +1,81 @@
-import { Box, Button, Card, CardContent, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, CircularProgress, IconButton } from "@mui/material";
 import { useCPData } from "../../global-states/CPProvider";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { backendURL } from "../../constants/backend-url";
-import { Link } from "react-router-dom";
+import CloseIcon from "@mui/icons-material/Close";
 
 const AddVideo = () => {
-
   const { cpData } = useCPData();
   const [exists, setExists] = useState(false);
   const [msg, setMsg] = useState("");
-  const [studioExists, setStdioExists] = useState(false);
+  const [studioExists, setStudioExists] = useState(false);
   const [videoData, setVideoData] = useState<any>();
-
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if(cpData.studio.length > 0) {
-      setStdioExists(true);
+    console.log(studioExists);
+    if (cpData.studio.length > 0) {
+      setStudioExists(true);
     }
-  }, [])
-
-  // if(!studioExists) {
-  //   return 
-
-
-  //     <Card sx={{ boxShadow: 3, width: "350px", height: "300px"}}>
-  //       <CardContent>
-  //         <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-
-  //           <Typography variant="h5" >
-  //             You need to create the Studio before you add any Video
-  //           </Typography>
-
-  //           <Box sx={{width: 200, height: 80, pt: 3}}>
-  //             {/* <Button color="inherit" component={Link} to="cp/settings/studio-settings">
-  //               Create Studio
-  //             </Button> */}
-  //           </Box>
-
-  //         </Box>
-
-  //       </CardContent>
-  //     </Card>
-      
-  // }
-  
+  }, []);
 
   const validationSchema = Yup.object({
     title: Yup.string().required("Video Title is required"),
     slug: Yup.string().required("Video Slug is required"),
     category: Yup.string().required("Category is required"),
-    tags: Yup.string().required("Tags is required"),
+    tags: Yup.string().required("Tags are required"),
     studioId: Yup.number().required("Channel Id is required"),
   });
 
+  // Handle File Selection
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setVideoFile(file);
+    }
+  };
 
-  const handleSubmit = async(values: any) => {
+  // Remove Selected File
+  const removeSelectedFile = () => {
+    setVideoFile(null);
+  };
+
+  // Handle Form Submission
+  const handleSubmit = async (values: any) => {
+    if (!videoFile) {
+      setMsg("Please select a video file before uploading.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("slug", values.slug);
     formData.append("category", values.category);
     formData.append("tags", values.tags);
     formData.append("studioId", values.studioId);
+    formData.append("video", videoFile);
 
-    const formDataObject: Record<string, any> = {};
-
-    formData.forEach((value, key) => {
-      formDataObject[key] = value;
-    });  
-
-    console.log("Converted Object:", formDataObject);
+    setLoading(true);
 
     let response;
-
-    if(exists) {
-      response = await updateOnServer(formDataObject);
+    if (exists) {
+      response = await updateOnServer(formData);
     } else {
-      setExists(false);
-      response = await createOnServer(formDataObject);
+      response = await createOnServer(formData);
     }
 
-    //server response is true
-    if(response.data) {
+    console.log(response);
+
+    setLoading(false);
+
+    if (response?.data) {
       setExists(true);
       setVideoData(response.data);
-      console.log(response.data);
     }
-
-  }
-
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -100,156 +86,139 @@ const AddVideo = () => {
       studioId: cpData?.studio[0]?.id || "",
     },
     validationSchema,
-    onSubmit: handleSubmit
+    onSubmit: handleSubmit,
   });
 
-
-  const createOnServer = async(formData: any) => {
+  // API Calls
+  const createOnServer = async (formData: FormData) => {
     try {
-      const jsonRes = await fetch(`${backendURL}/video/upload?studioid=${cpData?.studio[0]?.id}`, {
+      const response = await fetch(`${backendURL}/video2/upload?studioid=${cpData?.studio[0]?.id}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: formData,
       });
-      const res = await jsonRes.json();
-      console.log(res);
 
-      if (res.status) {
-        setMsg(res.msg);
-      } else {
-        setMsg(res.msg);
-      }
-
+      const res = await response.json();
+      setMsg(res.msg);
       return res;
-
-    } catch(err) {
-      console.log(err);
+    } catch (err) {
+      console.error(err);
+      setMsg("Error uploading video.");
     }
+  };
 
-  }
-
-  const updateOnServer = async(formData: any) => {
+  const updateOnServer = async (formData: FormData) => {
     try {
-      const jsonRes = await fetch(`${backendURL}/video/update?videoid=${videoData?.id}`, {
+      const response = await fetch(`${backendURL}/video/update?videoid=${videoData?.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: formData,
       });
-      const res = await jsonRes.json();
-      console.log(res);
 
-      if (res.status) {
-        setMsg(res.msg);
-      } else {
-        setMsg(res.msg);
-      }
-
-      return res.data;
-
-    } catch(err) {
-      console.log(err);
+      const res = await response.json();
+      setMsg(res.msg);
+      return res;
+    } catch (err) {
+      console.error(err);
+      setMsg("Error updating video.");
     }
-
-  }
-
-
+  };
 
   return (
-    <Box sx={{ minWidth: "80vh", minHeight: "85vh", display: "flex", justifyContent: "center"}}>
+    <Box sx={{ minWidth: "80vh", minHeight: "85vh", display: "flex", justifyContent: "center" }}>
       <Box sx={{ m: 3, pb: 2, width: "80%", height: "100%", backgroundColor: "#ffffff", borderRadius: "10px" }}>
-
-
-        
-        <Typography sx={{ mt: 2, ml: 3, color: 'text.primary', fontWeight: "bold", fontSize: 18 }}>
-        { exists ?  <>Edit Video Information</>: <>Upload New Video</>}
+        <Typography sx={{ mt: 2, ml: 3, color: "text.primary", fontWeight: "bold", fontSize: 18 }}>
+          {exists ? "Edit Video Information" : "Upload New Video"}
         </Typography>
-        
 
-        <Box sx={{ pl:6, pr: 6, mt: 1}}>
-            <form onSubmit={formik.handleSubmit}>
+        <Box sx={{ pl: 6, pr: 6, mt: 1 }}>
+          <form onSubmit={formik.handleSubmit}>
+            {/* Title */}
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Video Title"
+              name="title"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.title && Boolean(formik.errors.title)}
+              size="small"
+            />
 
-              {/* Title */}
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Video Title"
-                name="title"
-                value={formik.values.title}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.title && Boolean(formik.errors.title)}
-                size="small"
-              />
+            {/* Slug */}
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Video Slug"
+              name="slug"
+              value={formik.values.slug}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.slug && Boolean(formik.errors.slug)}
+              size="small"
+            />
 
-              {/* slug */}
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Video Slug"
-                name="slug"
-                value={formik.values.slug}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.slug && Boolean(formik.errors.slug)}
-                size="small"
-              />
+            {/* Category */}
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Video Category"
+              name="category"
+              value={formik.values.category}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.category && Boolean(formik.errors.category)}
+              size="small"
+            />
 
-              {/* category */}
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Video Category"
-                name="category"
-                value={formik.values.category}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.category && Boolean(formik.errors.category)}
-                // helperText={formik.touched.link && formik.errors.link}
-                size="small"
-              />
+            {/* Tags */}
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Video Tags - Comma Separated"
+              name="tags"
+              value={formik.values.tags}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.tags && Boolean(formik.errors.tags)}
+              size="small"
+            />
 
-              {/* category */}
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Video Tags - Comma Separated"
-                name="tags"
-                value={formik.values.tags}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.tags && Boolean(formik.errors.tags)}
-                // helperText={formik.touched.link && formik.errors.link}
-                size="small"
-              />
+            {/* Upload Video */}
+            <Typography sx={{ mt: 2, mb: 1, color: "text.primary", fontSize: 15 }}>
+              Choose a Video File (Only One)
+            </Typography>
 
-              {/* Main Image */}
-              <Typography sx={{ mt: 2, mb: 1, color: 'text.primary', fontSize: 15 }}>
-                Choose Video File To Upload
-              </Typography>
-              <input type="file" accept="video/*" onChange={() => {}} />
+            {/* File Input */}
+            {!videoFile ? (
+              <input type="file" accept="video/*" onChange={handleFileChange} />
+            ) : (
+              <Box sx={{ display: "flex", alignItems: "center", mt: 1, mb: 2 }}>
+                <Typography sx={{ fontSize: 14, color: "gray", mr: 1 }}>{videoFile.name}</Typography>
+                <IconButton onClick={removeSelectedFile} size="small">
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            )}
 
+            {/* Loading Indicator */}
+            {loading && (
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                <CircularProgress />
+              </Box>
+            )}
 
-              {/* Submit Button */}
+            {/* Submit Button */}
+            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }} disabled={loading}>
+              {loading ? "Uploading..." : exists ? "Edit Video Information" : "Upload Video"}
+            </Button>
+          </form>
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  sx={{ mt: 2 }}
-                >
-                  {exists ? <>Edit Video Information</> : <>Upload Video</>}
-                </Button>
-
-            </form>
-
-            <Typography sx={{ mt: 2, color: "gray" }}>{msg}</Typography>
-
-          </Box>
-
+          {/* Error Message */}
+          <Typography sx={{ mt: 2, color: "gray" }}>{msg}</Typography>
+        </Box>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
 export default AddVideo;

@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, CircularProgress } from "@mui/material";
 import { useCPData } from "../../global-states/CPProvider";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -10,6 +10,7 @@ const StoreSettings = () => {
   const { cpData, setCpData } = useCPData();
   const [exists, setExists] = useState(true);
   const [msg, setMsg] = useState("");
+  const [resAwait, setResAwait] = useState(false);
   
   useEffect(() => {
     if(cpData.store.length === 0) {
@@ -27,6 +28,7 @@ const StoreSettings = () => {
 
   const handleSubmit = async(values: any) => {
     setExists(true);
+    setResAwait(true);
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("slug", values.slug);
@@ -50,6 +52,8 @@ const StoreSettings = () => {
       //@ts-ignore
       setCpData(prev => ({...prev, store: [data]}))
     }
+
+    setResAwait(false);
   }
 
 
@@ -161,31 +165,25 @@ const StoreSettings = () => {
                 size="small"
               />
 
-              {/* Submit Button */}
+              {resAwait  && <CircularProgress />}
 
+              {/* Submit Button */}
                 <Button
                   type="submit"
                   variant="contained"
                   color="primary"
-                  fullWidth
                   sx={{ mt: 2 }}
+                  disabled={resAwait}
                 >
                   {exists ? <>Update Store</>: <>Create Store</>}
                 </Button>
 
+                <Typography sx={{ mt: 2, color: "gray" }}>{msg}</Typography>
+
             </form>
 
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ mt: 2 }}
-              onClick={() => {console.log(cpData)}}
-              >
-              Print State
-            </Button>
 
-            <Typography sx={{ mt: 2, color: "gray" }}>{msg}</Typography>
+
 
           </Box>
 

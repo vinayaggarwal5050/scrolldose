@@ -10,7 +10,8 @@ export interface VideoInterface {
   thumbnailPath?: string,
   filePath?: string,
   status? : string,
-  tags?: string
+  tags?: string,
+  url?: string
 }
 
 
@@ -22,9 +23,11 @@ export const createVideoEntryForStudioId = async(videoData: VideoInterface, stud
         slug: videoData.slug,
         category: videoData?.category,
         categoryId: videoData?.categoryId,
+        filePath: videoData?.filePath,
         thumbnailPath: videoData?.thumbnailPath,
         tags: videoData?.tags,
         status: videoData?.status,
+        url: videoData?.url,
         studio: {
           connect: {
             id: studioId
@@ -57,6 +60,7 @@ export const getAllVideoEnteries = async() => {
         filePath: true,
         thumbnailPath : true,
         status: true,
+        url: true,
         studioId: true,
         createdAt: true,
         lastUpdate: true,
@@ -150,6 +154,7 @@ export const getVideoEntryByVideoId = async(videoId: number) => {
         status: true,
         filePath: true,
         thumbnailPath : true,
+        url: true,
         studioId: true,
         createdAt: true,
         lastUpdate: true,
@@ -180,6 +185,7 @@ export const getVideoEntryByVideoSlug = async(videoSlug: string) => {
         status: true,
         filePath: true,
         thumbnailPath : true,
+        url: true,
         studioId: true,
         createdAt: true,
         lastUpdate: true,
@@ -210,6 +216,7 @@ export const getVideoEnteriesForStudioId = async(studioId: number) => {
         status: true,
         filePath: true,
         thumbnailPath : true,
+        url: true,
         studioId: true,
         createdAt: true,
         lastUpdate: true,
@@ -234,6 +241,7 @@ interface updateVideoEntrynterface {
   filePath?: string,
   status? : string,
   tags?: string,
+  url?: string,
   studioId?: number
 }
 
@@ -252,6 +260,7 @@ export const updateVideoByVideoId = async(data: updateVideoEntrynterface, videoI
         status: data?.status,
         thumbnailPath: data?.thumbnailPath,
         filePath: data?.filePath,
+        url: data?.url
        }
     })
 

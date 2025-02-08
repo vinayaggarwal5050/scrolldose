@@ -20,9 +20,11 @@ const createVideoEntryForStudioId = (videoData, studioId) => __awaiter(void 0, v
                 slug: videoData.slug,
                 category: videoData === null || videoData === void 0 ? void 0 : videoData.category,
                 categoryId: videoData === null || videoData === void 0 ? void 0 : videoData.categoryId,
+                filePath: videoData === null || videoData === void 0 ? void 0 : videoData.filePath,
                 thumbnailPath: videoData === null || videoData === void 0 ? void 0 : videoData.thumbnailPath,
                 tags: videoData === null || videoData === void 0 ? void 0 : videoData.tags,
                 status: videoData === null || videoData === void 0 ? void 0 : videoData.status,
+                url: videoData === null || videoData === void 0 ? void 0 : videoData.url,
                 studio: {
                     connect: {
                         id: studioId
@@ -51,6 +53,7 @@ const getAllVideoEnteries = () => __awaiter(void 0, void 0, void 0, function* ()
                 filePath: true,
                 thumbnailPath: true,
                 status: true,
+                url: true,
                 studioId: true,
                 createdAt: true,
                 lastUpdate: true,
@@ -133,6 +136,7 @@ const getVideoEntryByVideoId = (videoId) => __awaiter(void 0, void 0, void 0, fu
                 status: true,
                 filePath: true,
                 thumbnailPath: true,
+                url: true,
                 studioId: true,
                 createdAt: true,
                 lastUpdate: true,
@@ -162,6 +166,7 @@ const getVideoEntryByVideoSlug = (videoSlug) => __awaiter(void 0, void 0, void 0
                 status: true,
                 filePath: true,
                 thumbnailPath: true,
+                url: true,
                 studioId: true,
                 createdAt: true,
                 lastUpdate: true,
@@ -191,6 +196,7 @@ const getVideoEnteriesForStudioId = (studioId) => __awaiter(void 0, void 0, void
                 status: true,
                 filePath: true,
                 thumbnailPath: true,
+                url: true,
                 studioId: true,
                 createdAt: true,
                 lastUpdate: true,
@@ -219,6 +225,7 @@ const updateVideoByVideoId = (data, videoId) => __awaiter(void 0, void 0, void 0
                 status: data === null || data === void 0 ? void 0 : data.status,
                 thumbnailPath: data === null || data === void 0 ? void 0 : data.thumbnailPath,
                 filePath: data === null || data === void 0 ? void 0 : data.filePath,
+                url: data === null || data === void 0 ? void 0 : data.url
             }
         });
         return { status: true, data: response };

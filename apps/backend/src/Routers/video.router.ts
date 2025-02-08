@@ -115,7 +115,7 @@ videoRouter.put('/update', async(req: Request, res: Response) => {
   //http://localhost:5000/api/v1/video/update?videoid=3
 
   try {
-    const videoId = parseFloat(req.query.videoid as string);
+    const videoId = parseInt(req.query.videoid as string);
     const videoData = req.body;
     let response;
 
