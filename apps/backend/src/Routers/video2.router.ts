@@ -9,7 +9,9 @@ export const videoRouter2 = Router();
 
 // Define directories
 const uploadFolder = "./uploaded-videos/";
-const outputFolder = "../videos/";
+
+const outputFolder = path.join( "/usr/src/videos/");
+console.log(outputFolder);
 
 // Ensure directories exist
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
@@ -55,7 +57,7 @@ videoRouter2.post("/upload", upload.single("video"), async (req: any, res: any) 
   console.log(`Processing video: ${inputFilePath} -> ${outputFilePath}`);
 
   const filePath = `${outputFilePath}`;
-  const url = `/videos/${path.basename(path.join(outputFolder, slug))}`;
+  const url = `/videos/${slug}`;
 
   // Convert video to 480p MP4 (CBR 2 Mbps)
   ffmpeg(inputFilePath)

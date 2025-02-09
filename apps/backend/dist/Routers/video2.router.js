@@ -22,7 +22,8 @@ const video_functions_1 = require("../db-functions/video-functions");
 exports.videoRouter2 = (0, express_1.Router)();
 // Define directories
 const uploadFolder = "./uploaded-videos/";
-const outputFolder = "../videos/";
+const outputFolder = path_1.default.join("/usr/src/videos/");
+console.log(outputFolder);
 // Ensure directories exist
 if (!fs_1.default.existsSync(uploadFolder))
     fs_1.default.mkdirSync(uploadFolder, { recursive: true });
@@ -62,7 +63,7 @@ exports.videoRouter2.post("/upload", upload.single("video"), (req, res) => __awa
     const outputFilePath = path_1.default.join(outputFolder, `${slug}.mp4`);
     console.log(`Processing video: ${inputFilePath} -> ${outputFilePath}`);
     const filePath = `${outputFilePath}`;
-    const url = `/videos/${path_1.default.basename(path_1.default.join(outputFolder, slug))}`;
+    const url = `/videos/${slug}`;
     // Convert video to 480p MP4 (CBR 2 Mbps)
     (0, fluent_ffmpeg_1.default)(inputFilePath)
         .output(outputFilePath)
