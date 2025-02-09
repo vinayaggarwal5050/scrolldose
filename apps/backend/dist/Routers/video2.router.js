@@ -22,7 +22,7 @@ const video_functions_1 = require("../db-functions/video-functions");
 exports.videoRouter2 = (0, express_1.Router)();
 // Define directories
 const uploadFolder = "./uploaded-videos/";
-const outputFolder = "./converted-videos/";
+const outputFolder = "../videos/";
 // Ensure directories exist
 if (!fs_1.default.existsSync(uploadFolder))
     fs_1.default.mkdirSync(uploadFolder, { recursive: true });
@@ -61,7 +61,8 @@ exports.videoRouter2.post("/upload", upload.single("video"), (req, res) => __awa
     const inputFilePath = req.file.path;
     const outputFilePath = path_1.default.join(outputFolder, `${slug}.mp4`);
     console.log(`Processing video: ${inputFilePath} -> ${outputFilePath}`);
-    const filePath = `/videos/${path_1.default.basename(outputFilePath)}`;
+    const filePath = `${outputFilePath}`;
+    const url = `/videos/${path_1.default.basename(path_1.default.join(outputFolder, slug))}`;
     // Convert video to 480p MP4 (CBR 2 Mbps)
     (0, fluent_ffmpeg_1.default)(inputFilePath)
         .output(outputFilePath)
@@ -75,13 +76,12 @@ exports.videoRouter2.post("/upload", upload.single("video"), (req, res) => __awa
             fs_1.default.unlinkSync(inputFilePath); // Remove original file after conversion
             console.log("uploaded file deleted");
             // Save entry in the database **after** successful conversion
-            const response = yield (0, video_functions_1.createVideoEntryForStudioId)(Object.assign(Object.assign({}, videoData), { filePath }), studioId);
+            const response = yield (0, video_functions_1.createVideoEntryForStudioId)(Object.assign(Object.assign({}, videoData), { "filePath": filePath, "url": url }), studioId);
             console.log("database entry created");
             res.json({
                 status: true,
                 msg: "Upload, Conversion successful & database entry created",
-                data: response === null || response === void 0 ? void 0 : response.data,
-                url: filePath,
+                data: response === null || response === void 0 ? void 0 : response.data
             });
         }
         catch (dbError) {

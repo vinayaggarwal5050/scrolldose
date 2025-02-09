@@ -14,6 +14,7 @@ import StudioSettings from "./pages/studio/StudioSettings";
 import AddVideo from "./pages/studio/AddVideo";
 import AllVideos from "./pages/studio/AllVideos";
 import UploadVideo from "./pages/studio/UploadVideo";
+import VideoPlayer from "./pages/studio/VideoPlayer";
 
 const DashboardLayout = () => {
   return (
@@ -47,6 +48,7 @@ function App() {
               <Route path="videos/add-video" element={<AddVideo />} />
               <Route path="videos/upload-video" element={<UploadVideo />} />
               <Route path="videos/all-videos" element={<AllVideos />} />
+              <Route path="videos/player" element={<VideoPlayer />} />
             </Route>
           </Route>
 

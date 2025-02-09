@@ -9,7 +9,7 @@ export const videoRouter2 = Router();
 
 // Define directories
 const uploadFolder = "./uploaded-videos/";
-const outputFolder = "./converted-videos/";
+const outputFolder = "../videos/";
 
 // Ensure directories exist
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
@@ -54,7 +54,8 @@ videoRouter2.post("/upload", upload.single("video"), async (req: any, res: any) 
 
   console.log(`Processing video: ${inputFilePath} -> ${outputFilePath}`);
 
-  const filePath = `/videos/${path.basename(outputFilePath)}`
+  const filePath = `${outputFilePath}`;
+  const url = `/videos/${path.basename(path.join(outputFolder, slug))}`;
 
   // Convert video to 480p MP4 (CBR 2 Mbps)
   ffmpeg(inputFilePath)
@@ -70,15 +71,14 @@ videoRouter2.post("/upload", upload.single("video"), async (req: any, res: any) 
         console.log("uploaded file deleted");
 
         // Save entry in the database **after** successful conversion
-        const response = await createVideoEntryForStudioId( { ...videoData, "filePath": filePath, "url": filePath }, studioId);
+        const response = await createVideoEntryForStudioId( { ...videoData, "filePath": filePath, "url": url }, studioId);
 
         console.log("database entry created");
 
         res.json({
           status: true,
           msg: "Upload, Conversion successful & database entry created",
-          data: response?.data,
-          url: filePath,
+          data: response?.data
         });
       } catch (dbError) {
         console.error("Database entry failed:", dbError);

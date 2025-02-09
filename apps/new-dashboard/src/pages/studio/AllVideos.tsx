@@ -14,9 +14,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 import CreateIcon from '@mui/icons-material/Create';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 
 const AllVideos = () => {
@@ -87,7 +89,7 @@ const AllVideos = () => {
         </Typography>
 
         <Box sx={{ m: 2 }} >
-          <RenderVideoList videoList={videoList}  />
+          <RenderVideoList videoList={videoList} setVideoList={setVideoList}  />
         </Box>
 
 
@@ -103,11 +105,12 @@ const AllVideos = () => {
 export default AllVideos;
 
 
-const RenderVideoList = ({videoList} : any) => {
-
+const RenderVideoList = ({videoList, setVideoList} : any) => {
+  
   const [showForm, setShowForm] = useState(false);
   const [resAwait, setResAwait] = useState(false);
   const [msg, setMsg] = useState("");
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     title: Yup.string().required("Video Title is required"),
@@ -141,6 +144,13 @@ const RenderVideoList = ({videoList} : any) => {
 
     if(response?.status) {
 
+      setShowForm(false);
+      videoList = videoList.map((video:any) => 
+        video.id === response?.data?.id ? { ...video, ...response?.data } : video
+      )
+
+      setVideoList(videoList);
+      
     }
     setResAwait(false);
     
@@ -267,7 +277,8 @@ const RenderVideoList = ({videoList} : any) => {
 
           <TableHead>
             <TableRow >
-              <TableCell sx={{fontWeight: "bold"}}>Title </TableCell>
+              <TableCell sx={{fontWeight: "bold"}} align="left">Play</TableCell>
+              <TableCell sx={{fontWeight: "bold"}} align="left" >Title</TableCell>
               <TableCell sx={{fontWeight: "bold"}} align="left" >Slug</TableCell>
               <TableCell sx={{fontWeight: "bold"}} align="left">Category</TableCell>
               <TableCell sx={{fontWeight: "bold"}} align="left">Tags</TableCell>
@@ -283,9 +294,8 @@ const RenderVideoList = ({videoList} : any) => {
                 key={video?.title}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
-                  {video?.title}
-                </TableCell>
+                <TableCell align="left" onClick={() => navigate(`/cp/videos/player?url=${video?.url}`)}><PlayCircleOutlineIcon/></TableCell>
+                <TableCell component="th" scope="row">{video?.title}</TableCell>
                 <TableCell align="left">{video?.slug}</TableCell>
                 <TableCell align="left">{video?.category}</TableCell>
                 <TableCell align="left">{video?.tags}</TableCell>
