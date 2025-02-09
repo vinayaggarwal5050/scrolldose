@@ -23,30 +23,41 @@ exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, f
     const storeName = req.query.storename;
     const storeSlug = req.query.storeslug;
     const channelPartnerId = parseInt(req.query.channelpartnerid);
-    let data;
+    let response;
     if (productId) {
-        data = yield (0, product_functions_1.getProductByProductId)(productId);
+        response = yield (0, product_functions_1.getProductByProductId)(productId);
     }
     else if (storeId) {
-        data = yield (0, product_functions_1.getProductsByStoreId)(storeId);
+        response = yield (0, product_functions_1.getProductsByStoreId)(storeId);
     }
     else if (storeName) {
-        data = yield (0, product_functions_1.getProductsByStoreName)(storeName);
+        response = yield (0, product_functions_1.getProductsByStoreName)(storeName);
     }
     else if (storeSlug) {
-        data = yield (0, product_functions_1.getProductsByStoreSlug)(storeSlug);
+        response = yield (0, product_functions_1.getProductsByStoreSlug)(storeSlug);
     }
     else if (channelPartnerId) {
-        data = yield (0, product_functions_1.getproductsByChannelPartnerId)(channelPartnerId);
+        response = yield (0, product_functions_1.getproductsByChannelPartnerId)(channelPartnerId);
     }
     else {
-        data = yield (0, product_functions_1.getAllProducts)();
+        response = yield (0, product_functions_1.getAllProducts)();
     }
-    res.status(200).json({
-        status: true,
-        data: data,
-        msg: "/api/v1/products"
-    });
+    if (response.status) {
+        res.status(200).json({
+            status: true,
+            data: response === null || response === void 0 ? void 0 : response.data,
+            msg: "Product Information Fetched Successfully",
+            msgFrom: "/api/v1/product"
+        });
+    }
+    else {
+        res.status(200).json({
+            status: false,
+            error: response === null || response === void 0 ? void 0 : response.error,
+            msg: "Product Information Fetched Successfully",
+            msgFrom: "/api/v1/product"
+        });
+    }
 }));
 exports.productRouter.get('/range', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const startIndex = parseInt(req.query.startindex);
@@ -54,12 +65,23 @@ exports.productRouter.get('/range', (req, res) => __awaiter(void 0, void 0, void
     const limit = parseInt(req.query.limit);
     if (startIndex && endIndex && limit) {
         try {
-            const data = yield (0, product_functions_1.getProductsByRange)(startIndex, endIndex, limit);
-            res.status(200).json({
-                status: true,
-                data: data,
-                msg: "/api/v1/products/range"
-            });
+            const response = yield (0, product_functions_1.getProductsByRange)(startIndex, endIndex, limit);
+            if (response.status) {
+                res.status(200).json({
+                    status: true,
+                    data: response === null || response === void 0 ? void 0 : response.data,
+                    msg: "Product fetched succesfully",
+                    msgFrom: "/api/v1/products/range"
+                });
+            }
+            else {
+                res.status(200).json({
+                    status: false,
+                    error: response === null || response === void 0 ? void 0 : response.error,
+                    msg: "Product fetched succesfully",
+                    msgFrom: "/api/v1/products/range"
+                });
+            }
         }
         catch (err) {
             res.status(200).json({
@@ -71,8 +93,8 @@ exports.productRouter.get('/range', (req, res) => __awaiter(void 0, void 0, void
     }
     else {
         res.status(200).json({
-            status: true,
-            msg: "parameters missing",
+            status: false,
+            msg: "invalid inputs",
             msgFrom: "/api/v1/products/range"
         });
     }
@@ -84,12 +106,23 @@ exports.productRouter.get('/user-range', (req, res) => __awaiter(void 0, void 0,
     const userId = parseInt(req.query.userid);
     if (startIndex && endIndex && limit && userId) {
         try {
-            const data = yield (0, product_functions_1.getProductsByRangeAndUserId)(startIndex, endIndex, limit, userId);
-            res.status(200).json({
-                status: true,
-                data: data,
-                msg: "/api/v1/products/user-range"
-            });
+            const response = yield (0, product_functions_1.getProductsByRangeAndUserId)(startIndex, endIndex, limit, userId);
+            if (response.status) {
+                res.status(200).json({
+                    status: true,
+                    data: response === null || response === void 0 ? void 0 : response.data,
+                    msg: "Product fetched succesfully",
+                    msgFrom: "/api/v1/products/range"
+                });
+            }
+            else {
+                res.status(200).json({
+                    status: false,
+                    error: response === null || response === void 0 ? void 0 : response.error,
+                    msg: "Product fetched succesfully",
+                    msgFrom: "/api/v1/products/range"
+                });
+            }
         }
         catch (err) {
             res.status(200).json({
@@ -101,28 +134,40 @@ exports.productRouter.get('/user-range', (req, res) => __awaiter(void 0, void 0,
     }
     else {
         res.status(200).json({
-            status: true,
-            msg: "parameters missing",
-            msgFrom: "/api/v1/products/user-range"
+            status: false,
+            msg: "invalid inputs",
+            msgFrom: "/api/v1/products/range"
         });
     }
 }));
 exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/product/create?storeid=1
+    //http://localhost:5000/api/v1/product/create?storeid=1
     const storeId = parseInt(req.query.storeid);
     const productData = req.body;
     try {
-        const data = yield (0, product_functions_1.createProductForStoreId)(productData, storeId);
-        res.status(200).json({
-            status: true,
-            data: data,
-            msg: "/api/v1/product/create"
-        });
+        const response = yield (0, product_functions_1.createProductForStoreId)(productData, storeId);
+        if (response.status) {
+            res.status(200).json({
+                status: true,
+                data: response === null || response === void 0 ? void 0 : response.data,
+                msg: "Product Created succesfully",
+                msgFrom: "/api/v1/product/create"
+            });
+        }
+        else {
+            res.status(200).json({
+                status: false,
+                error: response === null || response === void 0 ? void 0 : response.error,
+                msg: "Failed to Create Product",
+                msgFrom: "/api/v1/product/create"
+            });
+        }
     }
     catch (error) {
         res.status(200).json({
             status: false,
-            msg: "some error",
+            msg: "Failed to create Product",
+            msgFrom: "/api/v1/product/create",
             error: error
         });
     }
@@ -130,55 +175,81 @@ exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, vo
 exports.productRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:6000/api/v1/product/update?productid=3
     try {
-        const productId = parseFloat(req.query.productid);
+        const productId = parseInt(req.query.productid);
         const productData = req.body;
         if (productId) {
-            const data = yield (0, product_functions_1.updateProductByProductId)(productData, productId);
-            res.status(200).json({
-                status: "true",
-                data: data,
-                msg: "api/v1/product/update?productid"
-            });
+            const response = yield (0, product_functions_1.updateProductByProductId)(productData, productId);
+            if (response.status) {
+                res.status(200).json({
+                    status: true,
+                    data: response === null || response === void 0 ? void 0 : response.data,
+                    msg: "Product Updated succesfully",
+                    msgFrom: "/api/v1/product/update?productid"
+                });
+            }
+            else {
+                res.status(200).json({
+                    status: false,
+                    error: response === null || response === void 0 ? void 0 : response.error,
+                    msg: "Failed to update Product",
+                    msgFrom: "/api/v1/product/update?productid"
+                });
+            }
         }
         else {
             res.status(200).json({
                 status: false,
-                msg: "invalid input"
+                msg: "invalid input",
+                msgFrom: "/api/v1/product/update"
             });
         }
     }
     catch (error) {
         res.status(200).json({
             status: false,
-            msg: "some error",
-            error: error
+            msg: "some database error",
+            error: error,
+            msgFrom: "/api/v1/product/update"
         });
     }
 }));
 exports.productRouter.delete('/delete', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/product/delete?productid=4
+    //http://localhost:5000/api/v1/product/delete?productid=4
     try {
         const productId = parseInt(req.query.productid);
-        const data = yield (0, product_functions_1.deleteproductByProductId)(productId);
         if (productId) {
-            res.status(200).json({
-                status: "true",
-                data: data,
-                msg: "api/v1/product/delete?productid="
-            });
+            const response = yield (0, product_functions_1.deleteproductByProductId)(productId);
+            if (response.status) {
+                res.status(200).json({
+                    status: true,
+                    data: response === null || response === void 0 ? void 0 : response.data,
+                    msg: "Product deleted succesfully",
+                    msgFrom: "/api/v1/product/delete?productid"
+                });
+            }
+            else {
+                res.status(200).json({
+                    status: false,
+                    error: response === null || response === void 0 ? void 0 : response.error,
+                    msg: "Failed to delete Product",
+                    msgFrom: "/api/v1/product/delete?productid"
+                });
+            }
         }
         else {
             res.json({
                 status: "false",
-                msg: "invalid data"
+                msg: "invalid inputs",
+                msgFrom: "/api/v1/product/delete"
             });
         }
     }
     catch (error) {
         res.status(200).json({
             status: false,
-            msg: "some error",
-            error: error
+            msg: "some database error",
+            error: error,
+            msgFrom: "/api/v1/product/delete"
         });
     }
 }));

@@ -25,6 +25,25 @@ model Superadmin {
   createdAt DateTime @default(now())
 }
 
+model GlobalCategory {
+  id        Int     @id @default(autoincrement())
+  name      String
+  slug      String?
+  
+  globalSubCategories   GlobalSubCategory[]
+
+}
+
+model GlobalSubCategory {
+  id                    Int           @id @default(autoincrement())
+  name                  String
+  slug                  String?
+
+  globalCategoryId     Int
+  globalCategory        GlobalCategory @relation(fields: [globalCategoryId], references: [id])
+
+}
+
 model ChannelPartner {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -52,12 +71,12 @@ model Store {
 model Product {
   id          Int      @id @default(autoincrement())
   name        String
+  slug        String?  @unique
   description String?
-  category    String?
   price       String?
+  category    String?
   image       String?
   link        String?
-  slug        String?
   video       String?
   tag         String?
   createdAt   DateTime @default(now())

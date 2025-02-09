@@ -7,6 +7,9 @@ import { userRouter } from "./Routers/userRoute";
 import { studioRouter } from "./Routers/studio.router";
 import { videoRouter } from "./Routers/video.router";
 import { videoRouter2 } from "./Routers/video2.router";
+import { globalCategoryRouter } from "./Routers/globalCategory.router";
+import { globalSubCategoryRouter } from "./Routers/globalSubCategory.router";
+
 import cors from "cors";
 
 const app = express();
@@ -64,7 +67,12 @@ app.get("/", (req: Request, res: Response) => {
   })
 })
 app.use("/api/v1/super-admin", superadminRouter);
+
+app.use("/api/v1/global-category", globalCategoryRouter);
+app.use("/api/v1/global-sub-category", globalSubCategoryRouter);
+
 app.use("/api/v1/channel-partner", channelPartnerRouter);
+
 app.use("/api/v1/store", storeRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/user", userRouter);

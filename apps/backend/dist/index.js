@@ -12,6 +12,8 @@ const userRoute_1 = require("./Routers/userRoute");
 const studio_router_1 = require("./Routers/studio.router");
 const video_router_1 = require("./Routers/video.router");
 const video2_router_1 = require("./Routers/video2.router");
+const globalCategory_router_1 = require("./Routers/globalCategory.router");
+const globalSubCategory_router_1 = require("./Routers/globalSubCategory.router");
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const PORT = 5000;
@@ -60,6 +62,8 @@ app.get("/", (req, res) => {
     });
 });
 app.use("/api/v1/super-admin", superadmin_router_1.superadminRouter);
+app.use("/api/v1/global-category", globalCategory_router_1.globalCategoryRouter);
+app.use("/api/v1/global-sub-category", globalSubCategory_router_1.globalSubCategoryRouter);
 app.use("/api/v1/channel-partner", channelPartner_router_1.channelPartnerRouter);
 app.use("/api/v1/store", store_router_1.storeRouter);
 app.use("/api/v1/product", product_router_1.productRouter);

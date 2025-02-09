@@ -32,30 +32,7 @@ export const AddProduct = () => {
     affiliateImageLink: Yup.string().optional(),
   });
 
-  const pushToServer = async (data: FormData) => {
-    try {
-      const res = await fetch(`${backendURL}/product/create`, {
-        method: "POST",
-        headers: {
-          "Authentication": `Auth-bearer: ${cpJWT}`
-        },
-        body: data,
-      });
-  
-      if (res.ok) {
-        setSubmitted(true);
-        alert("Product added successfully");
-        return await res.json();
-      } else {
-        alert("Could not add product");
-        return null;
-      }
-    } catch (err) {
-      console.error("Error uploading product:", err);
-      return null;
-    }
-  };
-  
+
 
   const handleSubmit = async(values: any) => {
     setSubmitted(true);
@@ -121,6 +98,31 @@ export const AddProduct = () => {
       setOtherImagesPreview(filesArray.map((file) => URL.createObjectURL(file))); 
     }
   };
+
+  const pushToServer = async (data: FormData) => {
+    try {
+      const res = await fetch(`${backendURL}/product/create`, {
+        method: "POST",
+        headers: {
+          "Authentication": `Auth-bearer: ${cpJWT}`
+        },
+        body: data,
+      });
+  
+      if (res.ok) {
+        setSubmitted(true);
+        alert("Product added successfully");
+        return await res.json();
+      } else {
+        alert("Could not add product");
+        return null;
+      }
+    } catch (err) {
+      console.error("Error uploading product:", err);
+      return null;
+    }
+  };
+  
 
   return(
     <Box sx={{ minWidth: "80vh", minHeight: "85vh", display: "flex", justifyContent: "center"}}>

@@ -32,11 +32,11 @@ const createProductForStoreId = (productData, storeId) => __awaiter(void 0, void
                 }
             },
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error creating product:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.createProductForStoreId = createProductForStoreId;
@@ -58,11 +58,11 @@ const getAllProducts = () => __awaiter(void 0, void 0, void 0, function* () {
                 storeId: true
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error fetching products:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getAllProducts = getAllProducts;
@@ -80,11 +80,11 @@ const getProductsByRange = (startIndex, endIndex, limit) => __awaiter(void 0, vo
             },
             take: limit, // Ensures that only 'limit' products are returned
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error fetching products by range:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getProductsByRange = getProductsByRange;
@@ -112,11 +112,11 @@ const getProductsByRangeAndUserId = (startIndex, endIndex, limit, userId) => __a
         const result = products.map((product) => {
             return Object.assign(Object.assign({}, product), { isWishedByUser: product.wishedByUsers.some((user) => user.userId === userId) });
         });
-        return result;
+        return { status: true, data: result };
     }
     catch (error) {
         console.error('Error fetching products by range and user ID:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getProductsByRangeAndUserId = getProductsByRangeAndUserId;
@@ -141,11 +141,11 @@ const getProductByProductId = (productId) => __awaiter(void 0, void 0, void 0, f
                 storeId: true
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Finding products:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getProductByProductId = getProductByProductId;
@@ -156,11 +156,11 @@ const getProductsByStoreId = (storeId) => __awaiter(void 0, void 0, void 0, func
                 storeId: storeId
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Finding products:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getProductsByStoreId = getProductsByStoreId;
@@ -174,11 +174,11 @@ const getProductsByStoreSlug = (StoreSlug) => __awaiter(void 0, void 0, void 0, 
                 products: true
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Finding products:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getProductsByStoreSlug = getProductsByStoreSlug;
@@ -192,11 +192,11 @@ const getProductsByStoreName = (StoreName) => __awaiter(void 0, void 0, void 0, 
                 products: true
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Finding products:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getProductsByStoreName = getProductsByStoreName;
@@ -215,11 +215,11 @@ const getproductsByChannelPartnerId = (channelPartnerId) => __awaiter(void 0, vo
                 storeId: store.id
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Finding products:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.getproductsByChannelPartnerId = getproductsByChannelPartnerId;
@@ -241,11 +241,11 @@ const updateProductByProductId = (data, productId) => __awaiter(void 0, void 0, 
                 tag: data === null || data === void 0 ? void 0 : data.tag
             }
         });
-        return response;
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Updaing products:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.updateProductByProductId = updateProductByProductId;
@@ -256,10 +256,11 @@ const deleteproductByProductId = (productId) => __awaiter(void 0, void 0, void 0
                 id: productId
             }
         });
+        return { status: true, data: response };
     }
     catch (error) {
         console.error('Error Deleting product:', error);
-        return error;
+        return { status: false, error: error };
     }
 });
 exports.deleteproductByProductId = deleteproductByProductId;

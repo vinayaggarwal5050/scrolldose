@@ -36,11 +36,11 @@ export const createProductForStoreId = async(productData: ProductInterface, stor
       },
     })
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
     console.error('Error creating product:', error);
-    return error;
+    return { status: false, error: error };
   }
 
 }
@@ -65,11 +65,11 @@ export const getAllProducts = async() => {
       }
     });
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
     console.error('Error fetching products:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 
@@ -88,10 +88,11 @@ export const getProductsByRange = async (startIndex: number, endIndex: number, l
       take: limit, // Ensures that only 'limit' products are returned
     });
 
-    return response;
+    return { status: true, data: response };
+    
   } catch (error) {
     console.error('Error fetching products by range:', error);
-    return error;
+    return { status: false, error: error };
   }
 };
 
@@ -124,10 +125,11 @@ export const getProductsByRangeAndUserId = async (startIndex: number, endIndex: 
       };
     });
 
-    return result;
+    return { status: true, data: result };
+    
   } catch (error) {
     console.error('Error fetching products by range and user ID:', error);
-    return error;
+    return { status: false, error: error };
   }
 };
 
@@ -154,11 +156,11 @@ export const getProductByProductId = async(productId: number) => {
       }
     })
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
     console.error('Error Finding products:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 
@@ -170,11 +172,11 @@ export const getProductsByStoreId = async(storeId: number) => {
       }
     })
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
     console.error('Error Finding products:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 
@@ -189,11 +191,11 @@ export const getProductsByStoreSlug = async(StoreSlug: string) => {
       }
     })
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
     console.error('Error Finding products:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 
@@ -208,11 +210,11 @@ export const getProductsByStoreName = async(StoreName: string) => {
       }
     })
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
     console.error('Error Finding products:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 
@@ -234,11 +236,11 @@ export const getproductsByChannelPartnerId = async(channelPartnerId: number) => 
       }
     })
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
     console.error('Error Finding products:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 
@@ -273,11 +275,11 @@ export const updateProductByProductId = async(data: updateProductInterface, prod
       }
     })
 
-    return response;
+    return { status: true, data: response };
 
   } catch(error) {
     console.error('Error Updaing products:', error);
-    return error;
+    return { status: false, error: error };
   }
 
 }
@@ -290,9 +292,11 @@ export const deleteproductByProductId = async(productId: number) => {
       }
     })
 
+  return { status: true, data: response };
+
   } catch(error) {
     console.error('Error Deleting product:', error);
-    return error;
+    return { status: false, error: error };
   }
 }
 
