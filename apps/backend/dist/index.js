@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const superadmin_router_1 = require("./Routers/superadmin.router");
 const channelPartner_router_1 = require("./Routers/channelPartner.router");
 const store_router_1 = require("./Routers/store.router");
+const category_router_1 = require("./Routers/category.router");
 const product_router_1 = require("./Routers/product.router");
 const userRoute_1 = require("./Routers/userRoute");
 const studio_router_1 = require("./Routers/studio.router");
@@ -66,8 +67,9 @@ app.use("/api/v1/global-category", globalCategory_router_1.globalCategoryRouter)
 app.use("/api/v1/global-sub-category", globalSubCategory_router_1.globalSubCategoryRouter);
 app.use("/api/v1/channel-partner", channelPartner_router_1.channelPartnerRouter);
 app.use("/api/v1/store", store_router_1.storeRouter);
+app.use("/api/v1/category", category_router_1.categoryRouter);
 app.use("/api/v1/product", product_router_1.productRouter);
-app.use("/api/v1/user", userRoute_1.userRouter);
 app.use("/api/v1/studio", studio_router_1.studioRouter);
 app.use("/api/v1/video", video_router_1.videoRouter);
 app.use('/api/v1/video2', video2_router_1.videoRouter2);
+app.use("/api/v1/user", userRoute_1.userRouter);

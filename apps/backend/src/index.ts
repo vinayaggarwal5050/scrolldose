@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { superadminRouter } from "./Routers/superadmin.router";
 import { channelPartnerRouter } from "./Routers/channelPartner.router";
 import { storeRouter } from "./Routers/store.router";
+import { categoryRouter } from "./Routers/category.router"; 
 import { productRouter } from "./Routers/product.router";
 import { userRouter } from "./Routers/userRoute";
 import { studioRouter } from "./Routers/studio.router";
@@ -74,8 +75,11 @@ app.use("/api/v1/global-sub-category", globalSubCategoryRouter);
 app.use("/api/v1/channel-partner", channelPartnerRouter);
 
 app.use("/api/v1/store", storeRouter);
+app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/product", productRouter);
-app.use("/api/v1/user", userRouter);
+
 app.use("/api/v1/studio", studioRouter);
 app.use("/api/v1/video", videoRouter);
 app.use('/api/v1/video2', videoRouter2);
+
+app.use("/api/v1/user", userRouter);

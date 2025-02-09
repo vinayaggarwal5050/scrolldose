@@ -1,13 +1,13 @@
-import {
-  createProductForStoreId,
-  getAllProducts,
-  getproductsByChannelPartnerId,
-  getProductByProductId,
-  getProductsByStoreId,
-  getProductsByStoreName,
-  getProductsByStoreSlug,
-  updateProductByProductId,
-} from "../db-functions/product-functions";
+// import {
+//   createProductForStoreId,
+//   getAllProducts,
+//   getproductsByChannelPartnerId,
+//   getProductByProductId,
+//   getProductsByStoreId,
+//   getProductsByStoreName,
+//   getProductsByStoreSlug,
+//   updateProductByProductId,
+// } from "../db-functions/product-functions";
 
 const productData1 = {
   name: "Universal Travel Adapter",
@@ -42,7 +42,7 @@ const testStoreFunctions = async () => {
   // console.log( await getProductsByStoreName("Wenomad") );
   // console.log( await getproductsByChannelPartnerId(4) );
   // console.log( await updateProductByProductId({name: "Universal Travel Power Adapter / Socket"}, 1) );
-  console.log( await getProductByProductId(1) );
+  // console.log( await getProductByProductId(1) );
 
 };
 

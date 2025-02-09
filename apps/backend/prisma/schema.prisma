@@ -32,6 +32,7 @@ model GlobalCategory {
   
   globalSubCategories   GlobalSubCategory[]
 
+
 }
 
 model GlobalSubCategory {
@@ -62,30 +63,50 @@ model Store {
   slug      String?
   createdAt DateTime @default(now())
 
+  categories  Category[]
+
   channelPartnerId Int            @unique
   channelPartner   ChannelPartner @relation(fields: [channelPartnerId], references: [id])
 
+
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String?
+
+  storeId   Int
+  store     Store @relation(fields: [storeId], references: [id])
+
   products Product[]
+
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  slug        String?  @unique
-  description String?
-  price       String?
-  category    String?
-  image       String?
-  link        String?
-  video       String?
-  tag         String?
+  id              Int      @id @default(autoincrement())
+  name            String
+  slug            String  @unique
+  description     String?
+  price           String?
+  mainImageUrl    String?
+  otherImagesUrl  String?
+  videoUrl        String?
+  videoId         Int?
+  stock           Int?
+  tags            String?
+
+  isAffiliateLink     Boolean   @default(false)
+  affiliateLink       String?
+  affiliateHost       String?            
+
+  categoryId      Int
+  category        Category @relation(fields: [categoryId], references: [id])
+
+  wishedByUsers   user[] @relation("UserWishesProduct")
+
   createdAt   DateTime @default(now())
   lastUpdate  DateTime @updatedAt
-
-  storeId Int
-  store   Store @relation(fields: [storeId], references: [id])
-
-  wishedByUsers user[] @relation("UserWishesProduct")
 }
 
 model Studio {

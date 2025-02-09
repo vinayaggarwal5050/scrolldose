@@ -9,25 +9,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteproductByProductId = exports.updateProductByProductId = exports.getproductsByChannelPartnerId = exports.getProductsByStoreName = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductByProductId = exports.getProductsByRangeAndUserId = exports.getProductsByRange = exports.getAllProducts = exports.createProductForStoreId = void 0;
+exports.deleteproductByProductId = exports.updateProductByProductId = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductsByCategoryId = exports.getProductByProductId = exports.getProductsByRangeAndUserId = exports.getProductsByRange = exports.getAllProducts = exports.createProductForCategoryId = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
-const createProductForStoreId = (productData, storeId) => __awaiter(void 0, void 0, void 0, function* () {
+const createProductForCategoryId = (productData, categoryId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.create({
             data: {
                 name: productData.name,
+                slug: productData.slug,
                 description: productData === null || productData === void 0 ? void 0 : productData.description,
-                category: productData === null || productData === void 0 ? void 0 : productData.category,
                 price: productData === null || productData === void 0 ? void 0 : productData.price,
-                image: productData === null || productData === void 0 ? void 0 : productData.image,
-                link: productData === null || productData === void 0 ? void 0 : productData.link,
-                slug: productData === null || productData === void 0 ? void 0 : productData.slug,
-                video: productData === null || productData === void 0 ? void 0 : productData.video,
-                tag: productData === null || productData === void 0 ? void 0 : productData.tag,
-                store: {
+                mainImageUrl: productData === null || productData === void 0 ? void 0 : productData.mainImageUrl,
+                otherImagesUrl: productData === null || productData === void 0 ? void 0 : productData.otherImagesUrl,
+                videoUrl: productData === null || productData === void 0 ? void 0 : productData.videoUrl,
+                videoId: productData === null || productData === void 0 ? void 0 : productData.videoId,
+                stock: productData === null || productData === void 0 ? void 0 : productData.stock,
+                tags: productData === null || productData === void 0 ? void 0 : productData.tags,
+                isAffiliateLink: productData === null || productData === void 0 ? void 0 : productData.isAffiliateLink,
+                affiliateLink: productData === null || productData === void 0 ? void 0 : productData.affiliateLink,
+                affiliateHost: productData === null || productData === void 0 ? void 0 : productData.affiliateHost,
+                category: {
                     connect: {
-                        id: storeId
+                        id: categoryId
                     }
                 }
             },
@@ -35,27 +39,30 @@ const createProductForStoreId = (productData, storeId) => __awaiter(void 0, void
         return { status: true, data: response };
     }
     catch (error) {
-        console.error('Error creating product:', error);
+        console.error('Error while Creating Product:', error);
         return { status: false, error: error };
     }
 });
-exports.createProductForStoreId = createProductForStoreId;
+exports.createProductForCategoryId = createProductForCategoryId;
 const getAllProducts = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.findMany({
             select: {
                 id: true,
                 name: true,
+                slug: true,
                 description: true,
                 price: true,
-                image: true,
-                link: true,
-                slug: true,
-                video: true,
-                tag: true,
-                createdAt: true,
-                lastUpdate: true,
-                storeId: true
+                mainImageUrl: true,
+                otherImagesUrl: true,
+                videoUrl: true,
+                videoId: true,
+                stock: true,
+                tags: true,
+                isAffiliateLink: true,
+                affiliateLink: true,
+                affiliateHost: true,
+                categoryId: true
             }
         });
         return { status: true, data: response };
@@ -129,16 +136,19 @@ const getProductByProductId = (productId) => __awaiter(void 0, void 0, void 0, f
             select: {
                 id: true,
                 name: true,
+                slug: true,
                 description: true,
                 price: true,
-                image: true,
-                link: true,
-                slug: true,
-                video: true,
-                tag: true,
-                createdAt: true,
-                lastUpdate: true,
-                storeId: true
+                mainImageUrl: true,
+                otherImagesUrl: true,
+                videoUrl: true,
+                videoId: true,
+                stock: true,
+                tags: true,
+                isAffiliateLink: true,
+                affiliateLink: true,
+                affiliateHost: true,
+                categoryId: true
             }
         });
         return { status: true, data: response };
@@ -149,14 +159,41 @@ const getProductByProductId = (productId) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.getProductByProductId = getProductByProductId;
-const getProductsByStoreId = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
+const getProductsByCategoryId = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.findMany({
             where: {
-                storeId: storeId
+                categoryId: categoryId
             }
         });
         return { status: true, data: response };
+    }
+    catch (error) {
+        console.error('Error Finding products:', error);
+        return { status: false, error: error };
+    }
+});
+exports.getProductsByCategoryId = getProductsByCategoryId;
+const getProductsByStoreId = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const categories = yield prisma.category.findMany({
+            where: {
+                storeId: storeId
+            },
+            select: {
+                id: true
+            }
+        });
+        if (!categories || categories.length === 0) {
+            return { status: false, message: "No Store found for this store id" };
+        }
+        const categoryIds = categories.map(category => category.id);
+        const products = yield prisma.product.findMany({
+            where: {
+                categoryId: { in: categoryIds },
+            },
+        });
+        return { status: true, data: products };
     }
     catch (error) {
         console.error('Error Finding products:', error);
@@ -164,17 +201,26 @@ const getProductsByStoreId = (storeId) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.getProductsByStoreId = getProductsByStoreId;
-const getProductsByStoreSlug = (StoreSlug) => __awaiter(void 0, void 0, void 0, function* () {
+const getProductsByStoreSlug = (storeSlug) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield prisma.store.findFirst({
+        const categories = yield prisma.category.findMany({
             where: {
-                slug: StoreSlug
+                slug: storeSlug
             },
-            include: {
-                products: true
+            select: {
+                id: true
             }
         });
-        return { status: true, data: response };
+        if (!categories || categories.length === 0) {
+            return { status: false, message: "No Store found for this store id" };
+        }
+        const categoryIds = categories.map(category => category.id);
+        const products = yield prisma.product.findMany({
+            where: {
+                categoryId: { in: categoryIds },
+            },
+        });
+        return { status: true, data: products };
     }
     catch (error) {
         console.error('Error Finding products:', error);
@@ -182,63 +228,26 @@ const getProductsByStoreSlug = (StoreSlug) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.getProductsByStoreSlug = getProductsByStoreSlug;
-const getProductsByStoreName = (StoreName) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield prisma.store.findFirst({
-            where: {
-                name: StoreName
-            },
-            include: {
-                products: true
-            }
-        });
-        return { status: true, data: response };
-    }
-    catch (error) {
-        console.error('Error Finding products:', error);
-        return { status: false, error: error };
-    }
-});
-exports.getProductsByStoreName = getProductsByStoreName;
-const getproductsByChannelPartnerId = (channelPartnerId) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const store = yield prisma.store.findFirst({
-            where: {
-                channelPartnerId: channelPartnerId
-            }
-        });
-        if (!store) {
-            return "no store exists for this channel partner id";
-        }
-        const response = yield prisma.product.findMany({
-            where: {
-                storeId: store.id
-            }
-        });
-        return { status: true, data: response };
-    }
-    catch (error) {
-        console.error('Error Finding products:', error);
-        return { status: false, error: error };
-    }
-});
-exports.getproductsByChannelPartnerId = getproductsByChannelPartnerId;
-const updateProductByProductId = (data, productId) => __awaiter(void 0, void 0, void 0, function* () {
+const updateProductByProductId = (productData, productId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.update({
             where: {
                 id: productId
             },
             data: {
-                name: data === null || data === void 0 ? void 0 : data.name,
-                description: data === null || data === void 0 ? void 0 : data.description,
-                category: data === null || data === void 0 ? void 0 : data.category,
-                price: data === null || data === void 0 ? void 0 : data.price,
-                image: data === null || data === void 0 ? void 0 : data.image,
-                slug: data === null || data === void 0 ? void 0 : data.image,
-                link: data === null || data === void 0 ? void 0 : data.link,
-                video: data === null || data === void 0 ? void 0 : data.link,
-                tag: data === null || data === void 0 ? void 0 : data.tag
+                name: productData.name,
+                slug: productData.slug,
+                description: productData === null || productData === void 0 ? void 0 : productData.description,
+                price: productData === null || productData === void 0 ? void 0 : productData.price,
+                mainImageUrl: productData === null || productData === void 0 ? void 0 : productData.mainImageUrl,
+                otherImagesUrl: productData === null || productData === void 0 ? void 0 : productData.otherImagesUrl,
+                videoUrl: productData === null || productData === void 0 ? void 0 : productData.videoUrl,
+                videoId: productData === null || productData === void 0 ? void 0 : productData.videoId,
+                stock: productData === null || productData === void 0 ? void 0 : productData.stock,
+                tags: productData === null || productData === void 0 ? void 0 : productData.tags,
+                isAffiliateLink: productData === null || productData === void 0 ? void 0 : productData.isAffiliateLink,
+                affiliateLink: productData === null || productData === void 0 ? void 0 : productData.affiliateLink,
+                affiliateHost: productData === null || productData === void 0 ? void 0 : productData.affiliateHost
             }
         });
         return { status: true, data: response };

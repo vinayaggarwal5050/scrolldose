@@ -1,4 +1,14 @@
 "use strict";
+// import {
+//   createProductForStoreId,
+//   getAllProducts,
+//   getproductsByChannelPartnerId,
+//   getProductByProductId,
+//   getProductsByStoreId,
+//   getProductsByStoreName,
+//   getProductsByStoreSlug,
+//   updateProductByProductId,
+// } from "../db-functions/product-functions";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,8 +18,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const product_functions_1 = require("../db-functions/product-functions");
 const productData1 = {
     name: "Universal Travel Adapter",
     description: "International All in One Worldwide Travel Adapter and Wall Charger with USB Ports with Multi Type Power Outlet USB 2.1A,100-250 Voltage Travel Charger",
@@ -41,6 +49,6 @@ const testStoreFunctions = () => __awaiter(void 0, void 0, void 0, function* () 
     // console.log( await getProductsByStoreName("Wenomad") );
     // console.log( await getproductsByChannelPartnerId(4) );
     // console.log( await updateProductByProductId({name: "Universal Travel Power Adapter / Socket"}, 1) );
-    console.log(yield (0, product_functions_1.getProductByProductId)(1));
+    // console.log( await getProductByProductId(1) );
 });
 testStoreFunctions();

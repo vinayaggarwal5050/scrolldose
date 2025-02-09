@@ -4,33 +4,44 @@ const prisma = getPrismaClient();
 
 export interface ProductInterface {
   name: string,
+  slug: string,
   description?: string,
   price?: string,
-  category?: string
-  image?: string,
-  link?: string,
-  slug?: string,
-  video?: string,
-  tag?: string
+  mainImageUrl?: string,
+  otherImagesUrl?: string,
+  videoUrl?: string,
+  videoId?: number,
+  stock?: number,
+  tags?: string,
+
+  isAffiliateLink?: boolean,
+  affiliateLink?: string,
+  affiliateHost?: string
+
 }
 
 
-export const createProductForStoreId = async(productData: ProductInterface, storeId: number) => {
+export const createProductForCategoryId = async(productData: ProductInterface, categoryId: number) => {
   try {
     const response = await prisma.product.create({
       data: {
         name: productData.name,
-        description: productData?.description,
-        category: productData?.category,
+        slug: productData.slug,
+        description:productData?.description,
         price: productData?.price,
-        image: productData?.image,
-        link: productData?.link,
-        slug: productData?.slug,
-        video: productData?.video,
-        tag: productData?.tag,
-        store: {
+        mainImageUrl: productData?.mainImageUrl,
+        otherImagesUrl: productData?.otherImagesUrl,
+        videoUrl: productData?.videoUrl,
+        videoId: productData?.videoId,
+        stock: productData?.stock,
+        tags: productData?.tags,
+      
+        isAffiliateLink: productData?.isAffiliateLink,
+        affiliateLink: productData?.affiliateLink,
+        affiliateHost: productData?.affiliateHost,
+        category: {
           connect: {
-            id: storeId
+            id: categoryId
           }
         }
       },
@@ -39,7 +50,7 @@ export const createProductForStoreId = async(productData: ProductInterface, stor
     return { status: true, data: response };
 
   } catch(error) {
-    console.error('Error creating product:', error);
+    console.error('Error while Creating Product:', error);
     return { status: false, error: error };
   }
 
@@ -51,17 +62,21 @@ export const getAllProducts = async() => {
       select: {
         id: true,
         name: true,
+        slug: true,
         description: true,
         price: true,
-        image: true,
-        link: true,
-        slug: true,
-        video: true,
-        tag: true,
-        createdAt: true,
-        lastUpdate: true,
+        mainImageUrl: true,
+        otherImagesUrl: true,
+        videoUrl: true,
+        videoId: true,
+        stock: true,
+        tags: true,
+      
+        isAffiliateLink: true,
+        affiliateLink: true,
+        affiliateHost: true,
 
-        storeId: true
+        categoryId: true
       }
     });
 
@@ -72,6 +87,7 @@ export const getAllProducts = async() => {
     return { status: false, error: error };
   }
 }
+
 
 export const getProductsByRange = async (startIndex: number, endIndex: number, limit: number) => {
   try {
@@ -95,6 +111,7 @@ export const getProductsByRange = async (startIndex: number, endIndex: number, l
     return { status: false, error: error };
   }
 };
+
 
 export const getProductsByRangeAndUserId = async (startIndex: number, endIndex: number, limit: number, userId: number) => {
   try {
@@ -133,6 +150,7 @@ export const getProductsByRangeAndUserId = async (startIndex: number, endIndex: 
   }
 };
 
+
 export const getProductByProductId = async(productId: number) => {
   try {
     const response = await prisma.product.findFirst({
@@ -142,17 +160,37 @@ export const getProductByProductId = async(productId: number) => {
       select: {
         id: true,
         name: true,
+        slug: true,
         description: true,
         price: true,
-        image: true,
-        link: true,
-        slug: true,
-        video: true,
-        tag: true,
-        createdAt: true,
-        lastUpdate: true,
+        mainImageUrl: true,
+        otherImagesUrl: true,
+        videoUrl: true,
+        videoId: true,
+        stock: true,
+        tags: true,
+      
+        isAffiliateLink: true,
+        affiliateLink: true,
+        affiliateHost: true,
 
-        storeId: true
+        categoryId: true
+      }
+    })
+
+    return { status: true, data: response };
+
+  } catch(error) {
+    console.error('Error Finding products:', error);
+    return { status: false, error: error };
+  }
+}
+
+export const getProductsByCategoryId = async(categoryId: number) => {
+  try {
+    const response = await prisma.product.findMany({
+      where: {
+        categoryId: categoryId
       }
     })
 
@@ -166,112 +204,106 @@ export const getProductByProductId = async(productId: number) => {
 
 export const getProductsByStoreId = async(storeId: number) => {
   try {
-    const response = await prisma.product.findMany({
+    const categories = await prisma.category.findMany({
       where: {
         storeId: storeId
-      }
-    })
-
-    return { status: true, data: response };
-
-  } catch(error) {
-    console.error('Error Finding products:', error);
-    return { status: false, error: error };
-  }
-}
-
-export const getProductsByStoreSlug = async(StoreSlug: string) => {
-  try {
-    const response = await prisma.store.findFirst({
-      where: {
-        slug: StoreSlug
       },
-      include: {
-        products: true
+      select: {
+        id: true
       }
     })
 
-    return { status: true, data: response };
-
-  } catch(error) {
-    console.error('Error Finding products:', error);
-    return { status: false, error: error };
-  }
-}
-
-export const getProductsByStoreName = async(StoreName: string) => {
-  try {
-    const response = await prisma.store.findFirst({
-      where: {
-        name: StoreName
-      },
-      include: {
-        products: true
-      }
-    })
-
-    return { status: true, data: response };
-
-  } catch(error) {
-    console.error('Error Finding products:', error);
-    return { status: false, error: error };
-  }
-}
-
-export const getproductsByChannelPartnerId = async(channelPartnerId: number) => {
-  try {
-    const store = await prisma.store.findFirst({
-      where: {
-        channelPartnerId: channelPartnerId
-      }
-    })
-
-    if(!store) {
-      return "no store exists for this channel partner id"
+    if(!categories || categories.length === 0) {
+      return { status: false, message: "No Store found for this store id" };
     }
-    
-    const response = await prisma.product.findMany({
-      where: {
-        storeId: store.id
-      }
-    })
 
-    return { status: true, data: response };
+    const categoryIds = categories.map(category => category.id);
+    const products = await prisma.product.findMany({
+      where: {
+        categoryId: { in: categoryIds },
+      },
+    });
+
+    return { status: true, data: products };
 
   } catch(error) {
     console.error('Error Finding products:', error);
     return { status: false, error: error };
   }
 }
+
+export const getProductsByStoreSlug = async(storeSlug: string) => {
+  try {
+    const categories = await prisma.category.findMany({
+      where: {
+        slug: storeSlug
+      },
+      select: {
+        id: true
+      }
+    })
+
+    if(!categories || categories.length === 0) {
+      return { status: false, message: "No Store found for this store id" };
+    }
+
+    const categoryIds = categories.map(category => category.id);
+    const products = await prisma.product.findMany({
+      where: {
+        categoryId: { in: categoryIds },
+      },
+    });
+
+    return { status: true, data: products };
+
+  } catch(error) {
+    console.error('Error Finding products:', error);
+    return { status: false, error: error };
+  }
+}
+
 
 interface updateProductInterface {
-  name: string,
-  description?: string,
-  category?: string
-  price?: string,
-  image?: string,
-  link?: string,
+  id?: number,
+  name?: string,
   slug?: string,
-  video?: string,
-  tag?: string,
+  description?: string,
+  price?: string,
+  mainImageUrl?: string,
+  otherImagesUrl?: string,
+  videoUrl?: string,
+  videoId?: number,
+  stock?: number,
+  tags?: string,
+
+  isAffiliateLink?: boolean,
+  affiliateLink?: string,
+  affiliateHost?: string,
+
+  categoryId?: number
 }
 
-export const updateProductByProductId = async(data: updateProductInterface, productId: number) => {
+export const updateProductByProductId = async(productData: updateProductInterface, productId: number) => {
   try {
     const response = await prisma.product.update({
       where: {
         id: productId
       },
       data: {
-        name: data?.name,
-        description: data?.description,
-        category: data?.category,
-        price: data?.price,
-        image: data?.image,
-        slug: data?.image,
-        link: data?.link,
-        video: data?.link,
-        tag: data?.tag
+        name: productData.name,
+        slug: productData.slug,
+        description:productData?.description,
+        price: productData?.price,
+        mainImageUrl: productData?.mainImageUrl,
+        otherImagesUrl: productData?.otherImagesUrl,
+        videoUrl: productData?.videoUrl,
+        videoId: productData?.videoId,
+        stock: productData?.stock,
+        tags: productData?.tags,
+      
+        isAffiliateLink: productData?.isAffiliateLink,
+        affiliateLink: productData?.affiliateLink,
+        affiliateHost: productData?.affiliateHost
       }
     })
 
@@ -299,5 +331,4 @@ export const deleteproductByProductId = async(productId: number) => {
     return { status: false, error: error };
   }
 }
-
 

@@ -12,49 +12,56 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.productRouter = void 0;
 const express_1 = require("express");
 const product_functions_1 = require("../db-functions/product-functions");
+// import { validateCreateProduct } from "./middlewares/product.mw";
 exports.productRouter = (0, express_1.Router)();
 exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/product
-    //http://localhost:6000/api/v1/product?storeid=3
-    //http://localhost:6000/api/v1/product?channelpartneremail=superadmin@gmail.com
-    //http://localhost:6000/api/v1/product?channelpartnerid=2
+    //http://localhost:5000/api/v1/product
+    //http://localhost:5000/api/v1/product?productid=3
+    //http://localhost:5000/api/v1/product?categoryid=1
+    //http://localhost:5000/api/v1/product?storeid=3
+    //http://localhost:5000/api/v1/product?storeslug=my-store
     const productId = parseInt(req.query.productid);
+    const categoryId = parseInt(req.query.categoryid);
     const storeId = parseInt(req.query.storeid);
-    const storeName = req.query.storename;
     const storeSlug = req.query.storeslug;
-    const channelPartnerId = parseInt(req.query.channelpartnerid);
     let response;
-    if (productId) {
-        response = yield (0, product_functions_1.getProductByProductId)(productId);
+    try {
+        if (productId) {
+            response = yield (0, product_functions_1.getProductByProductId)(productId);
+        }
+        else if (storeId) {
+            response = yield (0, product_functions_1.getProductsByStoreId)(storeId);
+        }
+        else if (categoryId) {
+            response = yield (0, product_functions_1.getProductsByCategoryId)(categoryId);
+        }
+        else if (storeSlug) {
+            response = yield (0, product_functions_1.getProductsByStoreSlug)(storeSlug);
+        }
+        else {
+            response = yield (0, product_functions_1.getAllProducts)();
+        }
+        if (response.status) {
+            res.status(200).json({
+                status: true,
+                data: response === null || response === void 0 ? void 0 : response.data,
+                msg: "Product Information Fetched Successfully",
+                msgFrom: "/api/v1/product"
+            });
+        }
+        else {
+            res.status(200).json({
+                status: false,
+                error: response === null || response === void 0 ? void 0 : response.error,
+                msg: "Product Information Fetched Successfully",
+                msgFrom: "/api/v1/product"
+            });
+        }
     }
-    else if (storeId) {
-        response = yield (0, product_functions_1.getProductsByStoreId)(storeId);
-    }
-    else if (storeName) {
-        response = yield (0, product_functions_1.getProductsByStoreName)(storeName);
-    }
-    else if (storeSlug) {
-        response = yield (0, product_functions_1.getProductsByStoreSlug)(storeSlug);
-    }
-    else if (channelPartnerId) {
-        response = yield (0, product_functions_1.getproductsByChannelPartnerId)(channelPartnerId);
-    }
-    else {
-        response = yield (0, product_functions_1.getAllProducts)();
-    }
-    if (response.status) {
-        res.status(200).json({
-            status: true,
-            data: response === null || response === void 0 ? void 0 : response.data,
-            msg: "Product Information Fetched Successfully",
-            msgFrom: "/api/v1/product"
-        });
-    }
-    else {
+    catch (_a) {
         res.status(200).json({
             status: false,
-            error: response === null || response === void 0 ? void 0 : response.error,
-            msg: "Product Information Fetched Successfully",
+            msg: "Some Database Error",
             msgFrom: "/api/v1/product"
         });
     }
@@ -141,11 +148,11 @@ exports.productRouter.get('/user-range', (req, res) => __awaiter(void 0, void 0,
     }
 }));
 exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:5000/api/v1/product/create?storeid=1
-    const storeId = parseInt(req.query.storeid);
+    //http://localhost:5000/api/v1/product/create?categoryid=1
+    const categoryId = parseInt(req.query.categoryid);
     const productData = req.body;
     try {
-        const response = yield (0, product_functions_1.createProductForStoreId)(productData, storeId);
+        const response = yield (0, product_functions_1.createProductForCategoryId)(productData, categoryId);
         if (response.status) {
             res.status(200).json({
                 status: true,
@@ -173,7 +180,7 @@ exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, vo
     }
 }));
 exports.productRouter.put('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:6000/api/v1/product/update?productid=3
+    //http://localhost:5000/api/v1/product/update?productid=3
     try {
         const productId = parseInt(req.query.productid);
         const productData = req.body;

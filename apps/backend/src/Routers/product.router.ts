@@ -1,55 +1,62 @@
 import { Router, Request, Response } from "express";
-import { createProductForStoreId, deleteproductByProductId, getAllProducts, getproductsByChannelPartnerId, getProductByProductId, getProductsByStoreId, getProductsByStoreName, getProductsByStoreSlug, updateProductByProductId, getProductsByRange, getProductsByRangeAndUserId } from "../db-functions/product-functions";
-import { validateCreateProduct } from "./middlewares/product.mw";
+import { createProductForCategoryId, deleteproductByProductId, getAllProducts, getProductByProductId, getProductsByCategoryId, getProductsByStoreId, getProductsByStoreSlug, updateProductByProductId, getProductsByRange, getProductsByRangeAndUserId } from "../db-functions/product-functions";
+// import { validateCreateProduct } from "./middlewares/product.mw";
 
 export const productRouter = Router();
 
-
 productRouter.get('/', async (req: Request, res: Response) => {
-  //http://localhost:6000/api/v1/product
-  //http://localhost:6000/api/v1/product?storeid=3
-  //http://localhost:6000/api/v1/product?channelpartneremail=superadmin@gmail.com
-  //http://localhost:6000/api/v1/product?channelpartnerid=2
+  //http://localhost:5000/api/v1/product
+  //http://localhost:5000/api/v1/product?productid=3
+  //http://localhost:5000/api/v1/product?categoryid=1
+  //http://localhost:5000/api/v1/product?storeid=3
+  //http://localhost:5000/api/v1/product?storeslug=my-store
+
 
   const productId = parseInt(req.query.productid as string);
+  const categoryId = parseInt(req.query.categoryid as string);
   const storeId = parseInt(req.query.storeid as string);
-  const storeName = req.query.storename as string;
   const storeSlug = req.query.storeslug as string;
-  const channelPartnerId = parseInt(req.query.channelpartnerid as string);
 
   let response: any;
 
-  if(productId) {
-    response = await getProductByProductId(productId);
-  } else if(storeId) {
-    response = await getProductsByStoreId(storeId);
-  } else if(storeName) {
-    response = await getProductsByStoreName(storeName);
-  } else if(storeSlug) {
-    response = await getProductsByStoreSlug(storeSlug);
-  } else if(channelPartnerId) {
-    response = await getproductsByChannelPartnerId(channelPartnerId)
-  } else {
-    response = await getAllProducts();
-  }
+  try {
+    if(productId) {
+      response = await getProductByProductId(productId);
+    } else if(storeId) {
+      response = await getProductsByStoreId(storeId);
+    } else if(categoryId) {
+      response = await getProductsByCategoryId(categoryId);
+    } else if(storeSlug) {
+      response = await getProductsByStoreSlug(storeSlug);
+    } else {
+      response = await getAllProducts();
+    }
 
-  if(response.status) {
-    res.status(200).json({
-      status: true,
-      data: response?.data,
-      msg: "Product Information Fetched Successfully",
-      msgFrom: "/api/v1/product"
-    })
+    if(response.status) {
+      res.status(200).json({
+        status: true,
+        data: response?.data,
+        msg: "Product Information Fetched Successfully",
+        msgFrom: "/api/v1/product"
+      })
+  
+    } else {
+      res.status(200).json({
+        status: false,
+        error: response?.error,
+        msg: "Product Information Fetched Successfully",
+        msgFrom: "/api/v1/product"
+      })
+    }
 
-  } else {
+  } catch{
     res.status(200).json({
       status: false,
-      error: response?.error,
-      msg: "Product Information Fetched Successfully",
+      msg: "Some Database Error",
       msgFrom: "/api/v1/product"
     })
   }
-  
+ 
 })
 
 productRouter.get('/range', async (req: Request, res: Response) => {
@@ -140,12 +147,12 @@ productRouter.get('/user-range', async (req: Request, res: Response) => {
 })
 
 productRouter.post('/create', async(req: Request, res: Response) => {
-  //http://localhost:5000/api/v1/product/create?storeid=1
-  const storeId = parseInt(req.query.storeid as string);
+  //http://localhost:5000/api/v1/product/create?categoryid=1
+  const categoryId = parseInt(req.query.categoryid as string);
   const productData = req.body;
   
   try {
-    const response = await createProductForStoreId(productData, storeId);
+    const response = await createProductForCategoryId(productData, categoryId);
 
     if(response.status) {
       res.status(200).json({
@@ -164,7 +171,6 @@ productRouter.post('/create', async(req: Request, res: Response) => {
       })
     }
 
-
   } catch(error) {
     res.status(200).json({
       status: false,
@@ -176,7 +182,7 @@ productRouter.post('/create', async(req: Request, res: Response) => {
 })
 
 productRouter.put('/update', async(req: Request, res: Response) => {
-  //http://localhost:6000/api/v1/product/update?productid=3
+  //http://localhost:5000/api/v1/product/update?productid=3
 
   try {
     const productId = parseInt(req.query.productid as string);
