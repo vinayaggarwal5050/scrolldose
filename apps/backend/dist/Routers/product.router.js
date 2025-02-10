@@ -159,12 +159,15 @@ exports.productRouter.get('/user-range', (req, res) => __awaiter(void 0, void 0,
 }));
 exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:5000/api/v1/product/create
-    const productData = req.body;
-    const { categoryId, globalSubCategoryId, name, slug } = productData;
+    let productData = req.body;
+    const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink } = productData;
+    productData = Object.assign(Object.assign({}, productData), { "categoryId": parseInt(categoryId), "globalSubCategoryId": parseInt(globalSubCategoryId), "videoId": parseInt(videoId), "price": parseInt(price), "stock": parseInt(stock), "isAffiliateLink": (isAffiliateLink === 'true') ? true : false });
+    console.log(productData);
     if (categoryId && globalSubCategoryId && name && slug) {
         try {
+            // const response = {"status": true, "data": 124, "error": "some-error"} 
             const response = yield (0, product_functions_1.createProductForCategoryIdAndGlobalSubCategoryId)(productData);
-            if (response.status) {
+            if (response === null || response === void 0 ? void 0 : response.status) {
                 res.status(200).json({
                     status: true,
                     data: response === null || response === void 0 ? void 0 : response.data,

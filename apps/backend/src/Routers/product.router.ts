@@ -161,16 +161,30 @@ productRouter.get('/user-range', async (req: Request, res: Response) => {
 
 productRouter.post('/create', async(req: Request, res: Response) => {
   //http://localhost:5000/api/v1/product/create
-  const productData = req.body;
+  let productData = req.body;
 
-  const { categoryId, globalSubCategoryId, name, slug } = productData;
+  const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink } = productData;
+
+  productData = {
+    ...productData,
+    "categoryId": parseInt(categoryId),
+    "globalSubCategoryId": parseInt(globalSubCategoryId),
+    "videoId": parseInt(videoId),
+    "price": parseInt(price),
+    "stock": parseInt(stock),
+    "isAffiliateLink": (isAffiliateLink === 'true') ? true : false
+  }
+  
+  console.log(productData);
+
 
   if(categoryId && globalSubCategoryId && name && slug) {
-
+    
     try {
+      // const response = {"status": true, "data": 124, "error": "some-error"} 
       const response = await createProductForCategoryIdAndGlobalSubCategoryId(productData);
   
-      if(response.status) {
+      if(response?.status) {
         res.status(200).json({
           status: true,
           data: response?.data,

@@ -32,7 +32,6 @@ const AllCategories = () => {
 
   useEffect(() => {
 
-    console.log(cpData);
     const storeId = cpData.store[0]?.id;
 
     try {
@@ -121,7 +120,7 @@ const AllCategories = () => {
       <Typography sx={{ m: 3, color: "gray", fontSize: 14 }}>{msg}</Typography>
 
       {/* {Add Category Button} */}
-      {!showAddCategory && 
+      {!showAddCategory && !showUpdateCategory &&
         <Box sx={{m: 3}}>
           <Button  variant="contained" color="primary" onClick={() => setShowAddCategory(true)}>Add Category</Button>
         </Box>
@@ -164,14 +163,20 @@ const AllCategories = () => {
 
                   <TableCell align="left">{category?.name}</TableCell>
                   <TableCell align="left">{category?.slug}</TableCell>
-                  <TableCell align="left"  onClick={() => handleEditButton(category)}><CreateIcon /></TableCell>
+                  <TableCell align="left"  onClick={() => handleEditButton(category)}>
+                    <Button color="inherit">
+                      <CreateIcon />
+                    </Button>
+                  </TableCell>
                   <TableCell align="left"  onClick={() => handleDeleteButton(category?.id)}>
-                    <Box sx={{ display: "flex" }}>
-                      <DeleteSweepOutlinedIcon />
-                      {resAwait &&
-                      <CircularProgress/>
-                      }
-                    </Box>
+                    <Button color="inherit">
+                      <Box sx={{ display: "flex" }}>
+                        <DeleteSweepOutlinedIcon />
+                        {resAwait &&
+                        <CircularProgress/>
+                        }
+                      </Box>
+                    </Button>
 
                   </TableCell>
 

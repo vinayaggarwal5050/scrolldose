@@ -28,6 +28,7 @@ const createProductForCategoryIdAndGlobalSubCategoryId = (productData) => __awai
                 tags: productData === null || productData === void 0 ? void 0 : productData.tags,
                 isAffiliateLink: productData === null || productData === void 0 ? void 0 : productData.isAffiliateLink,
                 affiliateLink: productData === null || productData === void 0 ? void 0 : productData.affiliateLink,
+                affiliateImageLink: productData === null || productData === void 0 ? void 0 : productData.affiliateImageLink,
                 affiliateHost: productData === null || productData === void 0 ? void 0 : productData.affiliateHost,
                 category: {
                     connect: {
@@ -66,6 +67,7 @@ const getAllProducts = () => __awaiter(void 0, void 0, void 0, function* () {
                 tags: true,
                 isAffiliateLink: true,
                 affiliateLink: true,
+                affiliateImageLink: true,
                 affiliateHost: true,
                 categoryId: true
             }
@@ -175,6 +177,7 @@ const getProductByProductId = (productId) => __awaiter(void 0, void 0, void 0, f
                 tags: true,
                 isAffiliateLink: true,
                 affiliateLink: true,
+                affiliateImageLink: true,
                 affiliateHost: true,
                 categoryId: true
             }

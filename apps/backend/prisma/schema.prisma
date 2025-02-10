@@ -87,19 +87,25 @@ model Category {
 
 model Product {
   id              Int      @id @default(autoincrement())
+
   name            String
   slug            String  @unique
   description     String?
-  price           String?
-  mainImageUrl    String?
-  otherImagesUrl  String?
+  price           Int?
+
   videoUrl        String?
   videoId         Int?
+
   stock           Int?
   tags            String?
 
+  mainImageUrl    String?
+  otherImagesUrl  String?
+
+
   isAffiliateLink     Boolean   @default(false)
   affiliateLink       String?
+  affiliateImageLink  String?
   affiliateHost       String?            
 
   categoryId      Int

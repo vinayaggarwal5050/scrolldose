@@ -1,22 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, TextField, Typography, MenuItem, Select, InputLabel, FormControl, Box, Radio, FormLabel, RadioGroup, FormControlLabel } from "@mui/material";
+import { backendURL } from "../../constants/backend-url";
+import { useCPData } from "../../global-states/CPProvider";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const categories = ["Mixed", "Electronics", "Clothing", "Books", "Home & Kitchen"];
+// const categories = ["Mixed", "Electronics", "Clothing", "Books", "Home & Kitchen"];
 const videos = ["Astronaut Lamp", "Night Lamp", "Kid's Money Bank", "Electronics Sound Book", "Moon Lamp"];
 
-export const AddProduct = () => {
+export const OldAddProduct = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
-  // const [ setOtherImages] = useState<File[]>([]);
   const [otherImagesPreview, setOtherImagesPreview] = useState<string[]>([]);
-  // const [isEditable, setIsEditable] = useState<boolean>(true);
 
-  const backendURL = "http://backend.scrolldose.com/api/v1";
+  const [categoryList, setCategoryList] = useState<any>();
+  const [msg, setMsg] = useState<any>();
+
+  // const backendURL = "http://backend.scrolldose.com/api/v1";
   const cpJWT = "sadfasdfjaljowieru9euernweoirw9e8y";
+
+  const { cpData } = useCPData();
+  const storeId = cpData.store[0]?.id;
+
+  useEffect(() => {
+    console.log(storeId);
+    getFromServer()
+    .then(response => {
+      if(response?.status) {
+        setCategoryList(response?.data)
+      }
+    })
+
+  }, [])
+
+  const getFromServer = async() => {
+    try {
+      const res = await fetch(`${backendURL}/category?storeid=${storeId}`);
+      const jsonRes = await res.json();
+      return jsonRes;
+
+    } catch(error) {
+      console.log(error);
+    }
+  }
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Product name is required"),
@@ -122,7 +150,7 @@ export const AddProduct = () => {
       return null;
     }
   };
-  
+ 
 
   return(
     <Box sx={{ minWidth: "80vh", minHeight: "85vh", display: "flex", justifyContent: "center"}}>
@@ -199,9 +227,9 @@ export const AddProduct = () => {
                   onChange={formik.handleChange}
                   error={formik.touched.category && Boolean(formik.errors.category)}
                 >
-                  {categories.map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {category}
+                  {categoryList.map((category: any) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.name}
                     </MenuItem>
                   ))}
                 </Select>

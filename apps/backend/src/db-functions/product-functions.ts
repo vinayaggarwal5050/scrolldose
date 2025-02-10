@@ -6,20 +6,23 @@ export interface ProductInterface {
   name: string,
   slug: string,
   description?: string,
-  price?: string,
+  price?: number,
+
   mainImageUrl?: string,
   otherImagesUrl?: string,
-  videoUrl?: string,
-  videoId?: number,
-  stock?: number,
-  tags?: string,
-
-  isAffiliateLink?: boolean,
-  affiliateLink?: string,
-  affiliateHost?: string
 
   categoryId: number,
-  globalSubCategoryId: number
+  globalSubCategoryId: number,
+  videoUrl?: string,
+  videoId?: number,
+
+  tags?: string,
+  stock?: number,
+  
+  isAffiliateLink?: boolean,
+  affiliateLink?: string,
+  affiliateImageLink?: string,
+  affiliateHost?: string
 
 }
 
@@ -41,6 +44,7 @@ export const createProductForCategoryIdAndGlobalSubCategoryId = async(productDat
       
         isAffiliateLink: productData?.isAffiliateLink,
         affiliateLink: productData?.affiliateLink,
+        affiliateImageLink: productData?.affiliateImageLink,
         affiliateHost: productData?.affiliateHost,
         category: {
           connect: {
@@ -82,6 +86,7 @@ export const getAllProducts = async() => {
       
         isAffiliateLink: true,
         affiliateLink: true,
+        affiliateImageLink: true,
         affiliateHost: true,
 
         categoryId: true
@@ -204,6 +209,7 @@ export const getProductByProductId = async(productId: number) => {
       
         isAffiliateLink: true,
         affiliateLink: true,
+        affiliateImageLink: true,
         affiliateHost: true,
 
         categoryId: true
@@ -316,7 +322,7 @@ interface updateProductInterface {
   name?: string,
   slug?: string,
   description?: string,
-  price?: string,
+  price?: number,
   mainImageUrl?: string,
   otherImagesUrl?: string,
   videoUrl?: string,

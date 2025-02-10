@@ -9,7 +9,7 @@ export const SideBar = () => {
   const menuOptions: any = {
       "Orders": ["New Order", "All Orders", "Sale Analytics"],
       "Store": ["Add Product", "All Products", "All Categories"],
-      "Videos": ["Add Video", "All Videos", "Video Analytics"],
+      "Studio": ["Add Video", "All Videos", "Video Analytics"],
       "Settings": ["Store Settings", "Studio Settings", "Profile Settings", "Account Setting"]
     };
 
@@ -78,18 +78,18 @@ export const SideBar = () => {
           </Collapse>
           <Divider sx={{m: 1}} />
 
-          {/* {Videos} */}
+          {/* {Studio} */}
           <ListItem disablePadding>
-            <ListItemButton onClick={() => handleClick("Videos")}>
+            <ListItemButton onClick={() => handleClick("Studio")}>
               <ListItemIcon><VideoIcon /></ListItemIcon>
-              <ListItemText primary="Videos" />
-              {menuOptions["Videos"] ? <ExpandLess /> : <ExpandMore />}
+              <ListItemText primary="Studio" />
+              {menuOptions["Studio"] ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </ListItem>
-          <Collapse in={menuState["Videos"]}>
+          <Collapse in={menuState["Studio"]}>
             <List>
-              {menuOptions["Videos"].map((text: any) => 
-                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/cp/videos/${text.toLowerCase().replace(/\s+/g, "-")}`} >
+              {menuOptions["Studio"].map((text: any) => 
+                <ListItemButton key={text} sx={{ pl: 6 }} component={Link} to={`/cp/studio/${text.toLowerCase().replace(/\s+/g, "-")}`} >
                   <ListItemText primary={text} />
                 </ListItemButton>
               )}    

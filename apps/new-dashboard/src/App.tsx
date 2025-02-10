@@ -3,7 +3,7 @@ import { CPProvider } from "./global-states/CPProvider";
 import { Header } from "./components/Header";
 import { SideBar } from "./components/Sidebar";
 import { DashBoard } from "./pages/DashBoard";
-import { AddProduct } from "./pages/products/AddProduct";
+
 import Signup from "./pages/auth/Signup";
 import Signin from "./pages/auth/Signin";
 import LandingPage from "./pages/landing-page/LandingPage";
@@ -16,6 +16,7 @@ import AllVideos from "./pages/studio/AllVideos";
 import UploadVideo from "./pages/studio/UploadVideo";
 import VideoPlayer from "./pages/studio/VideoPlayer";
 import AllCategories from "./pages/store/AllCategories";
+import AddProduct from "./pages/store/AddProduct";
 
 const DashboardLayout = () => {
   return (
@@ -51,10 +52,10 @@ function App() {
               <Route path="store/all-categories" element={<AllCategories />} />
 
 
-              <Route path="videos/add-video" element={<AddVideo />} />
-              <Route path="videos/upload-video" element={<UploadVideo />} />
-              <Route path="videos/all-videos" element={<AllVideos />} />
-              <Route path="videos/player" element={<VideoPlayer />} />
+              <Route path="studio/add-video" element={<AddVideo />} />
+              <Route path="studio/upload-video" element={<UploadVideo />} />
+              <Route path="studio/all-videos" element={<AllVideos />} />
+              <Route path="studio/player" element={<VideoPlayer />} />
             </Route>
           </Route>
 
