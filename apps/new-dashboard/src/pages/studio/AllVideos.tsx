@@ -267,7 +267,7 @@ const RenderVideoList = ({videoList, setVideoList} : any) => {
 
             <Typography sx={{ mt: 2, color: "gray" }}>{msg}</Typography>
 
-          </form>
+      </form>
     </Box>
     }
 

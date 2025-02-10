@@ -8,7 +8,7 @@ export const SideBar = () => {
 
   const menuOptions: any = {
       "Orders": ["New Order", "All Orders", "Sale Analytics"],
-      "Store": ["Add Product", "Add Categories", "All Products", "Categories", ],
+      "Store": ["Add Product", "All Products", "All Categories"],
       "Videos": ["Add Video", "All Videos", "Video Analytics"],
       "Settings": ["Store Settings", "Studio Settings", "Profile Settings", "Account Setting"]
     };

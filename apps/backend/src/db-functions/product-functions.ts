@@ -18,10 +18,13 @@ export interface ProductInterface {
   affiliateLink?: string,
   affiliateHost?: string
 
+  categoryId: number,
+  globalSubCategoryId: number
+
 }
 
 
-export const createProductForCategoryId = async(productData: ProductInterface, categoryId: number) => {
+export const createProductForCategoryIdAndGlobalSubCategoryId = async(productData: ProductInterface) => {
   try {
     const response = await prisma.product.create({
       data: {
@@ -41,7 +44,12 @@ export const createProductForCategoryId = async(productData: ProductInterface, c
         affiliateHost: productData?.affiliateHost,
         category: {
           connect: {
-            id: categoryId
+            id: productData.categoryId
+          },
+        },
+        globalSubcategory: {
+          connect: {
+            id: productData.globalSubCategoryId
           }
         }
       },
@@ -93,6 +101,30 @@ export const getProductsByRange = async (startIndex: number, endIndex: number, l
   try {
     const response = await prisma.product.findMany({
       where: {
+        id: {
+          gte: startIndex,
+          lte: endIndex,
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+      take: limit, // Ensures that only 'limit' products are returned
+    });
+
+    return { status: true, data: response };
+    
+  } catch (error) {
+    console.error('Error fetching products by range:', error);
+    return { status: false, error: error };
+  }
+};
+
+export const getProductsByRangeForSubCategoryId = async (startIndex: number, endIndex: number, limit: number, subCategoryId: number) => {
+  try {
+    const response = await prisma.product.findMany({
+      where: {
+        globalSubCategoryId: subCategoryId, // Filter products by globalSubCategoryId
         id: {
           gte: startIndex,
           lte: endIndex,
@@ -191,6 +223,22 @@ export const getProductsByCategoryId = async(categoryId: number) => {
     const response = await prisma.product.findMany({
       where: {
         categoryId: categoryId
+      }
+    })
+
+    return { status: true, data: response };
+
+  } catch(error) {
+    console.error('Error Finding products:', error);
+    return { status: false, error: error };
+  }
+}
+
+export const getProductsByGlobalSubCategoryId = async(globalSubCategoryId: number) => {
+  try {
+    const response = await prisma.product.findMany({
+      where: {
+        globalSubCategoryId: globalSubCategoryId
       }
     })
 

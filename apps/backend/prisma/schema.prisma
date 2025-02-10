@@ -43,6 +43,8 @@ model GlobalSubCategory {
   globalCategoryId     Int
   globalCategory        GlobalCategory @relation(fields: [globalCategoryId], references: [id])
 
+  products              Product[]
+
 }
 
 model ChannelPartner {
@@ -102,6 +104,9 @@ model Product {
 
   categoryId      Int
   category        Category @relation(fields: [categoryId], references: [id])
+
+  globalSubCategoryId   Int
+  globalSubcategory     GlobalSubCategory @relation(fields: [globalSubCategoryId], references: [id])
 
   wishedByUsers   user[] @relation("UserWishesProduct")
 

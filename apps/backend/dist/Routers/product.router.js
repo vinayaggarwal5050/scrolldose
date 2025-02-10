@@ -18,10 +18,12 @@ exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, f
     //http://localhost:5000/api/v1/product
     //http://localhost:5000/api/v1/product?productid=3
     //http://localhost:5000/api/v1/product?categoryid=1
+    //http://localhost:5000/api/v1/product?globalsubcategoryid=1
     //http://localhost:5000/api/v1/product?storeid=3
     //http://localhost:5000/api/v1/product?storeslug=my-store
     const productId = parseInt(req.query.productid);
     const categoryId = parseInt(req.query.categoryid);
+    const globalSubCategoryId = parseInt(req.query.globalsubcategoryid);
     const storeId = parseInt(req.query.storeid);
     const storeSlug = req.query.storeslug;
     let response;
@@ -34,6 +36,9 @@ exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, f
         }
         else if (categoryId) {
             response = yield (0, product_functions_1.getProductsByCategoryId)(categoryId);
+        }
+        else if (globalSubCategoryId) {
+            response = yield (0, product_functions_1.getProductsByGlobalSubCategoryId)(globalSubCategoryId);
         }
         else if (storeSlug) {
             response = yield (0, product_functions_1.getProductsByStoreSlug)(storeSlug);
@@ -70,38 +75,43 @@ exports.productRouter.get('/range', (req, res) => __awaiter(void 0, void 0, void
     const startIndex = parseInt(req.query.startindex);
     const endIndex = parseInt(req.query.endindex);
     const limit = parseInt(req.query.limit);
-    if (startIndex && endIndex && limit) {
-        try {
-            const response = yield (0, product_functions_1.getProductsByRange)(startIndex, endIndex, limit);
-            if (response.status) {
-                res.status(200).json({
-                    status: true,
-                    data: response === null || response === void 0 ? void 0 : response.data,
-                    msg: "Product fetched succesfully",
-                    msgFrom: "/api/v1/products/range"
-                });
-            }
-            else {
-                res.status(200).json({
-                    status: false,
-                    error: response === null || response === void 0 ? void 0 : response.error,
-                    msg: "Product fetched succesfully",
-                    msgFrom: "/api/v1/products/range"
-                });
-            }
+    const globalSubCategoryId = parseInt(req.query.globalSubCategoryId);
+    try {
+        let response;
+        if (startIndex && endIndex && limit) {
+            response = yield (0, product_functions_1.getProductsByRange)(startIndex, endIndex, limit);
         }
-        catch (err) {
+        else if (startIndex && endIndex && limit && globalSubCategoryId) {
+            response = yield (0, product_functions_1.getProductsByRangeForSubCategoryId)(startIndex, endIndex, limit, globalSubCategoryId);
+        }
+        else {
             res.status(200).json({
                 status: false,
-                msg: "some database error",
+                msg: "invalid inputs",
+                msgFrom: "/api/v1/products/range"
+            });
+        }
+        if (response === null || response === void 0 ? void 0 : response.status) {
+            res.status(200).json({
+                status: true,
+                data: response === null || response === void 0 ? void 0 : response.data,
+                msg: "Product fetched succesfully",
+                msgFrom: "/api/v1/products/range"
+            });
+        }
+        else {
+            res.status(200).json({
+                status: false,
+                error: response === null || response === void 0 ? void 0 : response.error,
+                msg: "Product fetched succesfully",
                 msgFrom: "/api/v1/products/range"
             });
         }
     }
-    else {
+    catch (err) {
         res.status(200).json({
             status: false,
-            msg: "invalid inputs",
+            msg: "some database error",
             msgFrom: "/api/v1/products/range"
         });
     }
@@ -148,34 +158,43 @@ exports.productRouter.get('/user-range', (req, res) => __awaiter(void 0, void 0,
     }
 }));
 exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:5000/api/v1/product/create?categoryid=1
-    const categoryId = parseInt(req.query.categoryid);
+    //http://localhost:5000/api/v1/product/create
     const productData = req.body;
-    try {
-        const response = yield (0, product_functions_1.createProductForCategoryId)(productData, categoryId);
-        if (response.status) {
-            res.status(200).json({
-                status: true,
-                data: response === null || response === void 0 ? void 0 : response.data,
-                msg: "Product Created succesfully",
-                msgFrom: "/api/v1/product/create"
-            });
+    const { categoryId, globalSubCategoryId, name, slug } = productData;
+    if (categoryId && globalSubCategoryId && name && slug) {
+        try {
+            const response = yield (0, product_functions_1.createProductForCategoryIdAndGlobalSubCategoryId)(productData);
+            if (response.status) {
+                res.status(200).json({
+                    status: true,
+                    data: response === null || response === void 0 ? void 0 : response.data,
+                    msg: "Product Created succesfully",
+                    msgFrom: "/api/v1/product/create"
+                });
+            }
+            else {
+                res.status(200).json({
+                    status: false,
+                    error: response === null || response === void 0 ? void 0 : response.error,
+                    msg: "Failed to Create Product",
+                    msgFrom: "/api/v1/product/create"
+                });
+            }
         }
-        else {
+        catch (error) {
             res.status(200).json({
                 status: false,
-                error: response === null || response === void 0 ? void 0 : response.error,
-                msg: "Failed to Create Product",
-                msgFrom: "/api/v1/product/create"
+                msg: "Some database error",
+                msgFrom: "/api/v1/product/create",
+                error: error
             });
         }
     }
-    catch (error) {
+    else {
         res.status(200).json({
             status: false,
-            msg: "Failed to create Product",
+            msg: "invalid inputs",
             msgFrom: "/api/v1/product/create",
-            error: error
         });
     }
 }));

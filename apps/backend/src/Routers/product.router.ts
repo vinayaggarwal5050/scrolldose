@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createProductForCategoryId, deleteproductByProductId, getAllProducts, getProductByProductId, getProductsByCategoryId, getProductsByStoreId, getProductsByStoreSlug, updateProductByProductId, getProductsByRange, getProductsByRangeAndUserId } from "../db-functions/product-functions";
+import { createProductForCategoryIdAndGlobalSubCategoryId, deleteproductByProductId, getAllProducts, getProductByProductId, getProductsByCategoryId, getProductsByGlobalSubCategoryId, getProductsByStoreId, getProductsByStoreSlug, updateProductByProductId, getProductsByRange, getProductsByRangeForSubCategoryId, getProductsByRangeAndUserId } from "../db-functions/product-functions";
 // import { validateCreateProduct } from "./middlewares/product.mw";
 
 export const productRouter = Router();
@@ -8,12 +8,14 @@ productRouter.get('/', async (req: Request, res: Response) => {
   //http://localhost:5000/api/v1/product
   //http://localhost:5000/api/v1/product?productid=3
   //http://localhost:5000/api/v1/product?categoryid=1
+  //http://localhost:5000/api/v1/product?globalsubcategoryid=1
   //http://localhost:5000/api/v1/product?storeid=3
   //http://localhost:5000/api/v1/product?storeslug=my-store
 
 
   const productId = parseInt(req.query.productid as string);
   const categoryId = parseInt(req.query.categoryid as string);
+  const globalSubCategoryId = parseInt(req.query.globalsubcategoryid as string);
   const storeId = parseInt(req.query.storeid as string);
   const storeSlug = req.query.storeslug as string;
 
@@ -26,6 +28,8 @@ productRouter.get('/', async (req: Request, res: Response) => {
       response = await getProductsByStoreId(storeId);
     } else if(categoryId) {
       response = await getProductsByCategoryId(categoryId);
+    } else if(globalSubCategoryId) {
+      response = await getProductsByGlobalSubCategoryId(globalSubCategoryId);
     } else if(storeSlug) {
       response = await getProductsByStoreSlug(storeSlug);
     } else {
@@ -60,46 +64,55 @@ productRouter.get('/', async (req: Request, res: Response) => {
 })
 
 productRouter.get('/range', async (req: Request, res: Response) => {
+
   const startIndex = parseInt(req.query.startindex as string);
   const endIndex = parseInt(req.query.endindex as string);
   const limit = parseInt(req.query.limit as string);
+  const globalSubCategoryId = parseInt(req.query.globalSubCategoryId as string);
 
-  if(startIndex && endIndex && limit) {
-    try {
-      const response = await getProductsByRange(startIndex, endIndex, limit);
 
-      if(response.status) {
-        res.status(200).json({
-          status: true,
-          data: response?.data,
-          msg: "Product fetched succesfully",
-          msgFrom: "/api/v1/products/range"
-        })
+  try {
+    let response;
 
-      } else {
-        res.status(200).json({
-          status: false,
-          error: response?.error,
-          msg: "Product fetched succesfully",
-          msgFrom: "/api/v1/products/range"
-        })
-      }
+    if(startIndex && endIndex && limit) {
+      response = await getProductsByRange(startIndex, endIndex, limit);
 
-    } catch(err) {
+    } else if(startIndex && endIndex && limit && globalSubCategoryId) {
+      response = await getProductsByRangeForSubCategoryId(startIndex, endIndex, limit, globalSubCategoryId);
+
+    } else {
       res.status(200).json({
         status: false,
-        msg: "some database error",
+        msg: "invalid inputs",
         msgFrom: "/api/v1/products/range"
       })
     }
 
-  } else {
+    if(response?.status) {
+      res.status(200).json({
+        status: true,
+        data: response?.data,
+        msg: "Product fetched succesfully",
+        msgFrom: "/api/v1/products/range"
+      })
+
+    } else {
+      res.status(200).json({
+        status: false,
+        error: response?.error,
+        msg: "Product fetched succesfully",
+        msgFrom: "/api/v1/products/range"
+      })
+    }
+
+  } catch(err) {
     res.status(200).json({
       status: false,
-      msg: "invalid inputs",
+      msg: "some database error",
       msgFrom: "/api/v1/products/range"
     })
   }
+
 })
 
 productRouter.get('/user-range', async (req: Request, res: Response) => {
@@ -147,38 +160,50 @@ productRouter.get('/user-range', async (req: Request, res: Response) => {
 })
 
 productRouter.post('/create', async(req: Request, res: Response) => {
-  //http://localhost:5000/api/v1/product/create?categoryid=1
-  const categoryId = parseInt(req.query.categoryid as string);
+  //http://localhost:5000/api/v1/product/create
   const productData = req.body;
+
+  const { categoryId, globalSubCategoryId, name, slug } = productData;
+
+  if(categoryId && globalSubCategoryId && name && slug) {
+
+    try {
+      const response = await createProductForCategoryIdAndGlobalSubCategoryId(productData);
   
-  try {
-    const response = await createProductForCategoryId(productData, categoryId);
-
-    if(response.status) {
-      res.status(200).json({
-        status: true,
-        data: response?.data,
-        msg: "Product Created succesfully",
-        msgFrom: "/api/v1/product/create"
-      })
-
-    } else {
+      if(response.status) {
+        res.status(200).json({
+          status: true,
+          data: response?.data,
+          msg: "Product Created succesfully",
+          msgFrom: "/api/v1/product/create"
+        })
+  
+      } else {
+        res.status(200).json({
+          status: false,
+          error: response?.error,
+          msg: "Failed to Create Product",
+          msgFrom: "/api/v1/product/create"
+        })
+      }
+  
+    } catch(error) {
       res.status(200).json({
         status: false,
-        error: response?.error,
-        msg: "Failed to Create Product",
-        msgFrom: "/api/v1/product/create"
+        msg: "Some database error",
+        msgFrom: "/api/v1/product/create",
+        error: error
       })
     }
 
-  } catch(error) {
+  } else {
     res.status(200).json({
       status: false,
-      msg: "Failed to create Product",
+      msg: "invalid inputs",
       msgFrom: "/api/v1/product/create",
-      error: error
     })
   }
+  
 })
 
 productRouter.put('/update', async(req: Request, res: Response) => {

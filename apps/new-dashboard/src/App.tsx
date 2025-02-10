@@ -15,6 +15,7 @@ import AddVideo from "./pages/studio/AddVideo";
 import AllVideos from "./pages/studio/AllVideos";
 import UploadVideo from "./pages/studio/UploadVideo";
 import VideoPlayer from "./pages/studio/VideoPlayer";
+import AllCategories from "./pages/store/AllCategories";
 
 const DashboardLayout = () => {
   return (
@@ -42,9 +43,14 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/cp" element={<DashboardLayout />}>
               <Route index element={<DashBoard />} /> 
-              <Route path="store/add-product" element={<AddProduct />} /> 
+
               <Route path="settings/store-settings" element={<StoreSettings />} />
               <Route path="settings/studio-settings" element={<StudioSettings />} />
+
+              <Route path="store/add-product" element={<AddProduct />} /> 
+              <Route path="store/all-categories" element={<AllCategories />} />
+
+
               <Route path="videos/add-video" element={<AddVideo />} />
               <Route path="videos/upload-video" element={<UploadVideo />} />
               <Route path="videos/all-videos" element={<AllVideos />} />

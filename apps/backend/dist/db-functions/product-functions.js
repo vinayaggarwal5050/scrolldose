@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteproductByProductId = exports.updateProductByProductId = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductsByCategoryId = exports.getProductByProductId = exports.getProductsByRangeAndUserId = exports.getProductsByRange = exports.getAllProducts = exports.createProductForCategoryId = void 0;
+exports.deleteproductByProductId = exports.updateProductByProductId = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductsByGlobalSubCategoryId = exports.getProductsByCategoryId = exports.getProductByProductId = exports.getProductsByRangeAndUserId = exports.getProductsByRangeForSubCategoryId = exports.getProductsByRange = exports.getAllProducts = exports.createProductForCategoryIdAndGlobalSubCategoryId = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
-const createProductForCategoryId = (productData, categoryId) => __awaiter(void 0, void 0, void 0, function* () {
+const createProductForCategoryIdAndGlobalSubCategoryId = (productData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.create({
             data: {
@@ -31,7 +31,12 @@ const createProductForCategoryId = (productData, categoryId) => __awaiter(void 0
                 affiliateHost: productData === null || productData === void 0 ? void 0 : productData.affiliateHost,
                 category: {
                     connect: {
-                        id: categoryId
+                        id: productData.categoryId
+                    },
+                },
+                globalSubcategory: {
+                    connect: {
+                        id: productData.globalSubCategoryId
                     }
                 }
             },
@@ -43,7 +48,7 @@ const createProductForCategoryId = (productData, categoryId) => __awaiter(void 0
         return { status: false, error: error };
     }
 });
-exports.createProductForCategoryId = createProductForCategoryId;
+exports.createProductForCategoryIdAndGlobalSubCategoryId = createProductForCategoryIdAndGlobalSubCategoryId;
 const getAllProducts = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.findMany({
@@ -95,6 +100,29 @@ const getProductsByRange = (startIndex, endIndex, limit) => __awaiter(void 0, vo
     }
 });
 exports.getProductsByRange = getProductsByRange;
+const getProductsByRangeForSubCategoryId = (startIndex, endIndex, limit, subCategoryId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield prisma.product.findMany({
+            where: {
+                globalSubCategoryId: subCategoryId, // Filter products by globalSubCategoryId
+                id: {
+                    gte: startIndex,
+                    lte: endIndex,
+                },
+            },
+            orderBy: {
+                id: 'asc',
+            },
+            take: limit, // Ensures that only 'limit' products are returned
+        });
+        return { status: true, data: response };
+    }
+    catch (error) {
+        console.error('Error fetching products by range:', error);
+        return { status: false, error: error };
+    }
+});
+exports.getProductsByRangeForSubCategoryId = getProductsByRangeForSubCategoryId;
 const getProductsByRangeAndUserId = (startIndex, endIndex, limit, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const products = yield prisma.product.findMany({
@@ -174,6 +202,21 @@ const getProductsByCategoryId = (categoryId) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.getProductsByCategoryId = getProductsByCategoryId;
+const getProductsByGlobalSubCategoryId = (globalSubCategoryId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield prisma.product.findMany({
+            where: {
+                globalSubCategoryId: globalSubCategoryId
+            }
+        });
+        return { status: true, data: response };
+    }
+    catch (error) {
+        console.error('Error Finding products:', error);
+        return { status: false, error: error };
+    }
+});
+exports.getProductsByGlobalSubCategoryId = getProductsByGlobalSubCategoryId;
 const getProductsByStoreId = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const categories = yield prisma.category.findMany({

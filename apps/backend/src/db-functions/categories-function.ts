@@ -142,7 +142,7 @@ export const updateCategoryByCategoryId = async(data: updateCategoryInterface, c
 
 export const deleteCategoryByCategoryId = async(categoryId: number) => {
   try {
-    const response = await prisma.product.delete({
+    const response = await prisma.category.delete({
       where: {
         id: categoryId
       }

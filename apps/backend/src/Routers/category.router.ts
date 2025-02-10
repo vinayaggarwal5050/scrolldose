@@ -9,7 +9,6 @@ categoryRouter.get('/', async (req: Request, res: Response) => {
   //http://localhost:5000/api/v1/category?storeid=3
   //http://localhost:5000/api/v1/category?channelpartnerid=4
 
-
   const categoryId = parseInt(req.query.categoryid as string);
   const storeId = parseInt(req.query.storeid as string);
   const channelPartnerId = parseInt(req.query.channelpartnerid as string);
@@ -31,7 +30,7 @@ categoryRouter.get('/', async (req: Request, res: Response) => {
       res.status(200).json({
         status: true,
         data: response?.data,
-        msg: "category Information Fetched Successfully",
+        msg: "All Categories Fetched Successfully For This Store!!!",
         msgFrom: "/api/v1/category"
       })
   
@@ -39,7 +38,7 @@ categoryRouter.get('/', async (req: Request, res: Response) => {
       res.status(200).json({
         status: false,
         error: response?.error,
-        msg: "category Information Fetched Successfully",
+        msg: "Error While Fetching Categories",
         msgFrom: "/api/v1/category"
       })
     }
@@ -61,22 +60,31 @@ categoryRouter.post('/create', async(req: Request, res: Response) => {
   const categoryData = req.body;
   
   try {
-    const response = await createCategoryForStoreId(categoryData, storeId);
+    if(storeId) {
+      const response = await createCategoryForStoreId(categoryData, storeId);
 
-    if(response.status) {
-      res.status(200).json({
-        status: true,
-        data: response?.data,
-        msg: "Category Created succesfully",
-        msgFrom: "/api/v1/category/create"
-      })
-
+      if(response.status) {
+        res.status(200).json({
+          status: true,
+          data: response?.data,
+          msg: "Category Created succesfully",
+          msgFrom: "/api/v1/category/create?storeid="
+        })
+  
+      } else {
+        res.status(200).json({
+          status: false,
+          error: response?.error,
+          msg: "Failed to Create Category",
+          msgFrom: "/api/v1/category/create?storeid="
+        })
+      }
+  
     } else {
       res.status(200).json({
         status: false,
-        error: response?.error,
-        msg: "Failed to Create Category",
-        msgFrom: "/api/v1/category/create"
+        msg: "Invalid input data",
+        msgFrom: "/api/v1/category/create?storeid=",
       })
     }
 
@@ -84,7 +92,7 @@ categoryRouter.post('/create', async(req: Request, res: Response) => {
     res.status(200).json({
       status: false,
       msg: "Failed to create category",
-      msgFrom: "/api/v1/category/create",
+      msgFrom: "/api/v1/category/create?storeid=",
       error: error
     })
   }

@@ -39,7 +39,7 @@ exports.categoryRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, 
             res.status(200).json({
                 status: true,
                 data: response === null || response === void 0 ? void 0 : response.data,
-                msg: "category Information Fetched Successfully",
+                msg: "All Categories Fetched Successfully For This Store!!!",
                 msgFrom: "/api/v1/category"
             });
         }
@@ -47,7 +47,7 @@ exports.categoryRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, 
             res.status(200).json({
                 status: false,
                 error: response === null || response === void 0 ? void 0 : response.error,
-                msg: "category Information Fetched Successfully",
+                msg: "Error While Fetching Categories",
                 msgFrom: "/api/v1/category"
             });
         }
@@ -65,21 +65,30 @@ exports.categoryRouter.post('/create', (req, res) => __awaiter(void 0, void 0, v
     const storeId = parseInt(req.query.storeid);
     const categoryData = req.body;
     try {
-        const response = yield (0, categories_function_1.createCategoryForStoreId)(categoryData, storeId);
-        if (response.status) {
-            res.status(200).json({
-                status: true,
-                data: response === null || response === void 0 ? void 0 : response.data,
-                msg: "Category Created succesfully",
-                msgFrom: "/api/v1/category/create"
-            });
+        if (storeId) {
+            const response = yield (0, categories_function_1.createCategoryForStoreId)(categoryData, storeId);
+            if (response.status) {
+                res.status(200).json({
+                    status: true,
+                    data: response === null || response === void 0 ? void 0 : response.data,
+                    msg: "Category Created succesfully",
+                    msgFrom: "/api/v1/category/create?storeid="
+                });
+            }
+            else {
+                res.status(200).json({
+                    status: false,
+                    error: response === null || response === void 0 ? void 0 : response.error,
+                    msg: "Failed to Create Category",
+                    msgFrom: "/api/v1/category/create?storeid="
+                });
+            }
         }
         else {
             res.status(200).json({
                 status: false,
-                error: response === null || response === void 0 ? void 0 : response.error,
-                msg: "Failed to Create Category",
-                msgFrom: "/api/v1/category/create"
+                msg: "Invalid input data",
+                msgFrom: "/api/v1/category/create?storeid=",
             });
         }
     }
@@ -87,7 +96,7 @@ exports.categoryRouter.post('/create', (req, res) => __awaiter(void 0, void 0, v
         res.status(200).json({
             status: false,
             msg: "Failed to create category",
-            msgFrom: "/api/v1/category/create",
+            msgFrom: "/api/v1/category/create?storeid=",
             error: error
         });
     }

@@ -131,7 +131,7 @@ const updateCategoryByCategoryId = (data, categoryId) => __awaiter(void 0, void 
 exports.updateCategoryByCategoryId = updateCategoryByCategoryId;
 const deleteCategoryByCategoryId = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield prisma.product.delete({
+        const response = yield prisma.category.delete({
             where: {
                 id: categoryId
             }
