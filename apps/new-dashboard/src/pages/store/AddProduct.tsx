@@ -13,6 +13,13 @@ const AddProduct = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [allowEdit, setAllowEdit] = useState(false);
 
+
+
+  const [mainImage, setMainImage] = useState<File | null>(null);
+  const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
+  const [otherImages, setOtherImages] = useState<File[] | null>(null);
+  const [otherImagesPreview, setOtherImagesPreview] = useState<string[]>([]);
+
   const [categoryList, setCategoryList] = useState<any>();
   const [videoList, setVideoList] = useState<any>();
   const [globalSubCategoryList, setGlobalSubCategoryList] = useState<any>();
@@ -110,6 +117,13 @@ const AddProduct = () => {
     formData.append("affiliateLink", values.affiliateLink);
     formData.append("affiliateHost", values.affiliateHost);
     formData.append("affiliateImageLink", values.affiliateImageLink);
+    formData.append("mainImage", mainImage || "image_not_find");
+
+    if (otherImages && otherImages.length > 0) {
+      otherImages.forEach((image: File) => {
+        formData.append("otherImages", image);
+      });
+    }
 
     const formDataObject: Record<string, any> = {};
     formData.forEach((value, key) => {
@@ -118,7 +132,7 @@ const AddProduct = () => {
 
     console.log("Converted Object:", formDataObject);
 
-    const response = await createOnServer(formDataObject);
+    const response = await createOnServer(formData);
     setResAwait(false);
     setMsg(response?.msg);
 
@@ -138,15 +152,15 @@ const AddProduct = () => {
       description: "",
       price: null,
   
-      categoryId: 1,
-      globalSubCategoryId: 1,
+      categoryId: "",
+      globalSubCategoryId: "",
       videoUrl: "",
-      videoId: 1,
+      videoId: "",
   
       tags:  "",
       stock: null,
   
-      isAffiliateLink : true,
+      isAffiliateLink : false,
       affiliateLink: "",
       affiliateHost: "",
       affiliateImageLink: "",
@@ -155,7 +169,24 @@ const AddProduct = () => {
     onSubmit: handleSubmit
   });
 
-useEffect(() => {
+  const handleMainImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      setMainImage(file);
+      setMainImagePreview(URL.createObjectURL(file)); 
+    }
+  };
+
+
+  const handleOtherImagesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const filesArray = Array.from(event.target.files);
+      setOtherImages(filesArray);
+      setOtherImagesPreview(filesArray.map((file) => URL.createObjectURL(file))); 
+    }
+  };
+
+  useEffect(() => {
 
     const fetchFromServer = async () => {
       setLoading(true);
@@ -179,10 +210,9 @@ useEffect(() => {
 
   const createOnServer = async(formData: any) => {
     try {
-      const res = await fetch(`${backendURL}/product/create`, {
+      const res = await fetch(`${backendURL}/product/upload`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: formData,
       });
       const jsonRes = await res.json();
       return jsonRes;
@@ -418,6 +448,28 @@ useEffect(() => {
                 size="small"
                 disabled={submitSuccess && !allowEdit}
               />
+
+              {/* Main Image */}
+              <Typography sx={{ mt: 2, mb: 1, color: 'text.primary', fontSize: 15 }}>
+                Main Image
+              </Typography>
+              <input type="file" accept="image/*" onChange={handleMainImageChange} />
+              {mainImagePreview && (
+                <Box sx={{ mt: 1 }}>
+                  <img src={mainImagePreview} alt="Main Preview" width="100px" height="100px" style={{ borderRadius: '5px', objectFit: 'cover' }} />
+                </Box>
+              )}
+
+              {/* Other Images */}
+              <Typography sx={{ mt: 2, mb:1, color: 'text.primary', fontSize: 15 }}>
+                Other Images
+              </Typography>
+              <input type="file" accept="image/*" multiple onChange={handleOtherImagesChange} />
+              <div style={{ display: "flex", gap: "10px", marginTop: 8 }}>
+              {otherImagesPreview.map((src, index) => (
+                <img key={index} src={src} alt={`Preview ${index + 1}`} width="100" />
+              ))}
+            </div>
 
               { resAwait && <CircularProgress/> }
 

@@ -100,7 +100,7 @@ model Product {
   tags            String?
 
   mainImageUrl    String?
-  otherImagesUrl  String?
+  otherImagesUrls  String[]
 
 
   isAffiliateLink     Boolean   @default(false)

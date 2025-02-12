@@ -1,7 +1,25 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateCreateProduct = void 0;
+exports.validateCreateProduct = exports.upload = void 0;
 const zod_1 = require("zod");
+const fs_1 = __importDefault(require("fs"));
+const multer_1 = __importDefault(require("multer"));
+const uploadDir = "uploaded-product-images";
+fs_1.default.mkdirSync(uploadDir, { recursive: true });
+// Multer Storage Configuration
+const storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueName = `${req.body.slug}-${Date.now() + "-" + file.originalname}`;
+        cb(null, uniqueName);
+    },
+});
+exports.upload = (0, multer_1.default)({ storage });
 const createProductSchema = zod_1.z.object({
     name: zod_1.z.string().min(5, 'name must be at least 3 characters long'),
     description: zod_1.z.string().optional(),

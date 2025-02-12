@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.productRouter = void 0;
 const express_1 = require("express");
 const product_functions_1 = require("../db-functions/product-functions");
+const product_mw_1 = require("./middlewares/product.mw");
 // import { validateCreateProduct } from "./middlewares/product.mw";
 exports.productRouter = (0, express_1.Router)();
 exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -157,15 +158,73 @@ exports.productRouter.get('/user-range', (req, res) => __awaiter(void 0, void 0,
         });
     }
 }));
-exports.productRouter.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //http://localhost:5000/api/v1/product/create
+exports.productRouter.post("/create", product_mw_1.upload.single("mainImage"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.file) {
+        return res.status(400).json({ error: "Image is required" });
+    }
     let productData = req.body;
     const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink } = productData;
-    productData = Object.assign(Object.assign({}, productData), { "categoryId": parseInt(categoryId), "globalSubCategoryId": parseInt(globalSubCategoryId), "videoId": parseInt(videoId), "price": parseInt(price), "stock": parseInt(stock), "isAffiliateLink": (isAffiliateLink === 'true') ? true : false });
+    const mainImageUrl = `/uploaded-product-images/${req.file.filename}`;
+    productData = Object.assign(Object.assign({}, productData), { "categoryId": parseInt(categoryId), "globalSubCategoryId": parseInt(globalSubCategoryId), "videoId": parseInt(videoId), "price": parseInt(price), "stock": parseInt(stock), "isAffiliateLink": (isAffiliateLink === 'true') ? true : false, "mainImageUrl": mainImageUrl });
     console.log(productData);
     if (categoryId && globalSubCategoryId && name && slug) {
         try {
-            // const response = {"status": true, "data": 124, "error": "some-error"} 
+            const response = yield (0, product_functions_1.createProductForCategoryIdAndGlobalSubCategoryId)(productData);
+            if (response === null || response === void 0 ? void 0 : response.status) {
+                res.status(200).json({
+                    status: true,
+                    data: response === null || response === void 0 ? void 0 : response.data,
+                    msg: "Product Created succesfully",
+                    msgFrom: "/api/v1/product/create"
+                });
+            }
+            else {
+                res.status(200).json({
+                    status: false,
+                    error: response === null || response === void 0 ? void 0 : response.error,
+                    msg: "Failed to Create Product",
+                    msgFrom: "/api/v1/product/create"
+                });
+            }
+        }
+        catch (error) {
+            res.status(200).json({
+                status: false,
+                msg: "Some database error",
+                msgFrom: "/api/v1/product/create",
+                error: error
+            });
+        }
+    }
+    else {
+        res.status(200).json({
+            status: false,
+            msg: "invalid inputs",
+            msgFrom: "/api/v1/product/create",
+        });
+    }
+}));
+exports.productRouter.post("/upload", product_mw_1.upload.fields([
+    { name: "mainImage", maxCount: 1 },
+    { name: "otherImages", maxCount: 5 }
+]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.files.mainImage || req.files.mainImage.length === 0) {
+        return res.status(200).json({
+            status: false,
+            message: "Main Image is required",
+            msgFrom: "/api/v1/product/upload"
+        });
+    }
+    let productData = req.body;
+    const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink } = productData;
+    const mainImageUrl = `/uploaded-product-images/${req.files.mainImage[0].filename}`;
+    const otherImagesUrls = req.files.otherImages
+        ? req.files.otherImages.map((file) => `/uploaded-product-images/${file.filename}`)
+        : [];
+    productData = Object.assign(Object.assign({}, productData), { "categoryId": parseInt(categoryId), "globalSubCategoryId": parseInt(globalSubCategoryId), "videoId": parseInt(videoId), "price": parseInt(price), "stock": parseInt(stock), "isAffiliateLink": (isAffiliateLink === 'true') ? true : false, "mainImageUrl": mainImageUrl, "otherImagesUrls": otherImagesUrls });
+    console.log(productData);
+    if (categoryId && globalSubCategoryId && name && slug) {
+        try {
             const response = yield (0, product_functions_1.createProductForCategoryIdAndGlobalSubCategoryId)(productData);
             if (response === null || response === void 0 ? void 0 : response.status) {
                 res.status(200).json({

@@ -1,6 +1,24 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
+import fs from "fs";
+import multer from "multer";
+import path from "path";
+const uploadDir = "uploaded-product-images";
+fs.mkdirSync(uploadDir, { recursive: true });
+
+// Multer Storage Configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${req.body.slug}-${Date.now() + "-" + file.originalname}`;
+    cb(null, uniqueName);
+  },
+});
+
+export const upload = multer({ storage });
 
 const createProductSchema = z.object({
   name: z.string().min(5, 'name must be at least 3 characters long'),

@@ -1,8 +1,13 @@
 import { Router, Request, Response } from "express";
 import { createProductForCategoryIdAndGlobalSubCategoryId, deleteproductByProductId, getAllProducts, getProductByProductId, getProductsByCategoryId, getProductsByGlobalSubCategoryId, getProductsByStoreId, getProductsByStoreSlug, updateProductByProductId, getProductsByRange, getProductsByRangeForSubCategoryId, getProductsByRangeAndUserId } from "../db-functions/product-functions";
+import { upload } from "./middlewares/product.mw";
 // import { validateCreateProduct } from "./middlewares/product.mw";
 
+
+
+
 export const productRouter = Router();
+
 
 productRouter.get('/', async (req: Request, res: Response) => {
   //http://localhost:5000/api/v1/product
@@ -159,11 +164,17 @@ productRouter.get('/user-range', async (req: Request, res: Response) => {
   }
 })
 
-productRouter.post('/create', async(req: Request, res: Response) => {
-  //http://localhost:5000/api/v1/product/create
+productRouter.post("/create", upload.single("mainImage"), async(req:any, res:any) => {
+
+  if (!req.file) { 
+    return res.status(400).json({ error: "Image is required" });
+  }
+
   let productData = req.body;
 
   const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink } = productData;
+
+  const mainImageUrl = `/uploaded-product-images/${req.file.filename}`;
 
   productData = {
     ...productData,
@@ -172,16 +183,16 @@ productRouter.post('/create', async(req: Request, res: Response) => {
     "videoId": parseInt(videoId),
     "price": parseInt(price),
     "stock": parseInt(stock),
-    "isAffiliateLink": (isAffiliateLink === 'true') ? true : false
+    "isAffiliateLink": (isAffiliateLink === 'true') ? true : false,
+    "mainImageUrl": mainImageUrl
   }
-  
-  console.log(productData);
 
+  console.log(productData);
 
   if(categoryId && globalSubCategoryId && name && slug) {
     
     try {
-      // const response = {"status": true, "data": 124, "error": "some-error"} 
+
       const response = await createProductForCategoryIdAndGlobalSubCategoryId(productData);
   
       if(response?.status) {
@@ -217,8 +228,92 @@ productRouter.post('/create', async(req: Request, res: Response) => {
       msgFrom: "/api/v1/product/create",
     })
   }
+
+
+
+});
+
+productRouter.post("/upload", upload.fields([
+  { name: "mainImage", maxCount: 1 },
+  { name: "otherImages", maxCount: 5 }
+]), async(req:any, res:any) => {
+
+  if (!req.files.mainImage || req.files.mainImage.length === 0) { 
+    return res.status(200).json({
+      status: false,
+      message: "Main Image is required",
+      msgFrom: "/api/v1/product/upload"
+    });
+  }
+
+  let productData = req.body;
+
+  const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink } = productData;
+
+  const mainImageUrl = `/uploaded-product-images/${req.files.mainImage[0].filename}`;
+
+  const otherImagesUrls = req.files.otherImages
+  ? req.files.otherImages.map((file: any) => `/uploaded-product-images/${file.filename}`)
+  : [];
+
+  productData = {
+    ...productData,
+    "categoryId": parseInt(categoryId),
+    "globalSubCategoryId": parseInt(globalSubCategoryId),
+    "videoId": parseInt(videoId),
+    "price": parseInt(price),
+    "stock": parseInt(stock),
+    "isAffiliateLink": (isAffiliateLink === 'true') ? true : false,
+    "mainImageUrl": mainImageUrl,
+    "otherImagesUrls": otherImagesUrls
+  }
+
+  console.log(productData);
+
+  if(categoryId && globalSubCategoryId && name && slug) {
+    
+    try {
+
+      const response = await createProductForCategoryIdAndGlobalSubCategoryId(productData);
   
-})
+      if(response?.status) {
+        res.status(200).json({
+          status: true,
+          data: response?.data,
+          msg: "Product Created succesfully",
+          msgFrom: "/api/v1/product/create"
+        })
+  
+      } else {
+        res.status(200).json({
+          status: false,
+          error: response?.error,
+          msg: "Failed to Create Product",
+          msgFrom: "/api/v1/product/create"
+        })
+      }
+  
+    } catch(error) {
+      res.status(200).json({
+        status: false,
+        msg: "Some database error",
+        msgFrom: "/api/v1/product/create",
+        error: error
+      })
+    }
+
+  } else {
+    res.status(200).json({
+      status: false,
+      msg: "invalid inputs",
+      msgFrom: "/api/v1/product/create",
+    })
+  }
+
+
+
+});
+
 
 productRouter.put('/update', async(req: Request, res: Response) => {
   //http://localhost:5000/api/v1/product/update?productid=3
