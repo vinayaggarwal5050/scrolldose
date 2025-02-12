@@ -1,8 +1,7 @@
 import { Router, Request, Response } from "express";
-import { createProductForCategoryIdAndGlobalSubCategoryId, deleteproductByProductId, getAllProducts, getProductByProductId, getProductsByCategoryId, getProductsByGlobalSubCategoryId, getProductsByStoreId, getProductsByStoreSlug, updateProductByProductId, getProductsByRange, getProductsByRangeForSubCategoryId, getProductsByRangeAndUserId } from "../db-functions/product-functions";
+import { createProductForCategoryIdAndGlobalSubCategoryId, deleteproductByProductId, getAllProducts, getProductByProductId, getProductByProductSlug, getProductsByCategoryId, getProductsByGlobalSubCategoryId, getProductsByStoreId, getProductsByStoreSlug, updateProductByProductId, getProductsByRange, getProductsByRangeForSubCategoryId, getProductsByRangeAndUserId } from "../db-functions/product-functions";
 import { upload } from "./middlewares/product.mw";
 // import { validateCreateProduct } from "./middlewares/product.mw";
-
 
 
 
@@ -12,13 +11,16 @@ export const productRouter = Router();
 productRouter.get('/', async (req: Request, res: Response) => {
   //http://localhost:5000/api/v1/product
   //http://localhost:5000/api/v1/product?productid=3
+  //http://localhost:5000/api/v1/product?productslug=this-is-my-product
   //http://localhost:5000/api/v1/product?categoryid=1
+
   //http://localhost:5000/api/v1/product?globalsubcategoryid=1
   //http://localhost:5000/api/v1/product?storeid=3
   //http://localhost:5000/api/v1/product?storeslug=my-store
 
 
   const productId = parseInt(req.query.productid as string);
+  const productSlug = req.query.productslug as string;
   const categoryId = parseInt(req.query.categoryid as string);
   const globalSubCategoryId = parseInt(req.query.globalsubcategoryid as string);
   const storeId = parseInt(req.query.storeid as string);
@@ -29,6 +31,9 @@ productRouter.get('/', async (req: Request, res: Response) => {
   try {
     if(productId) {
       response = await getProductByProductId(productId);
+    } else if(productSlug) {
+      response = await getProductByProductSlug(productSlug);
+
     } else if(storeId) {
       response = await getProductsByStoreId(storeId);
     } else if(categoryId) {
@@ -162,7 +167,7 @@ productRouter.get('/user-range', async (req: Request, res: Response) => {
       msgFrom: "/api/v1/products/range"
     })
   }
-})
+}) 
 
 productRouter.post("/create", upload.single("mainImage"), async(req:any, res:any) => {
 
@@ -187,7 +192,7 @@ productRouter.post("/create", upload.single("mainImage"), async(req:any, res:any
     "mainImageUrl": mainImageUrl
   }
 
-  console.log(productData);
+  // console.log(productData);
 
   if(categoryId && globalSubCategoryId && name && slug) {
     
@@ -268,7 +273,7 @@ productRouter.post("/upload", upload.fields([
     "otherImagesUrls": otherImagesUrls
   }
 
-  console.log(productData);
+  // console.log(productData);
 
   if(categoryId && globalSubCategoryId && name && slug) {
     

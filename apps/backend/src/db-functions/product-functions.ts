@@ -224,6 +224,42 @@ export const getProductByProductId = async(productId: number) => {
   }
 }
 
+export const getProductByProductSlug = async(productSlug: string) => {
+  try {
+    const response = await prisma.product.findFirst({
+      where: {
+        slug: productSlug
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        price: true,
+        mainImageUrl: true,
+        otherImagesUrls: true,
+        videoUrl: true,
+        videoId: true,
+        stock: true,
+        tags: true,
+      
+        isAffiliateLink: true,
+        affiliateLink: true,
+        affiliateImageLink: true,
+        affiliateHost: true,
+
+        categoryId: true
+      }
+    })
+
+    return { status: true, data: response };
+
+  } catch(error) {
+    console.error('Error Finding products:', error);
+    return { status: false, error: error };
+  }
+}
+
 export const getProductsByCategoryId = async(categoryId: number) => {
   try {
     const response = await prisma.product.findMany({

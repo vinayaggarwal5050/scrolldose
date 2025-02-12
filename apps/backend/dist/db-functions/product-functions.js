@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteproductByProductId = exports.updateProductByProductId = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductsByGlobalSubCategoryId = exports.getProductsByCategoryId = exports.getProductByProductId = exports.getProductsByRangeAndUserId = exports.getProductsByRangeForSubCategoryId = exports.getProductsByRange = exports.getAllProducts = exports.createProductForCategoryIdAndGlobalSubCategoryId = void 0;
+exports.deleteproductByProductId = exports.updateProductByProductId = exports.getProductsByStoreSlug = exports.getProductsByStoreId = exports.getProductsByGlobalSubCategoryId = exports.getProductsByCategoryId = exports.getProductByProductSlug = exports.getProductByProductId = exports.getProductsByRangeAndUserId = exports.getProductsByRangeForSubCategoryId = exports.getProductsByRange = exports.getAllProducts = exports.createProductForCategoryIdAndGlobalSubCategoryId = void 0;
 const signelton_1 = require("./signelton");
 const prisma = (0, signelton_1.getPrismaClient)();
 const createProductForCategoryIdAndGlobalSubCategoryId = (productData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -190,6 +190,39 @@ const getProductByProductId = (productId) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.getProductByProductId = getProductByProductId;
+const getProductByProductSlug = (productSlug) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield prisma.product.findFirst({
+            where: {
+                slug: productSlug
+            },
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                description: true,
+                price: true,
+                mainImageUrl: true,
+                otherImagesUrls: true,
+                videoUrl: true,
+                videoId: true,
+                stock: true,
+                tags: true,
+                isAffiliateLink: true,
+                affiliateLink: true,
+                affiliateImageLink: true,
+                affiliateHost: true,
+                categoryId: true
+            }
+        });
+        return { status: true, data: response };
+    }
+    catch (error) {
+        console.error('Error Finding products:', error);
+        return { status: false, error: error };
+    }
+});
+exports.getProductByProductSlug = getProductByProductSlug;
 const getProductsByCategoryId = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield prisma.product.findMany({

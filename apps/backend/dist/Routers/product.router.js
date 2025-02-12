@@ -18,11 +18,13 @@ exports.productRouter = (0, express_1.Router)();
 exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //http://localhost:5000/api/v1/product
     //http://localhost:5000/api/v1/product?productid=3
+    //http://localhost:5000/api/v1/product?productslug=this-is-my-product
     //http://localhost:5000/api/v1/product?categoryid=1
     //http://localhost:5000/api/v1/product?globalsubcategoryid=1
     //http://localhost:5000/api/v1/product?storeid=3
     //http://localhost:5000/api/v1/product?storeslug=my-store
     const productId = parseInt(req.query.productid);
+    const productSlug = req.query.productslug;
     const categoryId = parseInt(req.query.categoryid);
     const globalSubCategoryId = parseInt(req.query.globalsubcategoryid);
     const storeId = parseInt(req.query.storeid);
@@ -31,6 +33,9 @@ exports.productRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, f
     try {
         if (productId) {
             response = yield (0, product_functions_1.getProductByProductId)(productId);
+        }
+        else if (productSlug) {
+            response = yield (0, product_functions_1.getProductByProductSlug)(productSlug);
         }
         else if (storeId) {
             response = yield (0, product_functions_1.getProductsByStoreId)(storeId);

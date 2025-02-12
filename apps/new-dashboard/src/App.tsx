@@ -17,6 +17,8 @@ import UploadVideo from "./pages/studio/UploadVideo";
 import VideoPlayer from "./pages/studio/VideoPlayer";
 import AllCategories from "./pages/store/AllCategories";
 import AddProduct from "./pages/store/AddProduct";
+import AllProducts from "./pages/store/AllProducts";
+import Product from "./pages/store/Product";
 
 const DashboardLayout = () => {
   return (
@@ -48,7 +50,9 @@ function App() {
               <Route path="settings/store-settings" element={<StoreSettings />} />
               <Route path="settings/studio-settings" element={<StudioSettings />} />
 
-              <Route path="store/add-product" element={<AddProduct />} /> 
+              <Route path="store/add-product" element={<AddProduct />} />
+              <Route path="store/product" element={<Product />} />
+              <Route path="store/all-products" element={<AllProducts />} />
               <Route path="store/all-categories" element={<AllCategories />} />
 
 

@@ -68,7 +68,7 @@ const AddProduct = () => {
       if(response?.status) {
         setGlobalSubCategoryList(response?.data);
       } else {
-        setVideoList(null);
+        setGlobalSubCategoryList(null);
       }
 
     } catch(error) {
