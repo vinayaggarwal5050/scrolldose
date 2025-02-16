@@ -294,7 +294,7 @@ const RenderVideoList = ({videoList, setVideoList} : any) => {
                 key={video?.title}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell align="left" onClick={() => navigate(`/cp/videos/player?url=${video?.url}`)}><PlayCircleOutlineIcon/></TableCell>
+                <TableCell align="left" onClick={() => navigate(`/cp/studio/player?url=${video?.url}`)}><PlayCircleOutlineIcon/></TableCell>
                 <TableCell component="th" scope="row">{video?.title}</TableCell>
                 <TableCell align="left">{video?.slug}</TableCell>
                 <TableCell align="left">{video?.category}</TableCell>
