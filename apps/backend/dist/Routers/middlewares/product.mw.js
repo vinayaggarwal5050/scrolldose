@@ -7,7 +7,7 @@ exports.validateCreateProduct = exports.upload = void 0;
 const zod_1 = require("zod");
 const fs_1 = __importDefault(require("fs"));
 const multer_1 = __importDefault(require("multer"));
-const uploadDir = "uploaded-product-images";
+const uploadDir = "./../product-images";
 fs_1.default.mkdirSync(uploadDir, { recursive: true });
 // Multer Storage Configuration
 const storage = multer_1.default.diskStorage({

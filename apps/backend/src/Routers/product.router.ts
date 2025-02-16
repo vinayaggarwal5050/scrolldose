@@ -169,17 +169,13 @@ productRouter.get('/user-range', async (req: Request, res: Response) => {
   }
 }) 
 
-productRouter.post("/create", upload.single("mainImage"), async(req:any, res:any) => {
 
-  if (!req.file) { 
-    return res.status(400).json({ error: "Image is required" });
-  }
+productRouter.post("/create",  async(req:any, res:any) => {
+
 
   let productData = req.body;
 
-  const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink } = productData;
-
-  const mainImageUrl = `/uploaded-product-images/${req.file.filename}`;
+  const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink, affiliateImageLink } = productData;
 
   productData = {
     ...productData,
@@ -189,7 +185,8 @@ productRouter.post("/create", upload.single("mainImage"), async(req:any, res:any
     "price": parseInt(price),
     "stock": parseInt(stock),
     "isAffiliateLink": (isAffiliateLink === 'true') ? true : false,
-    "mainImageUrl": mainImageUrl
+    "mainImageUrl": affiliateImageLink,
+
   }
 
   // console.log(productData);
@@ -238,27 +235,30 @@ productRouter.post("/create", upload.single("mainImage"), async(req:any, res:any
 
 });
 
+
 productRouter.post("/upload", upload.fields([
   { name: "mainImage", maxCount: 1 },
   { name: "otherImages", maxCount: 5 }
 ]), async(req:any, res:any) => {
 
-  if (!req.files.mainImage || req.files.mainImage.length === 0) { 
-    return res.status(200).json({
-      status: false,
-      message: "Main Image is required",
-      msgFrom: "/api/v1/product/upload"
-    });
-  }
 
   let productData = req.body;
 
   const { categoryId, globalSubCategoryId, name, slug, price, videoId, stock, isAffiliateLink } = productData;
 
-  const mainImageUrl = `/uploaded-product-images/${req.files.mainImage[0].filename}`;
+  if ( !req.files.mainImage || req.files.mainImage.length === 0 ) { 
+    return res.status(200).json({
+      status: false,
+      msg: "Main Image is required",
+      msgFrom: "/api/v1/product/upload"
+    });
+  }
+
+
+  const mainImageUrl = `https://sd.llnk.in/product-images/${req.files?.mainImage[0]?.filename}` || null;
 
   const otherImagesUrls = req.files.otherImages
-  ? req.files.otherImages.map((file: any) => `/uploaded-product-images/${file.filename}`)
+  ? req.files.otherImages.map((file: any) => `https://sd.llnk.in/product-images/${file.filename}`)
   : [];
 
   productData = {

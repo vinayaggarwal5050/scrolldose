@@ -4,7 +4,7 @@ import { z } from 'zod';
 import fs from "fs";
 import multer from "multer";
 import path from "path";
-const uploadDir = "uploaded-product-images";
+const uploadDir = "./../product-images";
 fs.mkdirSync(uploadDir, { recursive: true });
 
 // Multer Storage Configuration

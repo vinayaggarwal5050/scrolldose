@@ -21,7 +21,7 @@ const Product = () => {
 
       if(response?.status) {
         setProduct(response?.data);
-        setSelectedImage(response?.data?.affiliateImageLink);
+        setSelectedImage(response?.data?. mainImageUrl);
       } else {
         setProduct(null);
       }

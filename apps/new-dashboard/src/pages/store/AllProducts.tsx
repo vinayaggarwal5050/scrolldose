@@ -10,6 +10,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
 import { useNavigate } from "react-router-dom";
 
 // import CreateIcon from '@mui/icons-material/Create';
@@ -22,6 +23,9 @@ const AllProducts = () => {
   const [productList, setProductList] = useState<any>([]);
   const [categoryList, setCategoryList] = useState<any>([]);
   const [globalSubCategoryList, setGlobalSubCategoryList] = useState<any>();
+
+  const [msg, setMsg] = useState<any>();
+  const [resAwait, setResAwait] = useState(false);
 
   const { cpData } = useCPData();
   const navigate = useNavigate();
@@ -75,6 +79,42 @@ const AllProducts = () => {
     }
   }
 
+  const deleteOnServer = async(productId: number) => {
+    try {
+      const res = await fetch(`${backendURL}/product/delete?productid=${productId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      const jsonRes = await res.json();
+      return jsonRes;
+
+    } catch(err) {
+      console.log(err);
+    }
+
+  }
+
+
+  const handleDeleteButton = async(productId: number) => {
+    console.log(productId);
+
+    setResAwait(true);
+    setMsg(null);
+
+    const response  = await deleteOnServer(productId);
+
+    setResAwait(false);
+    setMsg(response?.msg);
+
+    if(response.status) {
+      setProductList((prevProductList: any) => (
+        prevProductList.filter((product:any) => product.id !== productId)
+      ))
+    } else {
+
+    }
+  }
+
 
 
   useEffect(() => {
@@ -110,6 +150,8 @@ const AllProducts = () => {
           All Products
         </Typography>
 
+        <Typography sx={{ m: 3, color: "gray", fontSize: 14 }}>{msg}</Typography>
+
 
       {/* {TABLE} */}
       <Box sx={{m: 3, width: "90%"}}>
@@ -123,6 +165,7 @@ const AllProducts = () => {
                 <TableCell sx={{fontWeight: "bold"}} align="left" >GSC</TableCell>
                 <TableCell sx={{fontWeight: "bold"}} align="left" >Price</TableCell>
                 <TableCell sx={{fontWeight: "bold"}} align="left" >Affliate?</TableCell>
+                <TableCell sx={{fontWeight: "bold"}} align="left" >Delete</TableCell>
               </TableRow>
             </TableHead>
 
@@ -148,6 +191,18 @@ const AllProducts = () => {
                       </a> 
                        : 
                       <>No</>}
+                  </TableCell>
+
+                  <TableCell align="left"  onClick={() => handleDeleteButton(product?.id)}>
+                    <Button color="inherit">
+                      <Box sx={{ display: "flex" }}>
+                        <DeleteSweepOutlinedIcon />
+                        {resAwait &&
+                        <CircularProgress/>
+                        }
+                      </Box>
+                    </Button>
+
                   </TableCell>
 
                 </TableRow>

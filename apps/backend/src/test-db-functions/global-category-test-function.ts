@@ -34,9 +34,9 @@ const data = [
 
 const test = () => {
 
-  // data.forEach(async(item) => {
-  //   await createGlobalCategory(item);
-  // })
+  data.forEach(async(item) => {
+    await createGlobalCategory(item);
+  })
 
   getAllGloalCategories().then(res => console.log(res));
 

@@ -132,7 +132,14 @@ const AddProduct = () => {
 
     console.log("Converted Object:", formDataObject);
 
-    const response = await createOnServer(formData);
+    let response;
+
+    if(values.isAffiliateLink) {
+      response = await createOnServer(formDataObject);
+    } else {
+      response = await uploadOnServer(formData);
+    }
+
     setResAwait(false);
     setMsg(response?.msg);
 
@@ -210,6 +217,22 @@ const AddProduct = () => {
 
   const createOnServer = async(formData: any) => {
     try {
+      const res = await fetch(`${backendURL}/product/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const jsonRes = await res.json();
+      return jsonRes;
+
+    } catch(err) {
+      console.log(err);
+    }
+
+  }
+
+  const uploadOnServer = async(formData: any) => {
+    try {
       const res = await fetch(`${backendURL}/product/upload`, {
         method: "POST",
         body: formData,
@@ -222,6 +245,7 @@ const AddProduct = () => {
     }
 
   }
+
 
   return (
     <Box sx={{ minWidth: "80vh", minHeight: "85vh", display: "flex", justifyContent: "center"}}>
